@@ -1,0 +1,39 @@
+{
+  "name": "alexa-spotify-connect",
+  "version": "1.0.0",
+  "description": "Control Spotify Connect devices with Alexa",
+  "author": "Lawrence Thorpe",
+  "dependencies": {
+    "alexa-app-server": "^3.0.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.3",
+    "querystring": "^0.2.0",
+    "randomstring": "^1.1.5",
+    "request": "^2.81.0",
+    "spotify-web-api-node": "^2.4.0"
+  },
+  "license": "MIT",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thorpelawrence/alexa-spotify-connect.git"
+  },
+  "keywords": [
+    "amazon",
+    "alexa",
+    "echo",
+    "spotify",
+    "connect",
+    "node",
+    "nodejs",
+    "js"
+  ],
+  "bugs": {
+    "url": "https://github.com/thorpelawrence/alexa-spotify-connect/issues"
+  },
+  "homepage": "https://github.com/thorpelawrence/alexa-spotify-connect#readme"
+}

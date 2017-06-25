@@ -1,0 +1,55 @@
+<html>
+
+<head>
+  <title>Alexa Spotify Connect</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="client.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      background-color: #191414;
+      color: #1DB954;
+      font-family: 'Arial', sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1DB954;
+    }
+
+    .button {
+      color: #1DB954;
+      background-color: transparent;
+      border-radius: 2em;
+      border: 0.2em solid #1DB954;
+      padding: 0.5em 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #1DB954;
+      color: #FFF;
+    }
+
+    #play-pause-button {
+      border-radius: 100%;
+      padding: 0.5em;
+      height: 1em;
+      width: 1em;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="padding:0 20%;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;width:60%;height:60%;">
+    <a href="/login" id="login-button" class="button">Login with Spotify</a>
+    <a href="javascript:void(0)" id="play-pause-button" class="button fa"></a>
+    <a href="#" id="playback-status"></a>
+    <a href="javascript:void(0)" id="get-devices-button" class="button">Get devices</a>
+    <select id="devices-list" class="button"></select>
+  </div>
+</body>
+
+</html>
