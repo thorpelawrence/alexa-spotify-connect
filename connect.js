@@ -15,7 +15,7 @@ app.express({ expressApp: express_app });
 var spotifyApi = new SpotifyWebApi({
     clientId: '8f8e09d45e574e07b0a040bd70c95fb6',
     clientSecret: process.env.client_secret,
-    redirectUri: 'https://alexa-spotify-connect.herokuapp.com/callback'
+    redirectUri: 'http://localhost:8888/callback'
 });
 
 app.intent('PlayIntent', {
@@ -48,14 +48,21 @@ app.intent('GetDevicesIntent', {
     ]
 },
     function (req, res) {
-        request.get("https://api.spotify.com/v1/me/player/devices", function (error, response, body) {
-            console.log('error:', error);
-            var devices = body.devices;
-            res.say("I found these devices...");
-            for (var i = 0; i < devices.length; i++) {
-                res.say(devices[i].name);
-            }
-        }).auth(null, null, true, req.sessionDetails.accessToken);
+        request.get({
+            url: "https://api.spotify.com/v1/me/player/devices",
+            auth: {
+                "bearer": spotifyApi.getAccessToken()
+            },
+            json: true
+        },
+            function (error, response, body) {
+                console.log('error:', error);
+                var devices = body.devices;
+                res.say("I found these devices");
+                for (var i = 0; i < devices.length; i++) {
+                    res.say(devices[i].name);
+                }
+            });
     }
 );
 
@@ -83,7 +90,6 @@ express_app.get('/callback', function (req, res) {
             // Set the access token on the API object to use it in later calls
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
-            res.cookie('access_token', data.body['access_token']);
             res.redirect('/#' + querystring.stringify({ access_token: data.body['access_token'], refresh_token: data.body['refresh_token'] }));
         }, function (err) {
             console.log('Something went wrong!', err);
@@ -116,15 +122,15 @@ express_app.post('/playpause', function (req, res) {
 });
 
 express_app.post('/getdevices', function (req, res) {
-    spotifyApi.getMyDevices()
-        .then(function (data) {
-            var devices = data.body.devices;
-            for (var i = 0; i < devices.length; i++) {
-                console.log(devices[i].id + ":" + devices[i].name + ":" + devices[i].volume_percent);
-            }
-        }, function (err) {
-            console.error(err);
-        });
+    // spotifyApi.getMyDevices()
+    //     .then(function (data) {
+    //         var devices = data.body.devices;
+    //         for (var i = 0; i < devices.length; i++) {
+    //             console.log(devices[i].id + ":" + devices[i].name + ":" + devices[i].volume_percent);
+    //         }
+    //     }, function (err) {
+    //         console.error(err);
+    //     });
 });
 
 var port = process.env.PORT || 8888;
