@@ -51,7 +51,7 @@ app.intent('GetDevicesIntent', {
         request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
             auth: {
-                "bearer": spotifyApi.getAccessToken()
+                "bearer": req.sessionDetails.accessToken
             },
             json: true
         },
