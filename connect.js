@@ -7,13 +7,6 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var querystring = require('querystring');
 
-// var server = new AlexaAppServer({
-//     httpsEnabled: false,
-//     port: process.env.PORT || 443
-// });
-
-// server.start();
-
 var express_app = express();
 
 var app = new alexa.app('connect');
@@ -33,14 +26,14 @@ app.intent('PlayIntent', {
     ]
 },
     function (req, res) {
+        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.sessionDetails.accessToken);
         res.say('Playing');
     }
 );
 
 app.intent('PauseIntent', {
     "utterances": [
-        "pause",
-        "pause music"
+        "pause"
     ]
 },
     function (req, res) {
