@@ -42,6 +42,23 @@ app.intent('PauseIntent', {
     }
 );
 
+app.intent('GetDevicesIntent', {
+    "utterances": [
+        "get devices"
+    ]
+},
+    function (req, res) {
+        request.get("https://api.spotify.com/v1/me/player/devices", function (error, response, body) {
+            console.log('error:', error);
+            var devices = body.devices;
+            res.say("I found these devices...");
+            for (var i = 0; i < devices.length; i++) {
+                res.say(devices[i].name);
+            }
+        }).auth(null, null, true, req.sessionDetails.accessToken);
+    }
+);
+
 express_app.use(express.static(__dirname));
 
 express_app.get('/login', function (req, res) {
