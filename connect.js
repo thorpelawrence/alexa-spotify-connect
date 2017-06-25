@@ -7,12 +7,17 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var querystring = require('querystring');
 
-var server = new AlexaAppServer({
-    httpsEnabled: true,
-    port: process.env.PORT || 443
-});
+// var server = new AlexaAppServer({
+//     httpsEnabled: false,
+//     port: process.env.PORT || 443
+// });
+
+// server.start();
+
+var express_app = express();
 
 var app = new alexa.app('connect');
+app.express({ expressApp: express_app });
 
 var spotifyApi = new SpotifyWebApi({
     clientId: '8f8e09d45e574e07b0a040bd70c95fb6',
@@ -31,7 +36,6 @@ app.intent('playPauseIntent', {
     }
 );
 
-var express_app = express();
 express_app.use(express.static(__dirname));
 
 express_app.get('/login', function (req, res) {
