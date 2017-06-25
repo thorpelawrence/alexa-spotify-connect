@@ -37,7 +37,7 @@ app.intent('PauseIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.sessionDetails.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.sessionDetails.accessToken);
         res.say('Paused');
     }
 );
@@ -56,7 +56,7 @@ app.intent('GetDevicesIntent', {
             json: true
         },
             function (error, response, body) {
-                console.log('error:', error);
+                if (error != null) console.log('error:', error);
                 var devices = body.devices;
                 res.say("I found these devices");
                 for (var i = 0; i < devices.length; i++) {
