@@ -1,4 +1,5 @@
 var AlexaAppServer = require('alexa-app-server');
+var alexa = require('alexa-app');
 var SpotifyWebApi = require('spotify-web-api-node');
 var request = require('request');
 var randomstring = require('randomstring');
@@ -11,16 +12,29 @@ var server = new AlexaAppServer({
     port: process.env.PORT || 443
 });
 
+var app = new alexa.app('connect');
+
 var spotifyApi = new SpotifyWebApi({
     clientId: '8f8e09d45e574e07b0a040bd70c95fb6',
     clientSecret: process.env.client_secret,
     redirectUri: 'https://alexa-spotify-connect.herokuapp.com/callback'
 });
 
-var app = express();
-app.use(express.static(__dirname));
+app.intent('playPauseIntent', {
+    "utterances": [
+        "play",
+        "pause"
+    ]
+},
+    function (req, res) {
+        res.say('Play Pause');
+    }
+);
 
-app.get('/login', function (req, res) {
+var express_app = express();
+express_app.use(express.static(__dirname));
+
+express_app.get('/login', function (req, res) {
     var scopes = ['user-read-playback-state', 'user-modify-playback-state'];
     var state = randomstring.generate(16);
     res.cookie('spotify_auth_state', state);
@@ -28,7 +42,7 @@ app.get('/login', function (req, res) {
     res.redirect(authorizeURL);
 });
 
-app.get('/callback', function (req, res) {
+express_app.get('/callback', function (req, res) {
 
     var code = req.query.code;
     var state = req.query.state;
@@ -49,7 +63,7 @@ app.get('/callback', function (req, res) {
         });
 });
 
-app.get('/refresh_token', function (req, res) {
+express_app.get('/refresh_token', function (req, res) {
     spotifyApi.refreshAccessToken()
         .then(function (data) {
             console.log('The access token has been refreshed!');
@@ -63,7 +77,7 @@ app.get('/refresh_token', function (req, res) {
         });
 });
 
-app.post('/playpause', function (req, res) {
+express_app.post('/playpause', function (req, res) {
     console.log("PLAYPAUSE");
     //var playing = request.get("https://api.spotify.com/v1/me/player", { "auth":{"bearer":spotifyApi.getAccessToken()}, json: true });
     if (playing) {
@@ -74,7 +88,7 @@ app.post('/playpause', function (req, res) {
     }
 });
 
-app.post('/getdevices', function (req, res) {
+express_app.post('/getdevices', function (req, res) {
     spotifyApi.getMyDevices()
         .then(function (data) {
             var devices = data.body.devices;
@@ -88,4 +102,6 @@ app.post('/getdevices', function (req, res) {
 
 var port = process.env.PORT || 8888;
 console.log('Listening on ' + port);
-app.listen(port);
+express_app.listen(port);
+
+module.exports = app;
