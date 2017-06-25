@@ -26,7 +26,7 @@ app.intent('PlayIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.sessionDetails.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.sessionDetails.accessToken);
         res.say('Playing');
     }
 );
@@ -37,6 +37,7 @@ app.intent('PauseIntent', {
     ]
 },
     function (req, res) {
+        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.sessionDetails.accessToken);
         res.say('Paused');
     }
 );
@@ -110,7 +111,7 @@ express_app.post('/getdevices', function (req, res) {
 });
 
 var port = process.env.PORT || 8888;
-console.log('Listening on ' + port);
+console.log("Listening on port " + port);
 express_app.listen(port);
 
 module.exports = app;
