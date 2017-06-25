@@ -48,6 +48,7 @@ app.intent('GetDevicesIntent', {
     ]
 },
     function (req, res) {
+        var devices = [];
         request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
             auth: {
@@ -57,12 +58,12 @@ app.intent('GetDevicesIntent', {
         },
             function (error, response, body) {
                 if (error != null) console.log('error:', error);
-                var devices = body.devices;
-                res.say("I found these devices");
-                for (var i = 0; i < devices.length; i++) {
-                    res.say(devices[i].name);
-                }
+                devices = body.devices;
             });
+        res.say("I found these devices");
+        for (var i = 0; i < devices.length; i++) {
+            res.say(devices[i].name);
+        }
     }
 );
 
