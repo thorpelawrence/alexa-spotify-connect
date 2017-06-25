@@ -1,4 +1,3 @@
-var AlexaAppServer = require('alexa-app-server');
 var alexa = require('alexa-app');
 var SpotifyWebApi = require('spotify-web-api-node');
 var request = require('request');
@@ -44,7 +43,8 @@ app.intent('PauseIntent', {
 
 app.intent('GetDevicesIntent', {
     "utterances": [
-        "get devices"
+        "devices",
+        "list"
     ]
 },
     function (req, res) {
