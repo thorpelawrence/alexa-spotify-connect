@@ -14,7 +14,7 @@ var server = new AlexaAppServer({
 var spotifyApi = new SpotifyWebApi({
     clientId: '8f8e09d45e574e07b0a040bd70c95fb6',
     clientSecret: process.env.client_secret,
-    redirectUri: 'http://localhost:8888/callback'
+    redirectUri: 'https://alexa-spotify-connect.herokuapp.com/callback'
 });
 
 var app = express();
