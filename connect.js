@@ -25,14 +25,26 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri: 'https://alexa-spotify-connect.herokuapp.com/callback'
 });
 
-app.intent('playPauseIntent', {
+app.intent('PlayIntent', {
     "utterances": [
         "play",
-        "pause"
+        "resume",
+        "continue"
     ]
 },
     function (req, res) {
-        res.say('Play Pause');
+        res.say('Playing');
+    }
+);
+
+app.intent('PauseIntent', {
+    "utterances": [
+        "pause",
+        "pause music"
+    ]
+},
+    function (req, res) {
+        res.say('Paused');
     }
 );
 
