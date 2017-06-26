@@ -57,6 +57,8 @@ app.intent('GetDevicesIntent', {
     }
 );
 
+express_app.use(express.static(__dirname));
+
 var port = process.env.PORT || 8888;
 console.log("Listening on port " + port);
 express_app.listen(port);
