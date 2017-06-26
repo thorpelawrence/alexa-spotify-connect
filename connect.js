@@ -5,7 +5,7 @@ var express = require('express');
 var express_app = express();
 
 var app = new alexa.app('connect');
-app.express({ expressApp: express_app });
+app.express({ expressApp: express_app, checkCert:false });
 
 app.intent('PlayIntent', {
     "utterances": [
@@ -53,6 +53,40 @@ app.intent('GetDevicesIntent', {
                     deviceNames.push(devices[i].name);
                 }
                 res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
+            })
+            .catch(function (err) {
+                console.error('error:', err.message);
+            });
+    }
+);
+
+app.intent('DevicePlayIntent', {
+    "slots": {
+        "NUMBER": "AMAZON.NUMBER"
+    },
+    "utterances": [
+        "play on {NUMBER}",
+        "play on number {NUMBER}",
+        "play on device {NUMBER}",
+        "play on device number {NUMBER}"
+    ]
+},
+    function (req, res) {
+        return request.get({
+            url: "https://api.spotify.com/v1/me/player/devices",
+            auth: {
+                "bearer": req.sessionDetails.accessToken
+            },
+            json: true
+        })
+            .then(function (body) {
+                var devices = body.devices || [];
+                var deviceNames = [];
+                res.reprompt("Which device should I play on?");
+                for (var i = 0; i < devices.length; i++) {
+                    deviceNames.push((i + 1) + ". " + devices[i].name);
+                }
+                res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", or " + deviceNames.slice(-1));
             })
             .catch(function (err) {
                 console.error('error:', err.message);
