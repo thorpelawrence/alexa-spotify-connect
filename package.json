@@ -5,13 +5,8 @@
   "author": "Lawrence Thorpe",
   "dependencies": {
     "alexa-app": "^4.0.1",
-    "alexa-app-server": "^3.0.1",
-    "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
-    "querystring": "^0.2.0",
-    "randomstring": "^1.1.5",
-    "request": "^2.81.0",
-    "spotify-web-api-node": "^2.4.0"
+    "request": "^2.81.0"
   },
   "license": "MIT",
   "main": "connect.js",
