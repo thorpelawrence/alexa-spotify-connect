@@ -5,7 +5,7 @@ var express = require('express');
 var express_app = express();
 
 var app = new alexa.app('connect');
-app.express({ expressApp: express_app, checkCert:false });
+app.express({ expressApp: express_app });
 
 app.intent('PlayIntent', {
     "utterances": [
@@ -50,9 +50,11 @@ app.intent('GetDevicesIntent', {
                 var deviceNames = [];
                 res.say("I found these devices:");
                 for (var i = 0; i < devices.length; i++) {
-                    deviceNames.push(devices[i].name);
+                    deviceNames.push((i + 1) + ". " + devices[i].name);
+                    devices[i].number = (i + 1);
                 }
                 res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
+                req.getSession().set("devices", devices);
             })
             .catch(function (err) {
                 console.error('error:', err.message);
@@ -72,27 +74,12 @@ app.intent('DevicePlayIntent', {
     ]
 },
     function (req, res) {
-        return request.get({
-            url: "https://api.spotify.com/v1/me/player/devices",
-            auth: {
-                "bearer": req.sessionDetails.accessToken
-            },
-            json: true
-        })
-            .then(function (body) {
-                var devices = body.devices || [];
-                var deviceNames = [];
-                res.reprompt("Which device should I play on?");
-                for (var i = 0; i < devices.length; i++) {
-                    deviceNames.push((i + 1) + ". " + devices[i].name);
-                }
-                res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", or " + deviceNames.slice(-1));
-            })
-            .catch(function (err) {
-                console.error('error:', err.message);
-            });
-    }
-);
+        if (request.slot("NUMBER")) {
+            var number = request.slot("NUMBER");
+            var devices = req.getSession().get("devices");
+            res.say("Device " + number + ": " + devices);
+        }
+    });
 
 express_app.use(express.static(__dirname));
 express_app.get('/', function (req, res) {
