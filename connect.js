@@ -46,7 +46,7 @@ app.intent('GetDevicesIntent', {
             json: true
         })
             .then(function (body) {
-                var devices = body.devices;
+                var devices = body.devices || [];
                 var deviceNames = [];
                 res.say("I found these devices:");
                 for (var i = 0; i < devices.length; i++) {
@@ -55,7 +55,7 @@ app.intent('GetDevicesIntent', {
                 res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
             })
             .catch(function (err) {
-                console.log('error:', err);
+                console.error('error:', err.message);
             });
     }
 );
