@@ -64,21 +64,21 @@ app.intent('GetDevicesIntent', {
 
 app.intent('DevicePlayIntent', {
     "slots": {
-        "NUMBER": "AMAZON.NUMBER"
+        "DEVICENUMBER": "AMAZON.NUMBER"
     },
     "utterances": [
-        "play on {NUMBER}",
-        "play on number {NUMBER}",
-        "play on device {NUMBER}",
-        "play on device number {NUMBER}"
+        "play on {-|DEVICENUMBER}",
+        "play on number {-|DEVICENUMBER}",
+        "play on device {-|DEVICENUMBER}",
+        "play on device number {-|DEVICENUMBER}"
     ]
 },
     function (req, res) {
         console.log(req.hasSession());
         console.log(req.getSession().get("devices"));
-        console.log(req.slots("NUMBER"));
-        if (req.slots("NUMBER")) {
-            var number = req.slot("NUMBER");
+        console.log(req.slot("DEVICENUMBER"));
+        if (req.slot("DEVICENUMBER")) {
+            var number = req.slot("DEVICENUMBER");
             var devices = req.getSession().get("devices");
             res.say("Device " + number + ": " + devices);
         }
