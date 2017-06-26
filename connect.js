@@ -52,7 +52,7 @@ app.intent('GetDevicesIntent', {
                 for (var i = 0; i < devices.length; i++) {
                     deviceNames.push(devices[i].name);
                 }
-                res.say(deviceNames.join(", "));
+                res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
             })
             .catch(function (err) {
                 console.log('error:', err);
