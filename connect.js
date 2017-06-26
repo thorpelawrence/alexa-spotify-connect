@@ -74,6 +74,9 @@ app.intent('DevicePlayIntent', {
     ]
 },
     function (req, res) {
+        console.log(req.hasSession());
+        console.log(req.getSession().get("devices"));
+        console.log(req.slot("NUMBER"));
         if (req.slot("NUMBER")) {
             var number = req.slot("NUMBER");
             var devices = req.getSession().get("devices");
