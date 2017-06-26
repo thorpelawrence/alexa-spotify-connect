@@ -1,5 +1,5 @@
 var alexa = require('alexa-app');
-var request = require('request');
+var request = require('request-promise');
 var express = require('express');
 
 var express_app = express();
@@ -50,7 +50,7 @@ app.intent('GetDevicesIntent', {
                 if (error != null) console.log('error:', error);
                 devices = body.devices;
             });
-        res.say("I found these devices");
+        res.say("I found these devices:");
         for (var i = 0; i < devices.length; i++) {
             res.say(devices[i].name);
         }
