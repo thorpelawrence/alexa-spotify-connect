@@ -58,6 +58,9 @@ app.intent('GetDevicesIntent', {
 );
 
 express_app.use(express.static(__dirname));
+express_app.get('/', function(req, res) {
+    res.redirect('https://github.com/thorpelawrence/alexa-spotify-connect');
+});
 
 var port = process.env.PORT || 8888;
 console.log("Listening on port " + port);
