@@ -39,26 +39,28 @@ app.intent('GetDevicesIntent', {
 },
     function (req, res) {
         var devices = [];
-        request.get({
+        return request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
             auth: {
                 "bearer": req.sessionDetails.accessToken
             },
             json: true
-        },
-            function (error, response, body) {
-                if (error != null) console.log('error:', error);
+        })
+            .then(function (data) {
                 devices = body.devices;
+                res.say("I found these devices:");
+                for (var i = 0; i < devices.length; i++) {
+                    res.say(devices[i].name);
+                }
+            })
+            .catch(function (err) {
+                console.log('error:', error);
             });
-        res.say("I found these devices:");
-        for (var i = 0; i < devices.length; i++) {
-            res.say(devices[i].name);
-        }
     }
 );
 
 express_app.use(express.static(__dirname));
-express_app.get('/', function(req, res) {
+express_app.get('/', function (req, res) {
     res.redirect('https://github.com/thorpelawrence/alexa-spotify-connect');
 });
 
