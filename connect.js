@@ -74,13 +74,19 @@ app.intent('DevicePlayIntent', {
     ]
 },
     function (req, res) {
-        console.log(req.hasSession());
-        console.log(req.getSession().get("devices"));
-        console.log(req.slot("DEVICENUMBER"));
-        if (req.slot("DEVICENUMBER")) {
-            var number = req.slot("DEVICENUMBER");
-            var devices = req.getSession().get("devices");
-            res.say("Device " + number + ": " + devices);
+        if (req.hasSession()) {
+            if (req.slot("DEVICENUMBER")) {
+                var deviceNumber = req.slot("DEVICENUMBER");
+                var devices = req.getSession().get("devices");
+                var deviceId, deviceName;
+                for (var i = 0; i < devices.length; i++) {
+                    if (devices[i].number == deviceNumber) {
+                        deviceId = devices[i].id;
+                        deviceName = devices[i].name;
+                    }
+                }
+                res.say("Device " + deviceNumber + ": " + deviceName);
+            }
         }
     });
 
