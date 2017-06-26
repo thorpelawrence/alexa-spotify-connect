@@ -48,13 +48,14 @@ app.intent('GetDevicesIntent', {
             .then(function (body) {
                 var devices = body.devices || [];
                 var deviceNames = [];
-                res.say("I found these devices:");
+                res.say("I found these connect devices:");
                 for (var i = 0; i < devices.length; i++) {
                     deviceNames.push((i + 1) + ". " + devices[i].name);
                     devices[i].number = (i + 1);
                 }
                 res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
                 req.getSession().set("devices", devices);
+                res.shouldEndSession(false);
             })
             .catch(function (err) {
                 console.error('error:', err.message);
