@@ -47,13 +47,15 @@ app.intent('GetDevicesIntent', {
         })
             .then(function (body) {
                 var devices = body.devices;
+                var deviceNames = [];
                 res.say("I found these devices:");
                 for (var i = 0; i < devices.length; i++) {
-                    res.say(devices[i].name);
+                    deviceNames.push(devices[i].name);
                 }
+                res.say(deviceNames.join(", "));
             })
             .catch(function (err) {
-                console.log('error:', error);
+                console.log('error:', err);
             });
     }
 );
