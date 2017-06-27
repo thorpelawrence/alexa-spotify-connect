@@ -1,6 +1,6 @@
 # alexa-spotify-connect
 
-![](resources/logo108.png)
+![](resources/icon108.png)
 
 ## Control Spotify Connect devices with Alexa
 
