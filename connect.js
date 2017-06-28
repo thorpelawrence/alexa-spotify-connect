@@ -94,7 +94,19 @@ app.intent('DevicePlayIntent', {
                         deviceName = devices[i].name;
                     }
                 }
-                request.put("https://api.spotify.com/v1/me/player/play?device_id=" + deviceId).auth(null, null, true, req.sessionDetails.accessToken);
+                request.put({
+                    url: "https://api.spotify.com/v1/me/player",
+                    auth: {
+                        "bearer": req.sessionDetails.accessToken
+                    },
+                    body: {
+                        "device_ids": [
+                            deviceId
+                        ],
+                        "play": true
+                    },
+                    json: true
+                });
                 res.say("Playing on device " + deviceNumber + ": " + deviceName);
             }
         }
