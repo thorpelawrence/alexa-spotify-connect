@@ -61,7 +61,7 @@ app.intent('GetDevicesIntent', {
                     deviceNames.push((i + 1) + ". " + devices[i].name);
                     devices[i].number = (i + 1);
                 }
-                res.say(deviceNames.slice(0, deviceNames.length - 1).join(', ') + ", and " + deviceNames.slice(-1));
+                res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
                 req.getSession().set("devices", devices);
                 res.shouldEndSession(false);
             })
