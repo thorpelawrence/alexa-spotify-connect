@@ -21,7 +21,7 @@ app.intent('PlayIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.sessionDetails.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().get("accessToken"));
         res.say('Playing');
     }
 );
@@ -32,7 +32,7 @@ app.intent('PauseIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.sessionDetails.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().get("accessToken"));
         res.say('Paused');
     }
 );
@@ -49,7 +49,7 @@ app.intent('GetDevicesIntent', {
         return request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
             auth: {
-                "bearer": req.sessionDetails.accessToken
+                "bearer": req.getSession().get("accessToken")
             },
             json: true
         })
@@ -58,7 +58,9 @@ app.intent('GetDevicesIntent', {
                 var deviceNames = [];
                 res.say("I found these connect devices:");
                 for (var i = 0; i < devices.length; i++) {
+                    //Number each device
                     deviceNames.push((i + 1) + ". " + devices[i].name);
+                    //Add the device number to JSON
                     devices[i].number = (i + 1);
                 }
                 //Comma separated list of device names
@@ -98,7 +100,7 @@ app.intent('DevicePlayIntent', {
                 request.put({
                     url: "https://api.spotify.com/v1/me/player",
                     auth: {
-                        "bearer": req.sessionDetails.accessToken
+                        "bearer": req.getSession().get("accessToken")
                     },
                     body: {
                         "device_ids": [
@@ -144,7 +146,7 @@ app.intent('DeviceTransferIntent', {
                 request.put({
                     url: "https://api.spotify.com/v1/me/player",
                     auth: {
-                        "bearer": req.sessionDetails.accessToken
+                        "bearer": req.getSession().get("accessToken")
                     },
                     body: {
                         "device_ids": [
