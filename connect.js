@@ -8,9 +8,6 @@ var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
 app.pre = function (request, response, type) {
-    console.log(request.applicationId);
-    console.log(request.getSession());
-    console.log(request.getSession().details);
     if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
         throw "Invalid applicationId";
     }
@@ -69,7 +66,6 @@ app.intent('GetDevicesIntent', {
                 //Comma separated list of device names
                 res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
                 req.getSession().set("devices", devices);
-                res.shouldEndSession(false);
             })
             .catch(function (err) {
                 console.error('error:', err.message);
