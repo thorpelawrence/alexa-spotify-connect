@@ -21,7 +21,7 @@ app.intent('PlayIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().user.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().details.accessToken);
         res.say('Playing');
     }
 );
@@ -32,7 +32,7 @@ app.intent('PauseIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().user.accessToken);
+        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().details.accessToken);
         res.say('Paused');
     }
 );
@@ -49,7 +49,7 @@ app.intent('GetDevicesIntent', {
         return request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
             auth: {
-                "bearer": req.getSession().user.accessToken
+                "bearer": req.getSession().details.accessToken
             },
             json: true
         })
@@ -100,7 +100,7 @@ app.intent('DevicePlayIntent', {
                 request.put({
                     url: "https://api.spotify.com/v1/me/player",
                     auth: {
-                        "bearer": req.getSession().user.accessToken
+                        "bearer": req.getSession().details.accessToken
                     },
                     body: {
                         "device_ids": [
@@ -146,7 +146,7 @@ app.intent('DeviceTransferIntent', {
                 request.put({
                     url: "https://api.spotify.com/v1/me/player",
                     auth: {
-                        "bearer": req.getSession().user.accessToken
+                        "bearer": req.getSession().details.accessToken
                     },
                     body: {
                         "device_ids": [
