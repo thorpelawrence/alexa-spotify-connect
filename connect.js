@@ -9,8 +9,8 @@ app.express({ expressApp: express_app });
 
 app.pre = function (request, response, type) {
     console.log(request.applicationId);
-    console.log(req.getSession());
-    console.log(req.getSession().details);
+    console.log(request.getSession());
+    console.log(request.getSession().details);
     if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
         throw "Invalid applicationId";
     }
