@@ -7,7 +7,7 @@ var express_app = express();
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
-app.pre = function(request, response, type) {
+app.pre = function (request, response, type) {
     if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
         throw "Invalid applicationId";
     }
@@ -94,7 +94,8 @@ app.intent('DevicePlayIntent', {
                         deviceName = devices[i].name;
                     }
                 }
-                res.say("Device " + deviceNumber + ": " + deviceName);
+                request.put("https://api.spotify.com/v1/me/player/play?device_id=" + deviceId).auth(null, null, true, req.sessionDetails.accessToken);
+                res.say("Playing on device " + deviceNumber + ": " + deviceName);
             }
         }
     });
