@@ -63,9 +63,9 @@ app.intent('GetDevicesIntent', {
                     devices[i].number = (i + 1);
                 }
                 req.getSession().set("devices", devices);
-                res.say("I found these connect devices:");
                 //Comma separated list of device names
-                res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
+                res.say("I found these connect devices: "
+                    + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
             })
             .catch(function (err) {
                 console.error('error:', err.message);
