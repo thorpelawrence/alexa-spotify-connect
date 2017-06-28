@@ -61,6 +61,7 @@ app.intent('GetDevicesIntent', {
                     deviceNames.push((i + 1) + ". " + devices[i].name);
                     devices[i].number = (i + 1);
                 }
+                //Comma separated list of device names
                 res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
                 req.getSession().set("devices", devices);
                 res.shouldEndSession(false);
@@ -116,6 +117,46 @@ express_app.use(express.static(__dirname));
 express_app.get('/', function (req, res) {
     res.redirect('https://github.com/thorpelawrence/alexa-spotify-connect');
 });
+
+app.intent('DeviceTransferIntent', {
+    "slots": {
+        "DEVICENUMBER": "AMAZON.NUMBER"
+    },
+    "utterances": [
+        "transfer to {-|DEVICENUMBER}",
+        "transfer to number {-|DEVICENUMBER}",
+        "transfer to device {-|DEVICENUMBER}",
+        "transfer to device number {-|DEVICENUMBER}"
+    ]
+},
+    function (req, res) {
+        if (req.hasSession()) {
+            if (req.slot("DEVICENUMBER")) {
+                var deviceNumber = req.slot("DEVICENUMBER");
+                var devices = req.getSession().get("devices") || [];
+                var deviceId, deviceName;
+                for (var i = 0; i < devices.length; i++) {
+                    if (devices[i].number == deviceNumber) {
+                        deviceId = devices[i].id;
+                        deviceName = devices[i].name;
+                    }
+                }
+                request.put({
+                    url: "https://api.spotify.com/v1/me/player",
+                    auth: {
+                        "bearer": req.sessionDetails.accessToken
+                    },
+                    body: {
+                        "device_ids": [
+                            deviceId
+                        ]
+                    },
+                    json: true
+                });
+                res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+            }
+        }
+    });
 
 var port = process.env.PORT || 8888;
 console.log("Listening on port " + port);
