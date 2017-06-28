@@ -7,6 +7,12 @@ var express_app = express();
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
+app.pre = function(request, response, type) {
+    if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
+        throw "Invalid applicationId";
+    }
+};
+
 app.intent('PlayIntent', {
     "utterances": [
         "play",
@@ -34,7 +40,9 @@ app.intent('PauseIntent', {
 app.intent('GetDevicesIntent', {
     "utterances": [
         "devices",
-        "list"
+        "list",
+        "search",
+        "find"
     ]
 },
     function (req, res) {
