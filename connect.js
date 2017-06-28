@@ -158,8 +158,11 @@ app.intent('DeviceTransferIntent', {
         }
     });
 
-var port = process.env.PORT || 8888;
-console.log("Listening on port " + port);
-express_app.listen(port);
+//Only listen if run directly, not if required as a module
+if (require.main === module) {
+    var port = process.env.PORT || 8888;
+    console.log("Listening on port " + port);
+    express_app.listen(port);
+}
 
 module.exports = app;
