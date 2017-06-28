@@ -56,16 +56,16 @@ app.intent('GetDevicesIntent', {
             .then(function (body) {
                 var devices = body.devices || [];
                 var deviceNames = [];
-                res.say("I found these connect devices:");
                 for (var i = 0; i < devices.length; i++) {
                     //Number each device
                     deviceNames.push((i + 1) + ". " + devices[i].name);
                     //Add the device number to JSON
                     devices[i].number = (i + 1);
                 }
+                req.getSession().set("devices", devices);
+                res.say("I found these connect devices:");
                 //Comma separated list of device names
                 res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
-                req.getSession().set("devices", devices);
             })
             .catch(function (err) {
                 console.error('error:', err.message);
