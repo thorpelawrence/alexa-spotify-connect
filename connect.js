@@ -8,7 +8,8 @@ var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
 app.pre = function (request, response, type) {
-    if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
+    if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0" &&
+        request.getSession().details.application.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
         throw "Invalid applicationId";
     }
 };
