@@ -123,7 +123,7 @@ app.intent('DevicePlayIntent', {
                     res.say("Playing on device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("Device " + deviceNumber + " not found");
+                    res.say("I couldn't find device " + deviceNumber);
                 }
             }
         }
@@ -176,9 +176,10 @@ app.intent('DeviceTransferIntent', {
                         },
                         json: true
                     });
+                    res.say("Transferring to device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                    res.say("I couldn't find device " + deviceNumber);
                 }
             }
         }
