@@ -149,7 +149,13 @@ app.intent('DeviceTransferIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICENUMBER")) {
                 var deviceNumber = req.slot("DEVICENUMBER");
-                var devices = req.getSession().get("devices") || [];
+                if (req.getSession().isNew()) {
+                    //If new session try to use cache
+                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
+                }
+                else {
+                    var devices = req.getSession().get("devices") || [];
+                }
                 var deviceId, deviceName;
                 for (var i = 0; i < devices.length; i++) {
                     if (devices[i].number == deviceNumber) {
@@ -157,19 +163,23 @@ app.intent('DeviceTransferIntent', {
                         deviceName = devices[i].name;
                     }
                 }
-                request.put({
-                    url: "https://api.spotify.com/v1/me/player",
-                    auth: {
-                        "bearer": req.getSession().details.user.accessToken
-                    },
-                    body: {
-                        "device_ids": [
-                            deviceId
-                        ]
-                    },
-                    json: true
-                });
-                res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                if (deviceId) {
+                    request.put({
+                        url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
+                        body: {
+                            "device_ids": [
+                                deviceId
+                            ]
+                        },
+                        json: true
+                    });
+                }
+                else {
+                    res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                }
             }
         }
     });
