@@ -106,20 +106,25 @@ app.intent('DevicePlayIntent', {
                         deviceName = devices[i].name;
                     }
                 }
-                request.put({
-                    url: "https://api.spotify.com/v1/me/player",
-                    auth: {
-                        "bearer": req.getSession().details.user.accessToken
-                    },
-                    body: {
-                        "device_ids": [
-                            deviceId
-                        ],
-                        "play": true
-                    },
-                    json: true
-                });
-                res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                if (deviceId) {
+                    request.put({
+                        url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
+                        body: {
+                            "device_ids": [
+                                deviceId
+                            ],
+                            "play": true
+                        },
+                        json: true
+                    });
+                    res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                }
+                else {
+                    res.say("Device " + deviceNumber + " not found");
+                }
             }
         }
     });
