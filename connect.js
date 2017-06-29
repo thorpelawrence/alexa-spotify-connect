@@ -1,8 +1,10 @@
 var alexa = require('alexa-app');
 var request = require('request-promise');
 var express = require('express');
+var nodecache = require('node-cache');
 
 var express_app = express();
+var cache = nodecache({ stdTTL: 600, checkperiod: 120 });
 
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
@@ -64,6 +66,7 @@ app.intent('GetDevicesIntent', {
                     devices[i].number = (i + 1);
                 }
                 req.getSession().set("devices", devices);
+                cache.set(req.getSession().details.user.userId + ":devices", devices);
                 //Comma separated list of device names
                 res.say("I found these connect devices: "
                     + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
@@ -89,7 +92,13 @@ app.intent('DevicePlayIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICENUMBER")) {
                 var deviceNumber = req.slot("DEVICENUMBER");
-                var devices = req.getSession().get("devices") || [];
+                if (req.getSession().isNew()) {
+                    //If new session try to use cache
+                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
+                }
+                else {
+                    var devices = req.getSession().get("devices") || [];
+                }
                 var deviceId, deviceName;
                 for (var i = 0; i < devices.length; i++) {
                     if (devices[i].number == deviceNumber) {
