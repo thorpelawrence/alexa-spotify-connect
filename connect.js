@@ -4,7 +4,7 @@ var express = require('express');
 var nodecache = require('node-cache');
 
 var express_app = express();
-var cache = nodecache({ stdTTL: 600, checkperiod: 120 });
+var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
 
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
