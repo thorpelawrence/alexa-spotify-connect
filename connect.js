@@ -216,7 +216,7 @@ app.intent('GetTrackIntent', {
 },
     function (req, res) {
         return request.get({
-            url: "https://api.spotify.com/v1/me/player/devices",
+            url: "https://api.spotify.com/v1/me/player/currently-playing",
             auth: {
                 "bearer": req.getSession().details.user.accessToken
             },
