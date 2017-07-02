@@ -1,15 +1,10 @@
 var alexa = require('alexa-app');
-var requestpromise = require('request-promise');
+var request = require('request-promise');
 var express = require('express');
 var nodecache = require('node-cache');
 
 var express_app = express();
 var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
-var request = requestpromise.defaults({
-    auth: {
-        "bearer": req.getSession().details.user.accessToken
-    }
-});
 
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
@@ -33,7 +28,7 @@ app.intent('PlayIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/play");
+        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().details.user.accessToken);
     }
 );
 
@@ -43,7 +38,7 @@ app.intent('PauseIntent', {
     ]
 },
     function (req, res) {
-        request.put("https://api.spotify.com/v1/me/player/pause");
+        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().details.user.accessToken);
     }
 );
 
@@ -55,7 +50,7 @@ app.intent('SkipNextIntent', {
     ]
 },
     function (req, res) {
-        request.post("https://api.spotify.com/v1/me/player/next");
+        request.post("https://api.spotify.com/v1/me/player/next").auth(null, null, true, req.getSession().details.user.accessToken);
     }
 );
 
@@ -68,7 +63,7 @@ app.intent('SkipPreviousIntent', {
     ]
 },
     function (req, res) {
-        request.post("https://api.spotify.com/v1/me/player/previous");
+        request.post("https://api.spotify.com/v1/me/player/previous").auth(null, null, true, req.getSession().details.user.accessToken);
     }
 );
 
@@ -83,6 +78,9 @@ app.intent('GetDevicesIntent', {
     function (req, res) {
         return request.get({
             url: "https://api.spotify.com/v1/me/player/devices",
+            auth: {
+                "bearer": req.getSession().details.user.accessToken
+            },
             json: true
         })
             .then(function (body) {
@@ -135,6 +133,9 @@ app.intent('DevicePlayIntent', {
                 if (deviceId) {
                     request.put({
                         url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
                         body: {
                             "device_ids": [
                                 deviceId
@@ -187,8 +188,13 @@ app.intent('DeviceTransferIntent', {
                 if (deviceId) {
                     request.put({
                         url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
                         body: {
-                            "device_ids": [deviceId]
+                            "device_ids": [
+                                deviceId
+                            ]
                         },
                         json: true
                     });
@@ -211,6 +217,9 @@ app.intent('GetTrackIntent', {
     function (req, res) {
         return request.get({
             url: "https://api.spotify.com/v1/me/player/currently-playing",
+            auth: {
+                "bearer": req.getSession().details.user.accessToken
+            },
             json: true
         })
             .then(function (body) {
