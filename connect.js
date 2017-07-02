@@ -9,10 +9,15 @@ var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
-app.pre = function (request, response, type) {
-    if (request.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0" &&
-        request.getSession().details.application.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
+app.pre = function (req, res, type) {
+    if (req.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0" &&
+        req.getSession().details.application.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
         throw "Invalid applicationId";
+    }
+    if (!req.getSession().details.user.accessToken) {
+        res.say("You have not linked your Spotify account, check your Alexa app to link the account");
+        res.linkAccount();
+        throw "No accessToken";
     }
 };
 
@@ -25,7 +30,6 @@ app.intent('PlayIntent', {
 },
     function (req, res) {
         request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().details.user.accessToken);
-        res.say('Playing');
     }
 );
 
@@ -36,7 +40,31 @@ app.intent('PauseIntent', {
 },
     function (req, res) {
         request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().details.user.accessToken);
-        res.say('Paused');
+    }
+);
+
+app.intent('SkipNextIntent', {
+    "utterances": [
+        "skip",
+        "next",
+        "forwards"
+    ]
+},
+    function (req, res) {
+        request.post("https://api.spotify.com/v1/me/player/next").auth(null, null, true, req.getSession().details.user.accessToken);
+    }
+);
+
+app.intent('SkipPreviousIntent', {
+    "utterances": [
+        "previous",
+        "last",
+        "back",
+        "backwards"
+    ]
+},
+    function (req, res) {
+        request.post("https://api.spotify.com/v1/me/player/previous").auth(null, null, true, req.getSession().details.user.accessToken);
     }
 );
 
@@ -127,7 +155,8 @@ app.intent('DevicePlayIntent', {
                 }
             }
         }
-    });
+    }
+);
 
 express_app.use(express.static(__dirname));
 express_app.get('/', function (req, res) {
@@ -183,7 +212,8 @@ app.intent('DeviceTransferIntent', {
                 }
             }
         }
-    });
+    }
+);
 
 //Only listen if run directly, not if required as a module
 if (require.main === module) {
