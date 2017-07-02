@@ -229,11 +229,11 @@ app.intent('GetTrackIntent', {
                         artists.push(body.item.artists[i].name);
                     }
                     if (artists.length === 1) {
-                        var artistList = " by " + artists[0];
+                        var artistsList = " by " + artists[0];
                     }
                     else {
                         var featuring = artists.slice(1);
-                        var artistList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
+                        var artistsList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
                             + " by " + artists[0];
                     }
                     res.say("This is " + body.item.name + artistsList);
@@ -246,11 +246,11 @@ app.intent('GetTrackIntent', {
                             artists.push(body.item.artists[i].name);
                         }
                         if (artists.length === 1) {
-                            var artistList = " by " + artists[0];
+                            var artistsList = " by " + artists[0];
                         }
                         else {
                             var featuring = artists.slice(1);
-                            var artistList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
+                            var artistsList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
                                 + " by " + artists[0];
                         }
                         res.say("That was " + body.item.name + artistsList);
