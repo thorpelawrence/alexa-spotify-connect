@@ -224,36 +224,12 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    var artists = [];
-                    for (var i = 0; i < body.item.artists.length; i++) {
-                        artists.push(body.item.artists[i].name);
-                    }
-                    if (artists.length === 1) {
-                        var artistsList = " by " + artists[0];
-                    }
-                    else {
-                        var featuring = artists.slice(1);
-                        var artistsList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
-                            + " by " + artists[0];
-                    }
-                    res.say("This is " + body.item.name + artistsList);
+                    res.say("This is " + body.item.name + " by " + body.item.artists[0].name);
                 }
                 else {
                     if (body.item.name) {
                         //If not playing but last track known
-                        var artists = [];
-                        for (var i = 0; i < body.item.artists.length; i++) {
-                            artists.push(body.item.artists[i].name);
-                        }
-                        if (artists.length === 1) {
-                            var artistsList = " by " + artists[0];
-                        }
-                        else {
-                            var featuring = artists.slice(1);
-                            var artistsList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
-                                + " by " + artists[0];
-                        }
-                        res.say("That was " + body.item.name + artistsList);
+                        res.say("That was " + body.item.name + " by " + body.item.artists[0].name);
                     }
                     else {
                         //If unknown
