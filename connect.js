@@ -17,7 +17,6 @@ app.pre = function (req, res, type) {
     if (!req.getSession().details.user.accessToken) {
         res.say("You have not linked your Spotify account, check your Alexa app to link the account");
         res.linkAccount();
-        throw "No accessToken";
     }
 };
 
@@ -110,10 +109,7 @@ app.intent('DevicePlayIntent', {
         "DEVICENUMBER": "AMAZON.NUMBER"
     },
     "utterances": [
-        "play on {-|DEVICENUMBER}",
-        "play on number {-|DEVICENUMBER}",
-        "play on device {-|DEVICENUMBER}",
-        "play on device number {-|DEVICENUMBER}"
+        "play on {number|device|device number|} {-|DEVICENUMBER}"
     ]
 },
     function (req, res) {
@@ -168,10 +164,7 @@ app.intent('DeviceTransferIntent', {
         "DEVICENUMBER": "AMAZON.NUMBER"
     },
     "utterances": [
-        "transfer to {-|DEVICENUMBER}",
-        "transfer to number {-|DEVICENUMBER}",
-        "transfer to device {-|DEVICENUMBER}",
-        "transfer to device number {-|DEVICENUMBER}"
+        "transfer to {number|device|device number|} {-|DEVICENUMBER}"
     ]
 },
     function (req, res) {
@@ -212,6 +205,41 @@ app.intent('DeviceTransferIntent', {
                 }
             }
         }
+    }
+);
+
+app.intent('GetTrackIntent', {
+    "utterances": [
+        "{what is|what's} {playing|this song}",
+        "what {song|track|} is this"
+    ]
+},
+    function (req, res) {
+        return request.get({
+            url: "https://api.spotify.com/v1/me/player/devices",
+            auth: {
+                "bearer": req.getSession().details.user.accessToken
+            },
+            json: true
+        })
+            .then(function (body) {
+                if (body.is_playing) {
+                    res.say("This is " + body.item.name + " by " + body.item.artists.name);
+                }
+                else {
+                    if (body.item.name) {
+                        //If not playing but last track known
+                        res.say("That was " + body.item.name + " by " + body.item.artists.name);
+                    }
+                    else {
+                        //If unknown
+                        res.say("Nothing is playing");
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.error('error:', err.message);
+            });
     }
 );
 
