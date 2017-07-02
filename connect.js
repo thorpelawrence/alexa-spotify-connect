@@ -224,12 +224,36 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    res.say("This is " + body.item.name + " by " + body.item.artists.name);
+                    var artists = [];
+                    for (var i = 0; i < body.item.artists.length; i++) {
+                        artists.push(body.item.artists[i].name);
+                    }
+                    if (artists.length === 1) {
+                        var artistList = " by " + artists[0];
+                    }
+                    else {
+                        var featuring = artists.slice(1);
+                        var artistList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
+                            + " by " + artists[0];
+                    }
+                    res.say("This is " + body.item.name + artistsList);
                 }
                 else {
                     if (body.item.name) {
                         //If not playing but last track known
-                        res.say("That was " + body.item.name + " by " + body.item.artists.name);
+                        var artists = [];
+                        for (var i = 0; i < body.item.artists.length; i++) {
+                            artists.push(body.item.artists[i].name);
+                        }
+                        if (artists.length === 1) {
+                            var artistList = " by " + artists[0];
+                        }
+                        else {
+                            var featuring = artists.slice(1);
+                            var artistList = " featuring " + [featuring.slice(0, -1).join(', '), featuring.slice(-1)[0]].join(featuring.length < 2 ? '' : ', and ')
+                                + " by " + artists[0];
+                        }
+                        res.say("That was " + body.item.name + artistsList);
                     }
                     else {
                         //If unknown
