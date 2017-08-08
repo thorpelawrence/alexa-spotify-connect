@@ -20,6 +20,11 @@ app.pre = function (req, res, type) {
     }
 };
 
+app.launch(function(request, response) {
+    response.say("Try asking me to control your devices, to start, ask me to list your devices");
+    response.shouldEndSession(false);
+}
+
 app.intent('PlayIntent', {
     "utterances": [
         "play",
@@ -147,7 +152,8 @@ app.intent('DevicePlayIntent', {
                     res.say("Playing on device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + deviceNumber);
+                    res.say("I couldn't find device " + deviceNumber +
+                    ". Try asking me to list devices first");
                 }
             }
         }
