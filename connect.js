@@ -101,7 +101,8 @@ app.intent('GetDevicesIntent', {
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
                 //Comma separated list of device names
                 res.say("I found these connect devices: "
-                    + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
+                    + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '))
+                .shouldEndSession(false);
             })
             .catch(function (err) {
                 console.error('error:', err.message);
