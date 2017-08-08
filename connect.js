@@ -153,7 +153,7 @@ app.intent('DevicePlayIntent', {
                 }
                 else {
                     res.say("I couldn't find device " + deviceNumber +
-                    ". Try asking me to list devices first");
+                    ". Try asking me to list devices first").shouldEndSession(false);
                 }
             }
         }
@@ -207,7 +207,8 @@ app.intent('DeviceTransferIntent', {
                     res.say("Transferring to device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + deviceNumber);
+                    res.say("I couldn't find device " + deviceNumber +
+                    ". Try asking me to list devices first").shouldEndSession(false);
                 }
             }
         }
