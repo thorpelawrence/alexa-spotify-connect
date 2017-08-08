@@ -23,7 +23,7 @@ app.pre = function (req, res, type) {
 app.launch(function(request, response) {
     response.say("Try asking me to control your devices, to start, ask me to list your devices");
     response.shouldEndSession(false);
-}
+});
 
 app.intent('PlayIntent', {
     "utterances": [
