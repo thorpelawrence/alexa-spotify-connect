@@ -125,13 +125,13 @@ app.intent('GetDevicesIntent', {
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
                 if (devices.length > 0) {
                     //Comma separated list of device names
-                    res.say("I found these connect devices: "
-                        + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '))
-                        .shouldEndSession(false);
+                    res.say("I found these connect devices:");
+                    res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
+                    res.shouldEndSession(false);
                 }
                 else {
-                    res.say("I did not find any connect devices, check that you have connected some Spotify Connect devices. "
-                        + "Check your Alexa app for instructions.");
+                    res.say("I couldn't find any connect devices, make sure you have connected some Spotify Connect devices");
+                    res.say("Check your Alexa app for instructions");
                     res.card({
                         type: "Simple",
                         title: "Connecting to a device using Spotify Connect",
@@ -188,8 +188,9 @@ app.intent('DevicePlayIntent', {
                     res.say("Playing on device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + deviceNumber +
-                        ". Try asking me to list devices first").shouldEndSession(false);
+                    res.say("I couldn't find device " + deviceNumber);
+                    res.say("Try asking me to list devices first");
+                    res.shouldEndSession(false);
                 }
             }
         }
@@ -243,8 +244,9 @@ app.intent('DeviceTransferIntent', {
                     res.say("Transferring to device " + deviceNumber + ": " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + deviceNumber +
-                        ". Try asking me to list devices first").shouldEndSession(false);
+                    res.say("I couldn't find device " + deviceNumber);
+                    res.say("Try asking me to list devices first");
+                    res.shouldEndSession(false);
                 }
             }
         }
