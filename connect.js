@@ -20,9 +20,33 @@ app.pre = function (req, res, type) {
     }
 };
 
-app.launch(function(request, response) {
+app.launch(function (request, response) {
     response.say("Try asking me to control your devices, to start, ask me to list your devices");
     response.shouldEndSession(false);
+});
+
+app.intent("AMAZON.HelpIntent", {
+    "slots": {},
+    "utterances": []
+}, function (request, response) {
+    response.say("You can ask me to list your connect devices and then control them")
+        .reprompt("What would you like to do?");
+    response.shouldEndSession(false);
+    return;
+});
+
+app.intent("AMAZON.StopIntent", {
+    "slots": {},
+    "utterances": []
+}, function (request, response) {
+    return;
+});
+
+app.intent("AMAZON.CancelIntent", {
+    "slots": {},
+    "utterances": []
+}, function (request, response) {
+    return
 });
 
 app.intent('PlayIntent', {
@@ -99,10 +123,21 @@ app.intent('GetDevicesIntent', {
                 }
                 req.getSession().set("devices", devices);
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
-                //Comma separated list of device names
-                res.say("I found these connect devices: "
-                    + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '))
-                .shouldEndSession(false);
+                if (devices.length > 0) {
+                    //Comma separated list of device names
+                    res.say("I found these connect devices: "
+                        + [deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '))
+                        .shouldEndSession(false);
+                }
+                else {
+                    res.say("I did not find any connect devices, check that you have connected some Spotify Connect devices. "
+                        + "Check your Alexa app for instructions.");
+                    res.card({
+                        type: "Simple",
+                        title: "Connecting to a device using Spotify Connect",
+                        content: "https://support.spotify.com/uk/article/spotify-connect/"
+                    });
+                }
             })
             .catch(function (err) {
                 console.error('error:', err.message);
@@ -154,7 +189,7 @@ app.intent('DevicePlayIntent', {
                 }
                 else {
                     res.say("I couldn't find device " + deviceNumber +
-                    ". Try asking me to list devices first").shouldEndSession(false);
+                        ". Try asking me to list devices first").shouldEndSession(false);
                 }
             }
         }
@@ -209,7 +244,7 @@ app.intent('DeviceTransferIntent', {
                 }
                 else {
                     res.say("I couldn't find device " + deviceNumber +
-                    ". Try asking me to list devices first").shouldEndSession(false);
+                        ". Try asking me to list devices first").shouldEndSession(false);
                 }
             }
         }
