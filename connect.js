@@ -39,6 +39,7 @@ app.intent("AMAZON.StopIntent", {
     "slots": {},
     "utterances": []
 }, function (request, response) {
+    response.say("");
     return;
 });
 
@@ -46,7 +47,8 @@ app.intent("AMAZON.CancelIntent", {
     "slots": {},
     "utterances": []
 }, function (request, response) {
-    return
+    response.say("");
+    return;
 });
 
 app.intent('PlayIntent', {
