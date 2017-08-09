@@ -29,8 +29,9 @@ app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
 }, function (request, response) {
-    response.say("You can ask me to list your connect devices and then control them")
-        .reprompt("What would you like to do?");
+    response.say("You can ask me to list your connect devices and then control them. ")
+    response.say("For example, tell me to play on a device number after listing devices");
+    response.reprompt("What would you like to do?");
     response.shouldEndSession(false);
     return;
 });
