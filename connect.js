@@ -131,12 +131,14 @@ app.intent('GetDevicesIntent', {
                     res.shouldEndSession(false);
                 }
                 else {
-                    res.say("I couldn't find any connect devices, make sure you have connected some Spotify Connect devices. ");
-                    res.say("Check your Alexa app for instructions");
+                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
                     res.card({
                         type: "Simple",
                         title: "Connecting to a device using Spotify Connect",
-                        content: "https://support.spotify.com/uk/article/spotify-connect/"
+                        content: "To add a device to Spotify Connect,"
+                        + " log in to your Spotify account on a supported device"
+                        + " such as an Echo, phone, or computer"
+                        + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
                     });
                 }
             })
