@@ -201,7 +201,7 @@ app.intent('DevicePlayIntent', {
                 }
                 else {
                     //Not a number        
-                    res.say("I couldn't work out which device to control, make sure you refer to the device by number.");
+                    res.say("I couldn't work out which device to play on, make sure you refer to the device by number.");
                     res.say("Try asking me to play on a device number");
                     res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
@@ -273,7 +273,7 @@ app.intent('DeviceTransferIntent', {
                 }
                 else {
                     //Not a number
-                    res.say("I couldn't work out which device to control, make sure you refer to the device by number.");
+                    res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
                     res.say("Try asking me to to transfer a device number");
                     res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
