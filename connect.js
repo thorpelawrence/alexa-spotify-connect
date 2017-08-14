@@ -128,7 +128,7 @@ app.intent('GetDevicesIntent', {
                 if (devices.length > 0) {
                     //Comma separated list of device names
                     res.say("I found these connect devices: ");
-                    res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
+                    res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and ') + ". ");
                     res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
                     res.shouldEndSession(false);
                 }
