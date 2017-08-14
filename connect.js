@@ -20,33 +20,34 @@ app.pre = function (req, res, type) {
     }
 };
 
-app.launch(function (request, response) {
-    response.say("Try asking me to control your devices, to start, ask me to list your devices");
-    response.shouldEndSession(false);
+app.launch(function (req, res) {
+    res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
+    res.reprompt("To start, ask me to list your devices");
+    res.shouldEndSession(false);
 });
 
 app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
-}, function (request, response) {
-    response.say("You can ask me to list your connect devices and then control them. ")
-    response.say("For example, tell me to play on a device number after listing devices");
-    response.reprompt("What would you like to do?");
-    response.shouldEndSession(false);
+}, function (req, res) {
+    res.say("You can ask me to list your connect devices and then control them. ")
+    res.say("For example, tell me to play on a device number after listing devices");
+    res.reprompt("What would you like to do?");
+    res.shouldEndSession(false);
     return;
 });
 
 app.intent("AMAZON.StopIntent", {
     "slots": {},
     "utterances": []
-}, function (request, response) {
+}, function (req, res) {
     return;
 });
 
 app.intent("AMAZON.CancelIntent", {
     "slots": {},
     "utterances": []
-}, function (request, response) {
+}, function (req, res) {
     return;
 });
 
@@ -128,6 +129,7 @@ app.intent('GetDevicesIntent', {
                     //Comma separated list of device names
                     res.say("I found these connect devices: ");
                     res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and '));
+                    res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
                     res.shouldEndSession(false);
                 }
                 else {
@@ -159,42 +161,58 @@ app.intent('DevicePlayIntent', {
     function (req, res) {
         if (req.hasSession()) {
             if (req.slot("DEVICENUMBER")) {
-                var deviceNumber = req.slot("DEVICENUMBER");
-                if (req.getSession().isNew()) {
-                    //If new session try to use cache
-                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                }
-                else {
-                    var devices = req.getSession().get("devices") || [];
-                }
-                var deviceId, deviceName;
-                for (var i = 0; i < devices.length; i++) {
-                    if (devices[i].number == deviceNumber) {
-                        deviceId = devices[i].id;
-                        deviceName = devices[i].name;
+                if (!isNaN(req.slot("DEVICENUMBER"))) {
+                    var deviceNumber = req.slot("DEVICENUMBER");
+                    if (req.getSession().isNew()) {
+                        //If new session try to use cache
+                        var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
+                    }
+                    else {
+                        var devices = req.getSession().get("devices") || [];
+                    }
+                    var deviceId, deviceName;
+                    for (var i = 0; i < devices.length; i++) {
+                        if (devices[i].number == deviceNumber) {
+                            deviceId = devices[i].id;
+                            deviceName = devices[i].name;
+                        }
+                    }
+                    if (deviceId) {
+                        request.put({
+                            url: "https://api.spotify.com/v1/me/player",
+                            auth: {
+                                "bearer": req.getSession().details.user.accessToken
+                            },
+                            body: {
+                                "device_ids": [
+                                    deviceId
+                                ],
+                                "play": true
+                            },
+                            json: true
+                        });
+                        res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                    }
+                    else {
+                        res.say("I couldn't find device " + deviceNumber + ". ");
+                        res.say("Try asking me to list devices first");
+                        res.shouldEndSession(false);
                     }
                 }
-                if (deviceId) {
-                    request.put({
-                        url: "https://api.spotify.com/v1/me/player",
-                        auth: {
-                            "bearer": req.getSession().details.user.accessToken
-                        },
-                        body: {
-                            "device_ids": [
-                                deviceId
-                            ],
-                            "play": true
-                        },
-                        json: true
-                    });
-                    res.say("Playing on device " + deviceNumber + ": " + deviceName);
-                }
                 else {
-                    res.say("I couldn't find device " + deviceNumber + ". ");
-                    res.say("Try asking me to list devices first");
+                    //Not a number        
+                    res.say("I couldn't work out which device to control, make sure you refer to the device by number");
+                    res.say("Try asking me to play on a device number");
+                    res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
                 }
+            }
+            else {
+                //No slot value
+                res.say("I couldn't work out which device number to play on");
+                res.say("Try asking me to play on a device number");
+                res.reprompt("What would you like to do?");
+                res.shouldEndSession(false);
             }
         }
     }
@@ -216,41 +234,57 @@ app.intent('DeviceTransferIntent', {
     function (req, res) {
         if (req.hasSession()) {
             if (req.slot("DEVICENUMBER")) {
-                var deviceNumber = req.slot("DEVICENUMBER");
-                if (req.getSession().isNew()) {
-                    //If new session try to use cache
-                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                }
-                else {
-                    var devices = req.getSession().get("devices") || [];
-                }
-                var deviceId, deviceName;
-                for (var i = 0; i < devices.length; i++) {
-                    if (devices[i].number == deviceNumber) {
-                        deviceId = devices[i].id;
-                        deviceName = devices[i].name;
+                if (!isNaN(req.slot("DEVICENUMBER"))) {
+                    var deviceNumber = req.slot("DEVICENUMBER");
+                    if (req.getSession().isNew()) {
+                        //If new session try to use cache
+                        var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
+                    }
+                    else {
+                        var devices = req.getSession().get("devices") || [];
+                    }
+                    var deviceId, deviceName;
+                    for (var i = 0; i < devices.length; i++) {
+                        if (devices[i].number == deviceNumber) {
+                            deviceId = devices[i].id;
+                            deviceName = devices[i].name;
+                        }
+                    }
+                    if (deviceId) {
+                        request.put({
+                            url: "https://api.spotify.com/v1/me/player",
+                            auth: {
+                                "bearer": req.getSession().details.user.accessToken
+                            },
+                            body: {
+                                "device_ids": [
+                                    deviceId
+                                ]
+                            },
+                            json: true
+                        });
+                        res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                    }
+                    else {
+                        res.say("I couldn't find device " + deviceNumber + ". ");
+                        res.say("Try asking me to list devices first");
+                        res.shouldEndSession(false);
                     }
                 }
-                if (deviceId) {
-                    request.put({
-                        url: "https://api.spotify.com/v1/me/player",
-                        auth: {
-                            "bearer": req.getSession().details.user.accessToken
-                        },
-                        body: {
-                            "device_ids": [
-                                deviceId
-                            ]
-                        },
-                        json: true
-                    });
-                    res.say("Transferring to device " + deviceNumber + ": " + deviceName);
-                }
                 else {
-                    res.say("I couldn't find device " + deviceNumber + ". ");
-                    res.say("Try asking me to list devices first");
+                    //Not a number
+                    res.say("I couldn't work out which device to control, make sure you refer to the device by number");
+                    res.say("Try asking me to to transfer a device number");
+                    res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
                 }
+            }
+            else {
+                //No slot value
+                res.say("I couldn't work out which device number to transfer to");
+                res.say("Try asking me to transfer to a device number");
+                res.reprompt("What would you like to do?");
+                res.shouldEndSession(false);
             }
         }
     }
