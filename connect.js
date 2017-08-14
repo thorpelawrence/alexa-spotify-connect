@@ -201,7 +201,7 @@ app.intent('DevicePlayIntent', {
                 }
                 else {
                     //Not a number        
-                    res.say("I couldn't work out which device to control, make sure you refer to the device by number");
+                    res.say("I couldn't work out which device to control, make sure you refer to the device by number.");
                     res.say("Try asking me to play on a device number");
                     res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
@@ -209,7 +209,7 @@ app.intent('DevicePlayIntent', {
             }
             else {
                 //No slot value
-                res.say("I couldn't work out which device number to play on");
+                res.say("I couldn't work out which device number to play on.");
                 res.say("Try asking me to play on a device number");
                 res.reprompt("What would you like to do?");
                 res.shouldEndSession(false);
@@ -273,7 +273,7 @@ app.intent('DeviceTransferIntent', {
                 }
                 else {
                     //Not a number
-                    res.say("I couldn't work out which device to control, make sure you refer to the device by number");
+                    res.say("I couldn't work out which device to control, make sure you refer to the device by number.");
                     res.say("Try asking me to to transfer a device number");
                     res.reprompt("What would you like to do?");
                     res.shouldEndSession(false);
@@ -281,7 +281,7 @@ app.intent('DeviceTransferIntent', {
             }
             else {
                 //No slot value
-                res.say("I couldn't work out which device number to transfer to");
+                res.say("I couldn't work out which device number to transfer to.");
                 res.say("Try asking me to transfer to a device number");
                 res.reprompt("What would you like to do?");
                 res.shouldEndSession(false);
