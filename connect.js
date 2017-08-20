@@ -152,17 +152,17 @@ app.intent('GetDevicesIntent', {
 
 app.intent('DevicePlayIntent', {
     "slots": {
-        "DEVICENUMBER": "AMAZON.NUMBER"
+        "DEVICE": "DEVICES_ROOMS"
     },
     "utterances": [
-        "play on {number|device|device number|} {-|DEVICENUMBER}"
+        "play on {device|} {-|DEVICE}"
     ]
 },
     function (req, res) {
         if (req.hasSession()) {
-            if (req.slot("DEVICENUMBER")) {
-                if (!isNaN(req.slot("DEVICENUMBER"))) {
-                    var deviceNumber = req.slot("DEVICENUMBER");
+            if (req.slot("DEVICE")) {
+                if (!isNaN(req.slot("DEVICE"))) {
+                    var deviceNumber = req.slot("DEVICE");
                     if (req.getSession().isNew()) {
                         //If new session try to use cache
                         var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
@@ -225,17 +225,17 @@ express_app.get('/', function (req, res) {
 
 app.intent('DeviceTransferIntent', {
     "slots": {
-        "DEVICENUMBER": "AMAZON.NUMBER"
+        "DEVICE": "DEVICES_ROOMS"
     },
     "utterances": [
-        "transfer to {number|device|device number|} {-|DEVICENUMBER}"
+        "transfer to {device|} {-|DEVICE}"
     ]
 },
     function (req, res) {
         if (req.hasSession()) {
-            if (req.slot("DEVICENUMBER")) {
-                if (!isNaN(req.slot("DEVICENUMBER"))) {
-                    var deviceNumber = req.slot("DEVICENUMBER");
+            if (req.slot("DEVICE")) {
+                if (!isNaN(req.slot("DEVICE"))) {
+                    var deviceNumber = req.slot("DEVICE");
                     if (req.getSession().isNew()) {
                         //If new session try to use cache
                         var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
