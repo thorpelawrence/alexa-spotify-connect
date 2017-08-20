@@ -162,7 +162,7 @@ app.intent('DevicePlayIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
                 if (!isNaN(req.slot("DEVICE"))) {
-                    var deviceNumber = req.slot("DEVICE");
+                    var device = req.slot("DEVICE");
                     if (req.getSession().isNew()) {
                         //If new session try to use cache
                         var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
@@ -172,7 +172,7 @@ app.intent('DevicePlayIntent', {
                     }
                     var deviceId, deviceName;
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i] == device) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
@@ -191,10 +191,10 @@ app.intent('DevicePlayIntent', {
                             },
                             json: true
                         });
-                        res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                        res.say("Playing on device " + deviceName);
                     }
                     else {
-                        res.say("I couldn't find device " + deviceNumber + ". ");
+                        res.say("I couldn't find device " + device + ". ");
                         res.say("Try asking me to list devices first");
                         res.shouldEndSession(false);
                     }
@@ -235,7 +235,7 @@ app.intent('DeviceTransferIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
                 if (!isNaN(req.slot("DEVICE"))) {
-                    var deviceNumber = req.slot("DEVICE");
+                    var device = req.slot("DEVICE");
                     if (req.getSession().isNew()) {
                         //If new session try to use cache
                         var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
@@ -245,7 +245,7 @@ app.intent('DeviceTransferIntent', {
                     }
                     var deviceId, deviceName;
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i].number == device) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
@@ -263,10 +263,10 @@ app.intent('DeviceTransferIntent', {
                             },
                             json: true
                         });
-                        res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                        res.say("Transferring to device " + deviceName);
                     }
                     else {
-                        res.say("I couldn't find device " + deviceNumber + ". ");
+                        res.say("I couldn't find device " + device + ". ");
                         res.say("Try asking me to list devices first");
                         res.shouldEndSession(false);
                     }
