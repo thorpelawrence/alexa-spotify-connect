@@ -9,7 +9,7 @@
 **US**: https://www.amazon.com/Lawrence-Thorpe-Connect-Control-Spotify/dp/B074KFNWFD
 
 ## Contribution
-The utility script `skills.js` is provided to generate the intent schema and sample utterances from source
+The utility script `skill.js` is provided to generate the intent schema and sample utterances from source
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
