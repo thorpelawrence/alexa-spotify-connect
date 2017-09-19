@@ -5,8 +5,8 @@ var nodecache = require('node-cache');
 
 // Create instance of express
 var express_app = express();
-// Create a 10 minute cache for storing user devices
-var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
+// Create a 1 hour cache for storing user devices
+var cache = new nodecache({ stdTTL: 3600, checkperiod: 120 });
 // Create instance of alexa-app
 var app = new alexa.app('connect');
 // Bind alexa-app to express instance
