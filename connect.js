@@ -30,6 +30,7 @@ app.pre = function (req, res, type) {
 app.launch(function (req, res) {
     res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
     res.reprompt("To start, ask me to list your devices");
+    // Keep session open
     res.shouldEndSession(false);
 });
 
@@ -42,6 +43,7 @@ app.intent("AMAZON.HelpIntent", {
     res.say("You can ask me to list your connect devices and then control them. ")
     res.say("For example, tell me to play on a device number after listing devices");
     res.reprompt("What would you like to do?");
+    // Keep session open
     res.shouldEndSession(false);
     return;
 });
@@ -161,6 +163,7 @@ app.intent('GetDevicesIntent', {
                     res.say("I found these connect devices: ");
                     res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and ') + ". ");
                     res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
+                    // Keep session open
                     res.shouldEndSession(false);
                 }
                 else {
@@ -244,6 +247,7 @@ app.intent('DevicePlayIntent', {
                         // If device for number not found
                         res.say("I couldn't find device " + deviceNumber + ". ");
                         res.say("Try asking me to list devices first");
+                        // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
@@ -252,6 +256,7 @@ app.intent('DevicePlayIntent', {
                     res.say("I couldn't work out which device to play on, make sure you refer to the device by number.");
                     res.say("Try asking me to play on a device number");
                     res.reprompt("What would you like to do?");
+                    // Keep session open
                     res.shouldEndSession(false);
                 }
             }
@@ -260,6 +265,7 @@ app.intent('DevicePlayIntent', {
                 res.say("I couldn't work out which device number to play on.");
                 res.say("Try asking me to play on a device number");
                 res.reprompt("What would you like to do?");
+                // Keep session open
                 res.shouldEndSession(false);
             }
         }
@@ -325,6 +331,7 @@ app.intent('DeviceTransferIntent', {
                         // If device for number not found
                         res.say("I couldn't find device " + deviceNumber + ". ");
                         res.say("Try asking me to list devices first");
+                        // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
@@ -333,6 +340,7 @@ app.intent('DeviceTransferIntent', {
                     res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
                     res.say("Try asking me to to transfer a device number");
                     res.reprompt("What would you like to do?");
+                    // Keep session open
                     res.shouldEndSession(false);
                 }
             }
@@ -341,6 +349,7 @@ app.intent('DeviceTransferIntent', {
                 res.say("I couldn't work out which device number to transfer to.");
                 res.say("Try asking me to transfer to a device number");
                 res.reprompt("What would you like to do?");
+                // Keep session open
                 res.shouldEndSession(false);
             }
         }
