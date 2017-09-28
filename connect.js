@@ -125,6 +125,72 @@ app.intent('SkipPreviousIntent', {
     }
 );
 
+//Suggested new functionality
+// Handle volume
+app.intent('VolumeLevel', {
+    "slots": {
+        "VOLUMELEVEL": "AMAZON.NUMBER"
+   },
+    "utterances": [
+        "volume  {-|VOLUMELEVEL}"
+    ]
+},
+    function (req, res) {
+        // Check that request contains session
+        if (req.hasSession()) {
+            // Check that the slot has a value
+            if (req.slot("VOLUMELEVEL")) {
+                // Check if the slot is a number
+                if (!isNaN(req.slot("VOLUMELEVEL"))) {
+                    var volumeLevel = req.slot("VOLUMELEVEL");
+                    
+                    // Check that the device for the number was found
+                    if (volumeLevel < 100) {
+                        // PUT to Spotify REST API
+                        request.put({
+                            url: "https://api.spotify.com/v1/me/player/volume",
+                            // Send access token as bearer auth
+                            auth: {
+                                "bearer": req.getSession().details.user.accessToken
+                            },
+                            body: {
+                                // Send device ID
+                                "volume_percent": [
+                                    volumeLevel
+                                ],
+                                
+                            },
+                            // Handle sending as JSON
+                            json: true
+                        });
+                                        }
+                    else {
+                        // If number doesn't make sense
+                        res.say("Try saying a number between 1 and 99");
+                        // Keep session open
+                        res.shouldEndSession(false);
+                    }
+                }
+                else {
+                    // Not a number
+                    res.say("Try saying a volume number between 1 and 99");
+                    res.reprompt("What would you like to do?");
+                    // Keep session open
+                    res.shouldEndSession(false);
+                }
+            }
+            else {
+                // No slot value
+               res.say("Try saying a volume number between 1 and 99");
+               res.reprompt("What would you like to do?");
+                // Keep session open
+                res.shouldEndSession(false);
+            }
+        }
+    }
+);
+
+
 // Handle get devices intent
 // No slots required
 app.intent('GetDevicesIntent', {
