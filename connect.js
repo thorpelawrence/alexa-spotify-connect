@@ -1,12 +1,9 @@
 var alexa = require('alexa-app');
 var request = require('request-promise');
 var express = require('express');
-var nodecache = require('node-cache');
 var fuzzy = require('fuzzy');
 
 var express_app = express();
-var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
-
 var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
@@ -99,52 +96,21 @@ app.intent('SkipPreviousIntent', {
     }
 );
 
-app.intent('GetDevicesIntent', {
-    "utterances": [
-        "devices",
-        "list",
-        "search",
-        "find"
-    ]
-},
-    function (req, res) {
-        return request.get({
-            url: "https://api.spotify.com/v1/me/player/devices",
-            auth: {
-                "bearer": req.getSession().details.user.accessToken
-            },
-            json: true
+function GetDevices(req) {
+    request.get({
+        url: "https://api.spotify.com/v1/me/player/devices",
+        auth: {
+            "bearer": req.getSession().details.user.accessToken
+        },
+        json: true
+    })
+        .then(function (body) {
+            return body.devices || [];
         })
-            .then(function (body) {
-                var devices = body.devices || [];
-                // Map just device names to new array
-                var deviceNames = devices.map((d) => { return d.name });
-                req.getSession().set("devices", devices);
-                cache.set(req.getSession().details.user.userId + ":devices", devices);
-                if (devices.length > 0) {
-                    //Comma separated list of device names
-                    res.say("I found these connect devices: ");
-                    res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and ') + ". ");
-                    res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
-                    res.shouldEndSession(false);
-                }
-                else {
-                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
-                    res.card({
-                        type: "Simple",
-                        title: "Connecting to a device using Spotify Connect",
-                        content: "To add a device to Spotify Connect,"
-                        + " log in to your Spotify account on a supported device"
-                        + " such as an Echo, phone, or computer"
-                        + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
-                    });
-                }
-            })
-            .catch(function (err) {
-                console.error('error:', err.message);
-            });
-    }
-);
+        .catch(function (err) {
+            console.error('error:', err.message);
+        });
+}
 
 app.intent('DevicePlayIntent', {
     "slots": {
@@ -158,13 +124,7 @@ app.intent('DevicePlayIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
                 var device = req.slot("DEVICE");
-                if (req.getSession().isNew()) {
-                    //If new session try to use cache
-                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                }
-                else {
-                    var devices = req.getSession().get("devices") || [];
-                }
+                var devices = GetDevices(req);
                 // Check for fuzzy matches of device name
                 var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
                 // Check if matches were found
@@ -184,11 +144,10 @@ app.intent('DevicePlayIntent', {
                         },
                         json: true
                     });
-                    res.say("Playing on device " + deviceName);
+                    res.say("Playing on " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + device + ". ");
-                    res.shouldEndSession(false);
+                    res.say("I couldn't find " + device + ". ");
                 }
             }
             else {
@@ -219,13 +178,7 @@ app.intent('DeviceTransferIntent', {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
                 var device = req.slot("DEVICE");
-                if (req.getSession().isNew()) {
-                    //If new session try to use cache
-                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                }
-                else {
-                    var devices = req.getSession().get("devices") || [];
-                }
+                var devices = GetDevices(req);
                 // Check for fuzzy matches of device name
                 var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
                 // Check if matches were found
@@ -244,11 +197,10 @@ app.intent('DeviceTransferIntent', {
                         },
                         json: true
                     });
-                    res.say("Transferring to device " + deviceName);
+                    res.say("Transferring to " + deviceName);
                 }
                 else {
-                    res.say("I couldn't find device " + device + ". ");
-                    res.shouldEndSession(false);
+                    res.say("I couldn't find " + device + ". ");
                 }
             }
         }
