@@ -22,8 +22,8 @@ app.pre = function (req, res, type) {
 };
 
 app.launch(function (req, res) {
-    res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
-    res.reprompt("To start, ask me to list your devices");
+    res.say("I can control your Spotify Connect devices, to start, ask me to ask me to play on a device");
+    res.reprompt("To start, try asking me to play a song on a device");
     res.shouldEndSession(false);
 });
 
@@ -31,8 +31,8 @@ app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
 }, function (req, res) {
-    res.say("You can ask me to list your connect devices and then control them. ")
-    res.say("For example, tell me to play on a device after listing devices");
+    res.say("You can ask me to control your connect devices. ")
+    res.say("For example, tell me to play on a device");
     res.reprompt("What would you like to do?");
     res.shouldEndSession(false);
     return;
@@ -188,7 +188,6 @@ app.intent('DevicePlayIntent', {
                 }
                 else {
                     res.say("I couldn't find device " + device + ". ");
-                    res.say("Try asking me to list devices first");
                     res.shouldEndSession(false);
                 }
             }
@@ -249,7 +248,6 @@ app.intent('DeviceTransferIntent', {
                 }
                 else {
                     res.say("I couldn't find device " + device + ". ");
-                    res.say("Try asking me to list devices first");
                     res.shouldEndSession(false);
                 }
             }
