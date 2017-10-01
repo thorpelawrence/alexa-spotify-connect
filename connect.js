@@ -125,29 +125,44 @@ app.intent('DevicePlayIntent', {
             if (req.slot("DEVICE")) {
                 var device = req.slot("DEVICE");
                 var devices = GetDevices(req);
-                // Check for fuzzy matches of device name
-                var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
-                // Check if matches were found
-                if (matches.length > 0) {
-                    var deviceId = matches[0].original.id;
-                    var deviceName = matches[0].string;
-                    request.put({
-                        url: "https://api.spotify.com/v1/me/player",
-                        auth: {
-                            "bearer": req.getSession().details.user.accessToken
-                        },
-                        body: {
-                            "device_ids": [
-                                deviceId
-                            ],
-                            "play": true
-                        },
-                        json: true
-                    });
-                    res.say("Playing on " + deviceName);
+                // Check if any devices were found
+                if (devices.length > 0) {
+                    // Check for fuzzy matches of device name
+                    var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
+                    // Check if matches were found
+                    if (matches.length > 0) {
+                        var deviceId = matches[0].original.id;
+                        var deviceName = matches[0].string;
+                        request.put({
+                            url: "https://api.spotify.com/v1/me/player",
+                            auth: {
+                                "bearer": req.getSession().details.user.accessToken
+                            },
+                            body: {
+                                "device_ids": [
+                                    deviceId
+                                ],
+                                "play": true
+                            },
+                            json: true
+                        });
+                        res.say("Playing on " + deviceName);
+                    }
+                    else {
+                        res.say("I couldn't find " + device + ". ");
+                    }
                 }
                 else {
-                    res.say("I couldn't find " + device + ". ");
+                    // No devices found
+                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
+                    res.card({
+                        type: "Simple",
+                        title: "Connecting to a device using Spotify Connect",
+                        content: "To add a device to Spotify Connect,"
+                        + " log in to your Spotify account on a supported device"
+                        + " such as an Echo, phone, or computer"
+                        + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
+                    });
                 }
             }
             else {
@@ -179,37 +194,52 @@ app.intent('DeviceTransferIntent', {
             if (req.slot("DEVICE")) {
                 var device = req.slot("DEVICE");
                 var devices = GetDevices(req);
-                // Check for fuzzy matches of device name
-                var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
-                // Check if matches were found
-                if (matches.length > 0) {
-                    var deviceId = matches[0].original.id;
-                    var deviceName = matches[0].string;
-                    request.put({
-                        url: "https://api.spotify.com/v1/me/player",
-                        auth: {
-                            "bearer": req.getSession().details.user.accessToken
-                        },
-                        body: {
-                            "device_ids": [
-                                deviceId
-                            ]
-                        },
-                        json: true
-                    });
-                    res.say("Transferring to " + deviceName);
+                // Check if any devices were found
+                if (devices.length > 0) {
+                    // Check for fuzzy matches of device name
+                    var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
+                    // Check if matches were found
+                    if (matches.length > 0) {
+                        var deviceId = matches[0].original.id;
+                        var deviceName = matches[0].string;
+                        request.put({
+                            url: "https://api.spotify.com/v1/me/player",
+                            auth: {
+                                "bearer": req.getSession().details.user.accessToken
+                            },
+                            body: {
+                                "device_ids": [
+                                    deviceId
+                                ]
+                            },
+                            json: true
+                        });
+                        res.say("Transferring to " + deviceName);
+                    }
+                    else {
+                        res.say("I couldn't find " + device + ". ");
+                    }
                 }
                 else {
-                    res.say("I couldn't find " + device + ". ");
+                    // No devices found
+                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
+                    res.card({
+                        type: "Simple",
+                        title: "Connecting to a device using Spotify Connect",
+                        content: "To add a device to Spotify Connect,"
+                        + " log in to your Spotify account on a supported device"
+                        + " such as an Echo, phone, or computer"
+                        + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
+                    });
                 }
             }
-        }
-        else {
-            //No slot value
-            res.say("I couldn't work out which device to transfer to.");
-            res.say("Try asking me to transfer to a device by name");
-            res.reprompt("What would you like to do?");
-            res.shouldEndSession(false);
+            else {
+                //No slot value
+                res.say("I couldn't work out which device to transfer to.");
+                res.say("Try asking me to transfer to a device by name");
+                res.reprompt("What would you like to do?");
+                res.shouldEndSession(false);
+            }
         }
     }
 );
