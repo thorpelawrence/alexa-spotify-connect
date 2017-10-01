@@ -2,6 +2,7 @@ var alexa = require('alexa-app');
 var request = require('request-promise');
 var express = require('express');
 var nodecache = require('node-cache');
+var fuzzy = require('fuzzy');
 
 var express_app = express();
 var cache = new nodecache({ stdTTL: 600, checkperiod: 120 });
@@ -31,7 +32,7 @@ app.intent("AMAZON.HelpIntent", {
     "utterances": []
 }, function (req, res) {
     res.say("You can ask me to list your connect devices and then control them. ")
-    res.say("For example, tell me to play on a device number after listing devices");
+    res.say("For example, tell me to play on a device after listing devices");
     res.reprompt("What would you like to do?");
     res.shouldEndSession(false);
     return;
@@ -116,13 +117,8 @@ app.intent('GetDevicesIntent', {
         })
             .then(function (body) {
                 var devices = body.devices || [];
-                var deviceNames = [];
-                for (var i = 0; i < devices.length; i++) {
-                    //Number each device
-                    deviceNames.push((i + 1) + ". " + devices[i].name);
-                    //Add the device number to JSON
-                    devices[i].number = (i + 1);
-                }
+                // Map just device names to new array
+                var deviceNames = devices.map((d) => { return d.name });
                 req.getSession().set("devices", devices);
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
                 if (devices.length > 0) {
@@ -161,56 +157,45 @@ app.intent('DevicePlayIntent', {
     function (req, res) {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
-                if (!isNaN(req.slot("DEVICE"))) {
-                    var device = req.slot("DEVICE");
-                    if (req.getSession().isNew()) {
-                        //If new session try to use cache
-                        var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                    }
-                    else {
-                        var devices = req.getSession().get("devices") || [];
-                    }
-                    var deviceId, deviceName;
-                    for (var i = 0; i < devices.length; i++) {
-                        if (devices[i] == device) {
-                            deviceId = devices[i].id;
-                            deviceName = devices[i].name;
-                        }
-                    }
-                    if (deviceId) {
-                        request.put({
-                            url: "https://api.spotify.com/v1/me/player",
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            body: {
-                                "device_ids": [
-                                    deviceId
-                                ],
-                                "play": true
-                            },
-                            json: true
-                        });
-                        res.say("Playing on device " + deviceName);
-                    }
-                    else {
-                        res.say("I couldn't find device " + device + ". ");
-                        res.say("Try asking me to list devices first");
-                        res.shouldEndSession(false);
-                    }
+                var device = req.slot("DEVICE");
+                if (req.getSession().isNew()) {
+                    //If new session try to use cache
+                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
                 }
                 else {
-                    //Not a number        
-                    res.say("I couldn't work out which device to play on, make sure you refer to the device by number.");
-                    res.say("Try asking me to play on a device number");
-                    res.reprompt("What would you like to do?");
+                    var devices = req.getSession().get("devices") || [];
+                }
+                // Check for fuzzy matches of device name
+                var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
+                // Check if matches were found
+                if (matches.length > 0) {
+                    var deviceId = matches[0].original.id;
+                    var deviceName = matches[0].string;
+                    request.put({
+                        url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
+                        body: {
+                            "device_ids": [
+                                deviceId
+                            ],
+                            "play": true
+                        },
+                        json: true
+                    });
+                    res.say("Playing on device " + deviceName);
+                }
+                else {
+                    res.say("I couldn't find device " + device + ". ");
+                    res.say("Try asking me to list devices first");
                     res.shouldEndSession(false);
                 }
             }
             else {
                 //No slot value
-                res.say("I couldn't work out which device number to play on.");
-                res.say("Try asking me to play on a device number");
+                res.say("I couldn't work out which device to play on.");
+                res.say("Try asking me to play on a device by name");
                 res.reprompt("What would you like to do?");
                 res.shouldEndSession(false);
             }
@@ -234,58 +219,47 @@ app.intent('DeviceTransferIntent', {
     function (req, res) {
         if (req.hasSession()) {
             if (req.slot("DEVICE")) {
-                if (!isNaN(req.slot("DEVICE"))) {
-                    var device = req.slot("DEVICE");
-                    if (req.getSession().isNew()) {
-                        //If new session try to use cache
-                        var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
-                    }
-                    else {
-                        var devices = req.getSession().get("devices") || [];
-                    }
-                    var deviceId, deviceName;
-                    for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == device) {
-                            deviceId = devices[i].id;
-                            deviceName = devices[i].name;
-                        }
-                    }
-                    if (deviceId) {
-                        request.put({
-                            url: "https://api.spotify.com/v1/me/player",
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            body: {
-                                "device_ids": [
-                                    deviceId
-                                ]
-                            },
-                            json: true
-                        });
-                        res.say("Transferring to device " + deviceName);
-                    }
-                    else {
-                        res.say("I couldn't find device " + device + ". ");
-                        res.say("Try asking me to list devices first");
-                        res.shouldEndSession(false);
-                    }
+                var device = req.slot("DEVICE");
+                if (req.getSession().isNew()) {
+                    //If new session try to use cache
+                    var devices = cache.get(req.getSession().details.user.userId + ":devices") || [];
                 }
                 else {
-                    //Not a number
-                    res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
-                    res.say("Try asking me to to transfer a device number");
-                    res.reprompt("What would you like to do?");
+                    var devices = req.getSession().get("devices") || [];
+                }
+                // Check for fuzzy matches of device name
+                var matches = fuzzy.filter(device, devices, { extract: (e) => { return e.name } });
+                // Check if matches were found
+                if (matches.length > 0) {
+                    var deviceId = matches[0].original.id;
+                    var deviceName = matches[0].string;
+                    request.put({
+                        url: "https://api.spotify.com/v1/me/player",
+                        auth: {
+                            "bearer": req.getSession().details.user.accessToken
+                        },
+                        body: {
+                            "device_ids": [
+                                deviceId
+                            ]
+                        },
+                        json: true
+                    });
+                    res.say("Transferring to device " + deviceName);
+                }
+                else {
+                    res.say("I couldn't find device " + device + ". ");
+                    res.say("Try asking me to list devices first");
                     res.shouldEndSession(false);
                 }
             }
-            else {
-                //No slot value
-                res.say("I couldn't work out which device number to transfer to.");
-                res.say("Try asking me to transfer to a device number");
-                res.reprompt("What would you like to do?");
-                res.shouldEndSession(false);
-            }
+        }
+        else {
+            //No slot value
+            res.say("I couldn't work out which device to transfer to.");
+            res.say("Try asking me to transfer to a device by name");
+            res.reprompt("What would you like to do?");
+            res.shouldEndSession(false);
         }
     }
 );
