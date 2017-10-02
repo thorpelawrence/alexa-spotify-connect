@@ -144,7 +144,7 @@ app.intent('VolumeLevelIntent', {
                 if (!isNaN(req.slot("VOLUMELEVEL"))) {
                     var volumeLevel = req.slot("VOLUMELEVEL");
                     // Check that the volume is valid
-                    if (volumeLevel > 0 && volumeLevel < 10) {
+                    if (volumeLevel >= 0 && volumeLevel <= 10) {
                         // PUT to Spotify REST API
                         request.put({
                             url: "https://api.spotify.com/v1/me/player/volume",
