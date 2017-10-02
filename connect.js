@@ -147,21 +147,15 @@ app.intent('VolumeLevelIntent', {
                     if (volumeLevel >= 0 && volumeLevel <= 10) {
                         // PUT to Spotify REST API
                         request.put({
-                            url: "https://api.spotify.com/v1/me/player/volume",
+                            // Send new volume * 10 (convert to percentage)
+                            url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + 10 * volumeLevel,
                             // Send access token as bearer auth
                             auth: {
                                 "bearer": req.getSession().details.user.accessToken
                             },
-                            body: {
-                                // Send new volume * 10 (convert to percentage)
-                                "volume_percent": [
-                                    10 * volumeLevel
-                                ],
-                            },
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Set volume to " + volumeLevel);
                     }
                     else {
                         // If not valid volume
