@@ -157,11 +157,11 @@ app.intent('VolumeLevelIntent', {
                                 "volume_percent": [
                                     10 * volumeLevel
                                 ],
-
                             },
                             // Handle sending as JSON
                             json: true
                         });
+                        res.say("Set volume to " + 10 * volumeLevel);
                     }
                     else {
                         // If not valid volume
@@ -180,7 +180,7 @@ app.intent('VolumeLevelIntent', {
             }
             else {
                 // No slot value
-                res.say("I could't work out what volume to use.")
+                res.say("I could't work out the volume to use.")
                 res.say("Try setting a volume between 1 and 10");
                 res.reprompt("What would you like to do?");
                 // Keep session open
