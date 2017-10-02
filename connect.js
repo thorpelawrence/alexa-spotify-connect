@@ -125,14 +125,14 @@ app.intent('SkipPreviousIntent', {
     }
 );
 
-//Suggested new functionality
-// Handle volume
-app.intent('VolumeLevel', {
+// Handle volume level intent
+// Slot for new volume
+app.intent('VolumeLevelIntent', {
     "slots": {
         "VOLUMELEVEL": "AMAZON.NUMBER"
-   },
+    },
     "utterances": [
-        "volume  {-|VOLUMELEVEL}"
+        "{set the|set|} volume {level|} {to|} {-|VOLUMELEVEL}"
     ]
 },
     function (req, res) {
@@ -143,9 +143,8 @@ app.intent('VolumeLevel', {
                 // Check if the slot is a number
                 if (!isNaN(req.slot("VOLUMELEVEL"))) {
                     var volumeLevel = req.slot("VOLUMELEVEL");
-                    
-                    // Check that the device for the number was found
-                    if (volumeLevel < 100) {
+                    // Check that the volume is valid
+                    if (volumeLevel > 0 && volumeLevel < 10) {
                         // PUT to Spotify REST API
                         request.put({
                             url: "https://api.spotify.com/v1/me/player/volume",
@@ -154,26 +153,26 @@ app.intent('VolumeLevel', {
                                 "bearer": req.getSession().details.user.accessToken
                             },
                             body: {
-                                // Send device ID
+                                // Send new volume * 10 (convert to percentage)
                                 "volume_percent": [
-                                    volumeLevel
+                                    10 * volumeLevel
                                 ],
-                                
+
                             },
                             // Handle sending as JSON
                             json: true
                         });
-                                        }
+                    }
                     else {
-                        // If number doesn't make sense
-                        res.say("Try saying a number between 1 and 99");
+                        // If not valid volume
+                        res.say("You can only set the volume between 0 and 10");
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("Try saying a volume number between 1 and 99");
+                    res.say("Try setting a volume between 1 and 10");
                     res.reprompt("What would you like to do?");
                     // Keep session open
                     res.shouldEndSession(false);
@@ -181,8 +180,9 @@ app.intent('VolumeLevel', {
             }
             else {
                 // No slot value
-               res.say("Try saying a volume number between 1 and 99");
-               res.reprompt("What would you like to do?");
+                res.say("I could't work out what volume to use.")
+                res.say("Try setting a volume between 1 and 10");
+                res.reprompt("What would you like to do?");
                 // Keep session open
                 res.shouldEndSession(false);
             }
