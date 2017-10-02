@@ -161,7 +161,7 @@ app.intent('VolumeLevelIntent', {
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Set volume to " + 10 * volumeLevel);
+                        res.say("Set volume to " + volumeLevel);
                     }
                     else {
                         // If not valid volume
