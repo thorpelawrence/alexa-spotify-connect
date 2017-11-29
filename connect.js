@@ -19,7 +19,7 @@ app.pre = function (req, res, type) {
 };
 
 app.launch(function (req, res) {
-    res.say("I can control your Spotify Connect devices, to start, ask me to ask me to play on a device");
+    res.say("I can control your Spotify Connect devices, to start, ask me to play on a device");
     res.reprompt("To start, try asking me to play a song on a device");
     res.shouldEndSession(false);
 });
