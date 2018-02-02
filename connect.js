@@ -487,10 +487,12 @@ app.intent('GetTrackIntent', {
 
 // Set up redirect to project page
 express_app.use(express.static(__dirname));
+/* istanbul ignore next */
 express_app.get('/', function (req, res) {
     res.redirect('https://github.com/thorpelawrence/alexa-spotify-connect');
 });
 
+/* istanbul ignore if */
 // Only listen if run directly, not if required as a module
 if (require.main === module) {
     var port = process.env.PORT || 8888;

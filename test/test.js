@@ -24,7 +24,27 @@ describe('Pre and post handling', function () {
         var res = connect.request(req).then(function (r) {
             return r.response.outputSpeech.ssml;
         });
-        expect(res).to.eventually.contain("An error occured: Invalid applicationId");
+        return expect(res).to.eventually.contain("An error occured: Invalid applicationId");
+    });
+});
+
+describe('Launch handling', function () {
+    it('should handle launch of skill', function () {
+        var req = {
+            "session": {
+                "application": {
+                    "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
+                },
+                "user": {}
+            },
+            "request": {
+                "type": "LaunchRequest"
+            }
+        }
+        var res = connect.request(req).then(function (r) {
+            return r.response.outputSpeech.ssml;
+        });
+        return expect(res).to.eventually.include('I can control your Spotify Connect devices');
     });
 });
 
@@ -145,5 +165,25 @@ describe('AMAZON.HelpIntent', function () {
             return r.response.outputSpeech;
         });
         return expect(res).to.eventually.have.property("type", "SSML");
+    });
+});
+
+describe('AMAZON.StopIntent', function () {
+    it('should return nothing', function () {
+        var req = generateRequest('AMAZON.StopIntent', null, "example-access-token");
+        var res = connect.request(req).then(function (r) {
+            return r.response;
+        });
+        return expect(res).to.eventually.not.have.property("outputSpeech");
+    });
+});
+
+describe('AMAZON.CancelIntent', function () {
+    it('should return nothing', function () {
+        var req = generateRequest('AMAZON.CancelIntent', null, "example-access-token")
+        var res = connect.request(req).then(function (r) {
+            return r.response;
+        });
+        return expect(res).to.eventually.not.have.property("outputSpeech");
     });
 });
