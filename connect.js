@@ -26,6 +26,13 @@ app.pre = function (req, res, type) {
     }
 };
 
+// Run after every request
+app.post = function (req, res, type, exception) {
+    if (exception) {
+        return res.clear().say("An error occured: " + exception).send();
+    }
+};
+
 // Function for when skill is invoked without intent
 app.launch(function (req, res) {
     res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
