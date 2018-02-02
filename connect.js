@@ -26,6 +26,13 @@ app.pre = function (req, res, type) {
     }
 };
 
+// Run after every request
+app.post = function (req, res, type, exception) {
+    if (exception) {
+        return res.clear().say("An error occured: " + exception).send();
+    }
+};
+
 // Function for when skill is invoked without intent
 app.launch(function (req, res) {
     res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
@@ -77,7 +84,13 @@ app.intent('PlayIntent', {
 },
     function (req, res) {
         // PUT to Spotify REST API
-        request.put("https://api.spotify.com/v1/me/player/play").auth(null, null, true, req.getSession().details.user.accessToken);
+        var statusCode;
+        return request.put("https://api.spotify.com/v1/me/player/play", {
+            resolveWithFullResponse: true
+        }).auth(null, null, true, req.getSession().details.user.accessToken)
+            .then((r) => {
+                req.getSession().set("statusCode", r.statusCode);
+            });
     }
 );
 
@@ -90,7 +103,12 @@ app.intent('PauseIntent', {
 },
     function (req, res) {
         // PUT to Spotify REST API
-        request.put("https://api.spotify.com/v1/me/player/pause").auth(null, null, true, req.getSession().details.user.accessToken);
+        return request.put("https://api.spotify.com/v1/me/player/pause", {
+            resolveWithFullResponse: true
+        }).auth(null, null, true, req.getSession().details.user.accessToken)
+            .then((r) => {
+                req.getSession().set("statusCode", r.statusCode);
+            });
     }
 );
 
@@ -105,7 +123,12 @@ app.intent('SkipNextIntent', {
 },
     function (req, res) {
         // POST to Spotify REST API
-        request.post("https://api.spotify.com/v1/me/player/next").auth(null, null, true, req.getSession().details.user.accessToken);
+        return request.post("https://api.spotify.com/v1/me/player/next", {
+            resolveWithFullResponse: true
+        }).auth(null, null, true, req.getSession().details.user.accessToken)
+            .then((r) => {
+                req.getSession().set("statusCode", r.statusCode);
+            });
     }
 );
 
@@ -121,7 +144,12 @@ app.intent('SkipPreviousIntent', {
 },
     function (req, res) {
         // POST to Spotify REST API
-        request.post("https://api.spotify.com/v1/me/player/previous").auth(null, null, true, req.getSession().details.user.accessToken);
+        return request.post("https://api.spotify.com/v1/me/player/previous", {
+            resolveWithFullResponse: true
+        }).auth(null, null, true, req.getSession().details.user.accessToken)
+            .then((r) => {
+                req.getSession().set("statusCode", r.statusCode);
+            });
     }
 );
 
@@ -233,9 +261,9 @@ app.intent('GetDevicesIntent', {
                         type: "Simple",
                         title: "Connecting to a device using Spotify Connect",
                         content: "To add a device to Spotify Connect,"
-                        + " log in to your Spotify account on a supported device"
-                        + " such as an Echo, phone, or computer"
-                        + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
+                            + " log in to your Spotify account on a supported device"
+                            + " such as an Echo, phone, or computer"
+                            + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
                     });
                 }
             })
