@@ -34,7 +34,7 @@ describe('PlayIntent', function () {
             .put("/v1/me/player/play")
             .reply(204);
     });
-    
+
     it('should PUT to spotify play endpoint and recieve 204', function () {
         var req = generateRequest('PlayIntent');
         var res = connect.request(req).then(function (r) {
@@ -49,7 +49,8 @@ describe('PauseIntent', function () {
         nock("https://api.spotify.com")
             .put("/v1/me/player/pause")
             .reply(204);
-    })
+    });
+
     it('should PUT to spotify pause endpoint and recieve 204', function () {
         var req = generateRequest('PauseIntent');
         var res = connect.request(req).then(function (r) {
@@ -64,7 +65,8 @@ describe('SkipNextIntent', function () {
         nock("https://api.spotify.com")
             .post("/v1/me/player/next")
             .reply(204);
-    })
+    });
+
     it('should POST to spotify next endpoint and recieve 204', function () {
         var req = generateRequest('SkipNextIntent');
         var res = connect.request(req).then(function (r) {
@@ -79,7 +81,8 @@ describe('SkipPreviousIntent', function () {
         nock("https://api.spotify.com")
             .post("/v1/me/player/previous")
             .reply(204);
-    })
+    });
+
     it('should POST to spotify previous endpoint and recieve 204', function () {
         var req = generateRequest('SkipPreviousIntent');
         var res = connect.request(req).then(function (r) {
@@ -93,6 +96,30 @@ describe('GetDevicesIntent', function () {
     beforeEach(function () {
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
+            .reply(200, { "devices": [] });
+    });
+
+    it('should warn if no Spotify account linked', function () {
+        var req = generateRequest('GetDevicesIntent');
+        var res = connect.request(req).then(function (r) {
+            return r.response.outputSpeech.ssml;
+        });
+        return expect(res).to.eventually.include("You have not linked your Spotify account");
+    });
+
+    it('should find no devices', function () {
+        var req = generateRequest('GetDevicesIntent');
+        var res = connect.request(req).then(function (r) {
+            return r.response.outputSpeech.ssml;
+        });
+        return expect(res).to.eventually.include("couldn't find any connect devices");
+    });
+
+    it('should find 1 device', function () {
+        // Change reply to include a device
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/devices")
             .reply(200, {
                 "devices": [{
                     "id": "0",
@@ -103,17 +130,6 @@ describe('GetDevicesIntent', function () {
                     "volume_percent": 100
                 }]
             });
-    });
-
-    it('should warn if no Spotify account linked', function () {
-        var req = generateRequest('GetDevicesIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
-        return expect(res).to.eventually.include("You have not linked your Spotify account, check your Alexa app to link the account");
-    });
-
-    it('should return 1 device', function () {
         var req = generateRequest('GetDevicesIntent');
         var res = connect.request(req).then(function (r) {
             return r.response.outputSpeech.ssml;
