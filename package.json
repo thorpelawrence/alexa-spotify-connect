@@ -23,7 +23,7 @@
     "start": "node connect.js",
     "skill": "node skill.js",
     "test": "mocha",
-    "codeclimate-test": "nyc mocha"
+    "test-coverage": "nyc --reporter=lcovonly mocha"
   },
   "repository": {
     "type": "git",
