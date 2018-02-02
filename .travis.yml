@@ -13,3 +13,4 @@ script:
   - yarn run test-coverage
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
