@@ -3,10 +3,17 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
 const expect = chai.expect;
+const eventToPromise = require('event-to-promise');
 const connect = require('../connect');
 const generateRequest = require('./generate-request');
 
 chai.use(chaiAsPromised);
+
+function getRequestSSML(req) {
+    return connect.request(req).then(function (r) {
+        return r.response.outputSpeech.ssml;
+    });
+}
 
 describe('Pre and post handling', function () {
     it('should give error if invalid applicationId', function () {
@@ -41,9 +48,7 @@ describe('Launch handling', function () {
                 "type": "LaunchRequest"
             }
         }
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
+        var res = getRequestSSML(req);
         return expect(res).to.eventually.include('I can control your Spotify Connect devices');
     });
 });
@@ -55,7 +60,7 @@ describe('PlayIntent', function () {
             .reply(204);
     });
 
-    it('should PUT to spotify play endpoint and recieve 204', function () {
+    it('should PUT to Spotify play endpoint and recieve 204', function () {
         var req = generateRequest('PlayIntent');
         var res = connect.request(req).then(function (r) {
             return r.sessionAttributes.statusCode;
@@ -71,7 +76,7 @@ describe('PauseIntent', function () {
             .reply(204);
     });
 
-    it('should PUT to spotify pause endpoint and recieve 204', function () {
+    it('should PUT to Spotify pause endpoint and recieve 204', function () {
         var req = generateRequest('PauseIntent');
         var res = connect.request(req).then(function (r) {
             return r.sessionAttributes.statusCode;
@@ -87,7 +92,7 @@ describe('SkipNextIntent', function () {
             .reply(204);
     });
 
-    it('should POST to spotify next endpoint and recieve 204', function () {
+    it('should POST to Spotify next endpoint and recieve 204', function () {
         var req = generateRequest('SkipNextIntent');
         var res = connect.request(req).then(function (r) {
             return r.sessionAttributes.statusCode;
@@ -103,12 +108,67 @@ describe('SkipPreviousIntent', function () {
             .reply(204);
     });
 
-    it('should POST to spotify previous endpoint and recieve 204', function () {
+    it('should POST to Spotify previous endpoint and recieve 204', function () {
         var req = generateRequest('SkipPreviousIntent');
         var res = connect.request(req).then(function (r) {
             return r.sessionAttributes.statusCode;
         });
         return expect(res).to.eventually.equal(204);
+    });
+});
+
+describe('VolumeLevelIntent', function () {
+    it('should warn if no slot value', function () {
+        var req = generateRequest('VolumeLevelIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("couldn't work out the volume to use");
+    });
+
+    it('should warn if not a number', function () {
+        var req = generateRequest('VolumeLevelIntent', {
+            "VOLUMELEVEL": {
+                "name": "VOLUMELEVEL",
+                "value": "NaN"
+            }
+        });
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("Try setting a volume between 0 and 10");
+    });
+
+    it('should PUT correct volume to Spotify endpoint', function () {
+        var vol = Math.floor(Math.random() * 10);
+        var api = nock("https://api.spotify.com")
+            .put("/v1/me/player/volume")
+            .query({ "volume_percent": vol * 10 })
+            .reply(204);
+        var requested = eventToPromise(api, 'request')
+            .then(() => {
+                return true;
+                n.cleanAll();
+            });
+        var req = generateRequest('VolumeLevelIntent', {
+            "VOLUMELEVEL": {
+                "name": "VOLUMELEVEL",
+                "value": vol
+            }
+        });
+        connect.request(req);
+        return expect(requested).to.eventually.be.true;
+    });
+
+    it('should warn if volume outside of range', function () {
+        [-10, -5, 15].forEach(function (vol) {
+            var slots = {
+                "VOLUMELEVEL": {
+                    "name": "VOLUMELEVEL",
+                    "value": vol
+                }
+            };
+            var req = generateRequest('VolumeLevelIntent', slots);
+            var res = getRequestSSML(req);
+            if (vol < 0 || vol > 10)
+                return expect(res).to.eventually.include("You can only set the volume between 0 and 10");
+        });
     });
 });
 
@@ -121,17 +181,13 @@ describe('GetDevicesIntent', function () {
 
     it('should warn if no Spotify account linked', function () {
         var req = generateRequest('GetDevicesIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
+        var res = getRequestSSML(req);
         return expect(res).to.eventually.include("You have not linked your Spotify account");
     });
 
     it('should find no devices', function () {
         var req = generateRequest('GetDevicesIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
+        var res = getRequestSSML(req);
         return expect(res).to.eventually.include("couldn't find any connect devices");
     });
 
@@ -151,9 +207,7 @@ describe('GetDevicesIntent', function () {
                 }]
             });
         var req = generateRequest('GetDevicesIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
+        var res = getRequestSSML(req);
         return expect(res).to.eventually.include("My device");
     });
 });
