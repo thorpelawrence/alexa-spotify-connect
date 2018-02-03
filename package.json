@@ -5,6 +5,7 @@
   "author": "Lawrence Thorpe",
   "dependencies": {
     "alexa-app": "^4.0.1",
+    "event-to-promise": "^0.8.0",
     "express": "^4.15.3",
     "node-cache": "^4.1.1",
     "request": "^2.81.0",

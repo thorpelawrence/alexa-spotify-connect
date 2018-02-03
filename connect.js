@@ -194,7 +194,7 @@ app.intent('VolumeLevelIntent', {
                 }
                 else {
                     // Not a number
-                    res.say("Try setting a volume between 1 and 10");
+                    res.say("Try setting a volume between 0 and 10");
                     res.reprompt("What would you like to do?");
                     // Keep session open
                     res.shouldEndSession(false);
@@ -202,8 +202,8 @@ app.intent('VolumeLevelIntent', {
             }
             else {
                 // No slot value
-                res.say("I could't work out the volume to use.")
-                res.say("Try setting a volume between 1 and 10");
+                res.say("I couldn't work out the volume to use.")
+                res.say("Try setting a volume between 0 and 10");
                 res.reprompt("What would you like to do?");
                 // Keep session open
                 res.shouldEndSession(false);
