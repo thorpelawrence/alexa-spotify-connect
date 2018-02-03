@@ -210,6 +210,18 @@ describe('GetDevicesIntent', function () {
         var res = getRequestSSML(req);
         return expect(res).to.eventually.include("My device");
     });
+
+    it('should handle errors with request', function () {
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/devices")
+            .reply(503);
+        var req = generateRequest('GetDevicesIntent');
+        var res = connect.request(req).then(function (r) {
+            return r.sessionAttributes.statusCode;
+        });
+        expect(res).to.eventually.equal(503);
+    });
 });
 
 describe('AMAZON.HelpIntent', function () {
