@@ -269,7 +269,7 @@ app.intent('GetDevicesIntent', {
             })
             // Handle errors
             .catch(function (err) {
-                req.getSession().set("statusCode", err.statusCode).send();
+                req.getSession().set("statusCode", err.statusCode);
             });
     }
 );
@@ -480,7 +480,7 @@ app.intent('GetTrackIntent', {
             })
             // Handle errors
             .catch(function (err) {
-                req.getSession().set("statusCode", err.statusCode).send();
+                req.getSession().set("statusCode", err.statusCode);
             });
     }
 );

@@ -53,6 +53,36 @@ describe('Launch handling', function () {
     });
 });
 
+describe('AMAZON.HelpIntent', function () {
+    it('should give correct help information', function () {
+        var req = generateRequest.intentRequest('AMAZON.HelpIntent');
+        var res = connect.request(req).then(function (r) {
+            return r.response.outputSpeech;
+        });
+        return expect(res).to.eventually.have.property("type", "SSML");
+    });
+});
+
+describe('AMAZON.StopIntent', function () {
+    it('should return nothing', function () {
+        var req = generateRequest.intentRequest('AMAZON.StopIntent', null, "example-access-token");
+        var res = connect.request(req).then(function (r) {
+            return r.response;
+        });
+        return expect(res).to.eventually.not.have.property("outputSpeech");
+    });
+});
+
+describe('AMAZON.CancelIntent', function () {
+    it('should return nothing', function () {
+        var req = generateRequest.intentRequest('AMAZON.CancelIntent', null, "example-access-token")
+        var res = connect.request(req).then(function (r) {
+            return r.response;
+        });
+        return expect(res).to.eventually.not.have.property("outputSpeech");
+    });
+});
+
 describe('PlayIntent', function () {
     beforeEach(function () {
         nock("https://api.spotify.com")
@@ -273,32 +303,134 @@ describe('DevicePlayIntent', function () {
     });
 });
 
-describe('AMAZON.HelpIntent', function () {
-    it('should give correct help information', function () {
-        var req = generateRequest.intentRequest('AMAZON.HelpIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech;
+describe('DeviceTransferIntent', function () {
+    it('should warn if no slot value', function () {
+        var req = generateRequest.intentRequest('DeviceTransferIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("couldn't work out which device number to transfer to");
+    });
+
+    it('should warn if not a number', function () {
+        var req = generateRequest.intentRequest('DeviceTransferIntent', {
+            "DEVICENUMBER": {
+                "name": "DEVICENUMBER",
+                "value": "NaN"
+            }
         });
-        return expect(res).to.eventually.have.property("type", "SSML");
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("Try asking me to to transfer a device number");
+    });
+
+    it('should PUT to Spotify endpoint with device in body', function () {
+        var api = nock("https://api.spotify.com", {
+            reqheaders: {
+                "Authorization": "Bearer example-access-token"
+            }
+        })
+            .put("/v1/me/player", {
+                "device_ids": [device0.id]
+            })
+            .reply(204);
+        var requested = eventToPromise(api, 'request')
+            .then(() => {
+                return true;
+                api.cleanAll();
+            });
+        var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": 1
+                }
+            }, "example-access-token");
+        connect.request(req);
+        return expect(requested).to.eventually.be.true;
+    });
+
+    it('should warn if device not found', function () {
+        var deviceNumber = Math.floor(Math.random() * 10) + 2;
+        var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": deviceNumber
+                }
+            }, "example-access-token");
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("couldn't find device " + deviceNumber);
+    });
+
+    it('should use (empty) cache if new session', function () {
+        var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent', null, {
+            "DEVICENUMBER": {
+                "name": "DEVICENUMBER",
+                "value": 10
+            }
+        }, null, true);
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.contain("couldn't find device");
     });
 });
 
-describe('AMAZON.StopIntent', function () {
-    it('should return nothing', function () {
-        var req = generateRequest.intentRequest('AMAZON.StopIntent', null, "example-access-token");
-        var res = connect.request(req).then(function (r) {
-            return r.response;
-        });
-        return expect(res).to.eventually.not.have.property("outputSpeech");
+describe('GetTrackIntent', function () {
+    it('should give current playing track', function () {
+        var trackName = "Example track";
+        var artistName = "Example artist";
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/currently-playing")
+            .reply(204, {
+                "is_playing": true,
+                "item": {
+                    "name": trackName,
+                    "artists": [{ "name": artistName }]
+                }
+            });
+        var req = generateRequest.intentRequest('GetTrackIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.contain("This is " + trackName + " by " + artistName);
     });
-});
 
-describe('AMAZON.CancelIntent', function () {
-    it('should return nothing', function () {
-        var req = generateRequest.intentRequest('AMAZON.CancelIntent', null, "example-access-token")
-        var res = connect.request(req).then(function (r) {
-            return r.response;
-        });
-        return expect(res).to.eventually.not.have.property("outputSpeech");
+    it('should give last played track', function () {
+        var trackName = "Example track";
+        var artistName = "Example artist";
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/currently-playing")
+            .reply(204, {
+                "is_playing": false,
+                "item": {
+                    "name": trackName,
+                    "artists": [{ "name": artistName }]
+                }
+            });
+        var req = generateRequest.intentRequest('GetTrackIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.contain("That was " + trackName + " by " + artistName);
+    });
+
+    it('should say if nothing is playing', function () {
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/currently-playing")
+            .reply(204, {
+                "is_playing": false,
+                "item": {}
+            });
+        var req = generateRequest.intentRequest('GetTrackIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("Nothing is playing");
+    });
+
+    it('should handle errors with request', function () {
+        nock.cleanAll();
+        nock("https://api.spotify.com")
+            .get("/v1/me/player/currently-playing")
+            .reply(503);
+        var req = generateRequest.intentRequest('GetTrackIntent');
+        var res = getRequestAttribute(req, 'statusCode');
+        expect(res).to.eventually.equal(503);
     });
 });
