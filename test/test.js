@@ -318,7 +318,7 @@ describe('DeviceTransferIntent', function () {
             }
         });
         var res = getRequestSSML(req);
-        return expect(res).to.eventually.include("Try asking me to to transfer a device number");
+        return expect(res).to.eventually.include("Try asking me to transfer a device number");
     });
 
     it('should PUT to Spotify endpoint with device in body', function () {
