@@ -15,39 +15,39 @@ function getRequestSSML(req) {
     });
 }
 
+function getRequestAttribute(req, attribute) {
+    return connect.request(req).then(function (r) {
+        return r.sessionAttributes[attribute];
+    });
+}
+
+const device0 = {
+    "id": "0",
+    "number": 1,
+    "is_active": false,
+    "is_restricted": false,
+    "name": "My device",
+    "type": "Computer",
+    "volume_percent": 100
+};
+
 describe('Pre and post handling', function () {
     it('should give error if invalid applicationId', function () {
-        var req = {
-            "session": {
-                "application": {
-                    "applicationId": "example"
-                },
-                "user": {}
-            },
-            "request": {
-                "type": "IntentRequest"
-            }
-        };
-        var res = connect.request(req).then(function (r) {
-            return r.response.outputSpeech.ssml;
-        });
+        var req = generateRequest.requestType(null, "example-application-id");
+        var res = getRequestSSML(req);
         return expect(res).to.eventually.contain("An error occured: Invalid applicationId");
+    });
+
+    it('should warn if no Spotify account linked', function () {
+        var req = generateRequest.requestType('LaunchRequest');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("You have not linked your Spotify account");
     });
 });
 
 describe('Launch handling', function () {
     it('should handle launch of skill', function () {
-        var req = {
-            "session": {
-                "application": {
-                    "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
-                },
-                "user": {}
-            },
-            "request": {
-                "type": "LaunchRequest"
-            }
-        }
+        var req = generateRequest.requestType('LaunchRequest');
         var res = getRequestSSML(req);
         return expect(res).to.eventually.include('I can control your Spotify Connect devices');
     });
@@ -61,10 +61,8 @@ describe('PlayIntent', function () {
     });
 
     it('should PUT to Spotify play endpoint and recieve 204', function () {
-        var req = generateRequest('PlayIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.sessionAttributes.statusCode;
-        });
+        var req = generateRequest.intentRequest('PlayIntent');
+        var res = getRequestAttribute(req, 'statusCode');
         return expect(res).to.eventually.equal(204);
     });
 });
@@ -77,10 +75,8 @@ describe('PauseIntent', function () {
     });
 
     it('should PUT to Spotify pause endpoint and recieve 204', function () {
-        var req = generateRequest('PauseIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.sessionAttributes.statusCode;
-        });
+        var req = generateRequest.intentRequest('PauseIntent');
+        var res = getRequestAttribute(req, 'statusCode');
         return expect(res).to.eventually.equal(204);
     });
 });
@@ -93,10 +89,8 @@ describe('SkipNextIntent', function () {
     });
 
     it('should POST to Spotify next endpoint and recieve 204', function () {
-        var req = generateRequest('SkipNextIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.sessionAttributes.statusCode;
-        });
+        var req = generateRequest.intentRequest('SkipNextIntent');
+        var res = getRequestAttribute(req, 'statusCode');
         return expect(res).to.eventually.equal(204);
     });
 });
@@ -109,23 +103,21 @@ describe('SkipPreviousIntent', function () {
     });
 
     it('should POST to Spotify previous endpoint and recieve 204', function () {
-        var req = generateRequest('SkipPreviousIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.sessionAttributes.statusCode;
-        });
+        var req = generateRequest.intentRequest('SkipPreviousIntent');
+        var res = getRequestAttribute(req, 'statusCode');
         return expect(res).to.eventually.equal(204);
     });
 });
 
 describe('VolumeLevelIntent', function () {
     it('should warn if no slot value', function () {
-        var req = generateRequest('VolumeLevelIntent');
+        var req = generateRequest.intentRequest('VolumeLevelIntent');
         var res = getRequestSSML(req);
         return expect(res).to.eventually.include("couldn't work out the volume to use");
     });
 
     it('should warn if not a number', function () {
-        var req = generateRequest('VolumeLevelIntent', {
+        var req = generateRequest.intentRequest('VolumeLevelIntent', {
             "VOLUMELEVEL": {
                 "name": "VOLUMELEVEL",
                 "value": "NaN"
@@ -144,9 +136,9 @@ describe('VolumeLevelIntent', function () {
         var requested = eventToPromise(api, 'request')
             .then(() => {
                 return true;
-                n.cleanAll();
+                api.cleanAll();
             });
-        var req = generateRequest('VolumeLevelIntent', {
+        var req = generateRequest.intentRequest('VolumeLevelIntent', {
             "VOLUMELEVEL": {
                 "name": "VOLUMELEVEL",
                 "value": vol
@@ -164,7 +156,7 @@ describe('VolumeLevelIntent', function () {
                     "value": vol
                 }
             };
-            var req = generateRequest('VolumeLevelIntent', slots);
+            var req = generateRequest.intentRequest('VolumeLevelIntent', slots);
             var res = getRequestSSML(req);
             if (vol < 0 || vol > 10)
                 return expect(res).to.eventually.include("You can only set the volume between 0 and 10");
@@ -179,14 +171,8 @@ describe('GetDevicesIntent', function () {
             .reply(200, { "devices": [] });
     });
 
-    it('should warn if no Spotify account linked', function () {
-        var req = generateRequest('GetDevicesIntent');
-        var res = getRequestSSML(req);
-        return expect(res).to.eventually.include("You have not linked your Spotify account");
-    });
-
     it('should find no devices', function () {
-        var req = generateRequest('GetDevicesIntent');
+        var req = generateRequest.intentRequest('GetDevicesIntent');
         var res = getRequestSSML(req);
         return expect(res).to.eventually.include("couldn't find any connect devices");
     });
@@ -197,16 +183,9 @@ describe('GetDevicesIntent', function () {
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
             .reply(200, {
-                "devices": [{
-                    "id": "0",
-                    "is_active": false,
-                    "is_restricted": false,
-                    "name": "My device",
-                    "type": "Computer",
-                    "volume_percent": 100
-                }]
+                "devices": [device0]
             });
-        var req = generateRequest('GetDevicesIntent');
+        var req = generateRequest.intentRequest('GetDevicesIntent');
         var res = getRequestSSML(req);
         return expect(res).to.eventually.include("My device");
     });
@@ -216,17 +195,87 @@ describe('GetDevicesIntent', function () {
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
             .reply(503);
-        var req = generateRequest('GetDevicesIntent');
-        var res = connect.request(req).then(function (r) {
-            return r.sessionAttributes.statusCode;
-        });
+        var req = generateRequest.intentRequest('GetDevicesIntent');
+        var res = getRequestAttribute(req, 'statusCode');
         expect(res).to.eventually.equal(503);
+    });
+});
+
+describe('DevicePlayIntent', function () {
+    it('should warn if no slot value', function () {
+        var req = generateRequest.intentRequest('DevicePlayIntent');
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("couldn't work out which device number to play on");
+    });
+
+    it('should warn if not a number', function () {
+        var req = generateRequest.intentRequest('DevicePlayIntent', {
+            "DEVICENUMBER": {
+                "name": "DEVICENUMBER",
+                "value": "NaN"
+            }
+        });
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("refer to the device by number");
+    });
+
+    it('should PUT to Spotify endpoint with device in body', function () {
+        var api = nock("https://api.spotify.com", {
+            reqheaders: {
+                "Authorization": "Bearer example-access-token"
+            }
+        })
+            .put("/v1/me/player", {
+                "device_ids": [device0.id],
+                "play": true
+            })
+            .reply(204);
+        var requested = eventToPromise(api, 'request')
+            .then(() => {
+                return true;
+                api.cleanAll();
+            });
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": 1
+                }
+            }, "example-access-token");
+        connect.request(req);
+        return expect(requested).to.eventually.be.true;
+    });
+
+    it('should warn if device not found', function () {
+        var deviceNumber = Math.floor(Math.random() * 10) + 2;
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": deviceNumber
+                }
+            }, "example-access-token");
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.include("couldn't find device " + deviceNumber);
+    });
+
+    it('should use (empty) cache if new session', function () {
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent', null, {
+            "DEVICENUMBER": {
+                "name": "DEVICENUMBER",
+                "value": 10
+            }
+        }, null, true);
+        var res = getRequestSSML(req);
+        return expect(res).to.eventually.contain("couldn't find device");
     });
 });
 
 describe('AMAZON.HelpIntent', function () {
     it('should give correct help information', function () {
-        var req = generateRequest('AMAZON.HelpIntent');
+        var req = generateRequest.intentRequest('AMAZON.HelpIntent');
         var res = connect.request(req).then(function (r) {
             return r.response.outputSpeech;
         });
@@ -236,7 +285,7 @@ describe('AMAZON.HelpIntent', function () {
 
 describe('AMAZON.StopIntent', function () {
     it('should return nothing', function () {
-        var req = generateRequest('AMAZON.StopIntent', null, "example-access-token");
+        var req = generateRequest.intentRequest('AMAZON.StopIntent', null, "example-access-token");
         var res = connect.request(req).then(function (r) {
             return r.response;
         });
@@ -246,7 +295,7 @@ describe('AMAZON.StopIntent', function () {
 
 describe('AMAZON.CancelIntent', function () {
     it('should return nothing', function () {
-        var req = generateRequest('AMAZON.CancelIntent', null, "example-access-token")
+        var req = generateRequest.intentRequest('AMAZON.CancelIntent', null, "example-access-token")
         var res = connect.request(req).then(function (r) {
             return r.response;
         });
