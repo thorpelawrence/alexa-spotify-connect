@@ -52,7 +52,6 @@ app.intent("AMAZON.HelpIntent", {
     res.reprompt("What would you like to do?");
     // Keep session open
     res.shouldEndSession(false);
-    return;
 });
 
 // Handle default Amazon stop intent
@@ -211,7 +210,6 @@ app.intent('VolumeLevelIntent', {
         }
     }
 );
-
 
 // Handle get devices intent
 // No slots required
