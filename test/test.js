@@ -165,8 +165,8 @@ describe('VolumeLevelIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                return true;
                 api.cleanAll();
+                return true;
             });
         var req = generateRequest.intentRequest('VolumeLevelIntent', {
             "VOLUMELEVEL": {
@@ -262,8 +262,8 @@ describe('DevicePlayIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                return true;
                 api.cleanAll();
+                return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
             { "devices": [device0] },
@@ -333,8 +333,8 @@ describe('DeviceTransferIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                return true;
                 api.cleanAll();
+                return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
             { "devices": [device0] },
