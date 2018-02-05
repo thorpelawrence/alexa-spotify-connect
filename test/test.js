@@ -1,4 +1,3 @@
-const assert = require('assert');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
@@ -75,7 +74,7 @@ describe('AMAZON.StopIntent', function () {
 
 describe('AMAZON.CancelIntent', function () {
     it('should return nothing', function () {
-        var req = generateRequest.intentRequest('AMAZON.CancelIntent', null, "example-access-token")
+        var req = generateRequest.intentRequest('AMAZON.CancelIntent', null, "example-access-token");
         var res = connect.request(req).then(function (r) {
             return r.response;
         });
@@ -165,7 +164,7 @@ describe('VolumeLevelIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                api.cleanAll();
+                nock.cleanAll();
                 return true;
             });
         var req = generateRequest.intentRequest('VolumeLevelIntent', {
@@ -188,8 +187,9 @@ describe('VolumeLevelIntent', function () {
             };
             var req = generateRequest.intentRequest('VolumeLevelIntent', slots);
             var res = getRequestSSML(req);
-            if (vol < 0 || vol > 10)
+            if (vol < 0 || vol > 10) {
                 return expect(res).to.eventually.include("You can only set the volume between 0 and 10");
+            }
         });
     });
 });
@@ -262,7 +262,7 @@ describe('DevicePlayIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                api.cleanAll();
+                nock.cleanAll();
                 return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
@@ -333,7 +333,7 @@ describe('DeviceTransferIntent', function () {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                api.cleanAll();
+                nock.cleanAll();
                 return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
