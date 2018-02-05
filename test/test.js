@@ -187,19 +187,15 @@ describe('VolumeLevelIntent', () => {
     });
 
     test('should warn if volume outside of range', () => {
-        [-10, -5, 15].forEach(function (vol) {
-            var slots = {
-                "VOLUMELEVEL": {
-                    "name": "VOLUMELEVEL",
-                    "value": vol
-                }
-            };
-            var req = generateRequest.intentRequest('VolumeLevelIntent', slots);
-            return getRequestSSML(req).then(res => {
-                if (vol < 0 || vol > 10) {
-                    expect(res).toContain("You can only set the volume between 0 and 10");
-                }
-            });
+        var slots = {
+            "VOLUMELEVEL": {
+                "name": "VOLUMELEVEL",
+                "value": 15
+            }
+        };
+        var req = generateRequest.intentRequest('VolumeLevelIntent', slots);
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("You can only set the volume between 0 and 10");
         });
     });
 });
@@ -459,7 +455,7 @@ describe('GetTrackIntent', () => {
             .reply(503);
         var req = generateRequest.intentRequest('GetTrackIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
-			expect(res).toBe(503);
-		});
+            expect(res).toBe(503);
+        });
     });
 });
