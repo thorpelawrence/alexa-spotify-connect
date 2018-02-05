@@ -302,7 +302,7 @@ app.intent('DevicePlayIntent', {
                     var deviceId, deviceName;
                     // Iterate through devices to find ID and name by number
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i].number === deviceNumber) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
@@ -388,7 +388,7 @@ app.intent('DeviceTransferIntent', {
                     var deviceId, deviceName;
                     // Iterate through devices to find ID and name by number
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i].number === deviceNumber) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
