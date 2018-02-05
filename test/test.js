@@ -1,11 +1,11 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const nock = require('nock');
-const expect = chai.expect;
 const eventToPromise = require('event-to-promise');
 const connect = require('../connect');
 const generateRequest = require('./generate-request');
 
+const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 function getRequestSSML(req) {
