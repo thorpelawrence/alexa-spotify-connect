@@ -458,7 +458,8 @@ describe('GetTrackIntent', () => {
             .get("/v1/me/player/currently-playing")
             .reply(503);
         var req = generateRequest.intentRequest('GetTrackIntent');
-        return getRequestAttribute(req, 'statusCode');
-        expect(res).toBe(503);
+        return getRequestAttribute(req, 'statusCode').then(res => {
+			expect(res).toBe(503);
+		});
     });
 });
