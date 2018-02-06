@@ -173,8 +173,7 @@ describe('VolumeLevelIntent', () => {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                nock.cleanAll();
-                return true;
+                return api.isDone();
             });
         var req = generateRequest.intentRequest('VolumeLevelIntent', {
             "VOLUMELEVEL": {
@@ -269,7 +268,7 @@ describe('DevicePlayIntent', () => {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                return true;
+                return api.isDone();
             });
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
             { "devices": [device0] },
@@ -345,7 +344,7 @@ describe('DeviceTransferIntent', () => {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                return true;
+                return api.isDone();
             });
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
             { "devices": [device0] },
