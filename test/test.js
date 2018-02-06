@@ -3,6 +3,8 @@ const eventToPromise = require('event-to-promise');
 const connect = require('../connect');
 const generateRequest = require('./generate-request');
 
+nock.disableNetConnect();
+
 function getRequestSSML(req) {
     return connect.request(req).then(function (r) {
         return r.response.outputSpeech.ssml;
@@ -201,13 +203,10 @@ describe('VolumeLevelIntent', () => {
 });
 
 describe('GetDevicesIntent', () => {
-    beforeEach(() => {
+    test('should find no devices', () => {
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
             .reply(200, { "devices": [] });
-    });
-
-    test('should find no devices', () => {
         var req = generateRequest.intentRequest('GetDevicesIntent');
         return getRequestSSML(req).then(res => {
             expect(res).toContain("couldn't find any connect devices");
@@ -215,8 +214,6 @@ describe('GetDevicesIntent', () => {
     });
 
     test('should find 1 device', () => {
-        // Change reply to include a device
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
             .reply(200, {
@@ -229,7 +226,6 @@ describe('GetDevicesIntent', () => {
     });
 
     test('should handle errors with request', () => {
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/devices")
             .reply(503);
@@ -273,7 +269,6 @@ describe('DevicePlayIntent', () => {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                nock.cleanAll();
                 return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
@@ -350,7 +345,6 @@ describe('DeviceTransferIntent', () => {
             .reply(204);
         var requested = eventToPromise(api, 'request')
             .then(() => {
-                nock.cleanAll();
                 return true;
             });
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
@@ -399,7 +393,6 @@ describe('GetTrackIntent', () => {
     test('should give current playing track', () => {
         var trackName = "Example track";
         var artistName = "Example artist";
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/currently-playing")
             .reply(204, {
@@ -418,7 +411,6 @@ describe('GetTrackIntent', () => {
     test('should give last played track', () => {
         var trackName = "Example track";
         var artistName = "Example artist";
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/currently-playing")
             .reply(204, {
@@ -435,7 +427,6 @@ describe('GetTrackIntent', () => {
     });
 
     test('should say if nothing is playing', () => {
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/currently-playing")
             .reply(204, {
@@ -449,7 +440,6 @@ describe('GetTrackIntent', () => {
     });
 
     test('should handle errors with request', () => {
-        nock.cleanAll();
         nock("https://api.spotify.com")
             .get("/v1/me/player/currently-playing")
             .reply(503);
@@ -458,4 +448,8 @@ describe('GetTrackIntent', () => {
             expect(res).toBe(503);
         });
     });
+});
+
+afterEach(() => {
+    nock.cleanAll();
 });
