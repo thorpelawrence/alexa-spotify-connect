@@ -14,22 +14,24 @@
   "license": "MIT",
   "main": "connect.js",
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.0",
-    "mocha": "^5.0.0",
-    "nock": "^9.1.6",
-    "nyc": "^11.4.1"
+    "jest": "^22.1.4",
+    "nock": "^9.1.6"
   },
   "scripts": {
     "start": "node connect.js",
     "skill": "node skill.js",
-    "test": "mocha",
-    "test-coverage": "nyc --reporter=lcovonly mocha"
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thorpelawrence/alexa-spotify-connect.git"
+  },
+  "jest": {
+    "coverageReporters": [
+      "lcovonly"
+    ]
   },
   "keywords": [
     "amazon",

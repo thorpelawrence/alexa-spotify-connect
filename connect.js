@@ -52,7 +52,6 @@ app.intent("AMAZON.HelpIntent", {
     res.reprompt("What would you like to do?");
     // Keep session open
     res.shouldEndSession(false);
-    return;
 });
 
 // Handle default Amazon stop intent
@@ -212,7 +211,6 @@ app.intent('VolumeLevelIntent', {
     }
 );
 
-
 // Handle get devices intent
 // No slots required
 app.intent('GetDevicesIntent', {
@@ -304,7 +302,7 @@ app.intent('DevicePlayIntent', {
                     var deviceId, deviceName;
                     // Iterate through devices to find ID and name by number
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i].number === deviceNumber) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
@@ -390,7 +388,7 @@ app.intent('DeviceTransferIntent', {
                     var deviceId, deviceName;
                     // Iterate through devices to find ID and name by number
                     for (var i = 0; i < devices.length; i++) {
-                        if (devices[i].number == deviceNumber) {
+                        if (devices[i].number === deviceNumber) {
                             deviceId = devices[i].id;
                             deviceName = devices[i].name;
                         }
@@ -426,7 +424,7 @@ app.intent('DeviceTransferIntent', {
                 else {
                     // Not a number
                     res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
-                    res.say("Try asking me to to transfer a device number");
+                    res.say("Try asking me to transfer a device number");
                     res.reprompt("What would you like to do?");
                     // Keep session open
                     res.shouldEndSession(false);
