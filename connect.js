@@ -21,7 +21,7 @@ app.pre = function (req, res, type) {
     }
     // Check that the user has an access token, if they have linked their account
     if (!req.getSession().details.user.accessToken) {
-        res.say("You have not linked your Spotify account, check your Alexa app to link the account");
+        res.say("Du hast kein Spotify-Konto hinterlegt. Um dein Konto mit Alexa zu verknüpfen, gehe in die Alexa App");
         res.linkAccount();
     }
 };
@@ -29,14 +29,14 @@ app.pre = function (req, res, type) {
 // Run after every request
 app.post = function (req, res, type, exception) {
     if (exception) {
-        return res.clear().say("An error occured: " + exception).send();
+        return res.clear().say("Es ist ein Fehler aufgetreten: " + exception).send();
     }
 };
 
 // Function for when skill is invoked without intent
 app.launch(function (req, res) {
-    res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
-    res.reprompt("To start, ask me to list your devices");
+    res.say("Hey! Ich kann deine Spotify Connect Geräte steuern. Frag mich einfach nach deinen Geräten");
+    res.reprompt("Frag mich doch einfach nach deinen Geräten!");
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -47,9 +47,9 @@ app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
 }, function (req, res) {
-    res.say("You can ask me to list your connect devices and then control them. ")
-    res.say("For example, tell me to play on a device number after listing devices");
-    res.reprompt("What would you like to do?");
+    res.say("Du kannst mich nach deinen Spotify Connect Geräten fragen, um sie zu steuern.")
+    res.say("Sag' zum Beispiel, Spiele Musik auf dem Gerät, und der Geräte-Nummer, nachdem alle Geräte aufgelistet sind.");
+    res.reprompt("Was möchtest du machen?");
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -77,8 +77,7 @@ app.intent("AMAZON.CancelIntent", {
 app.intent('PlayIntent', {
     "utterances": [
         "play",
-        "resume",
-        "continue"
+        "wiedergabe"
     ]
 },
     function (req, res) {
@@ -115,9 +114,9 @@ app.intent('PauseIntent', {
 // No slots required
 app.intent('SkipNextIntent', {
     "utterances": [
-        "skip",
-        "next",
-        "forwards"
+        "weiter",
+        "{nächster|nächstes} {song|track|lied}",
+        "forwärts"
     ]
 },
     function (req, res) {
@@ -135,10 +134,9 @@ app.intent('SkipNextIntent', {
 // No slots required
 app.intent('SkipPreviousIntent', {
     "utterances": [
-        "previous",
-        "last",
-        "back",
-        "backwards"
+        "zurück",
+        "{letzter|letztes} {song|track|lied}",
+        "rückwärts"
     ]
 },
     function (req, res) {
@@ -159,7 +157,8 @@ app.intent('VolumeLevelIntent', {
         "VOLUMELEVEL": "AMAZON.NUMBER"
     },
     "utterances": [
-        "{set the|set|} volume {level|} {to|} {-|VOLUMELEVEL}"
+        "{ändere die|ändere|} Lautstärke auf {-|VOLUMELEVEL}",
+        "Lautstärke {-|VOLUMELEVEL}"
     ]
 },
     function (req, res) {
@@ -186,24 +185,24 @@ app.intent('VolumeLevelIntent', {
                     }
                     else {
                         // If not valid volume
-                        res.say("You can only set the volume between 0 and 10");
+                        res.say("Ich kann die Lautstärke nur auf 0 bis 10 ändern");
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("Try setting a volume between 0 and 10");
-                    res.reprompt("What would you like to do?");
+                    res.say("Versuche eine Zahl von 0 bis 10.");
+                    res.reprompt("Was möchtest du machen?");
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out the volume to use.")
-                res.say("Try setting a volume between 0 and 10");
-                res.reprompt("What would you like to do?");
+                res.say("Du hast keine Lautstärke angegeben.")
+                res.say("Versuche eine Zahl von 0 bis 10.");
+                res.reprompt("Was möchtest du machen?");
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -215,10 +214,11 @@ app.intent('VolumeLevelIntent', {
 // No slots required
 app.intent('GetDevicesIntent', {
     "utterances": [
-        "devices",
-        "list",
-        "search",
-        "find"
+        "geräte",
+        "liste",
+        "suche",
+        "finde",
+        "{liste|suche|finde|} {alle geräte|alle gerät-nummern} {auf|}"
     ]
 },
     function (req, res) {
@@ -246,22 +246,22 @@ app.intent('GetDevicesIntent', {
                 // Check if user has devices
                 if (devices.length > 0) {
                     // Comma separated list of device names
-                    res.say("I found these connect devices: ");
+                    res.say("Ich habe folgende Geräte gefunden: ");
                     res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and ') + ". ");
-                    res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
+                    res.say("Was möchtest du auf diesen Geräten {tun|machen}?").reprompt("Was möchtest du machen?");
                     // Keep session open
                     res.shouldEndSession(false);
                 }
                 else {
                     // No devices found
-                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
+                    res.say("Ich konnte keine Spotify Connect Geräte finden. Für weitere Informationen zum Verbinden deines Gerätes, gehe in der Alexa App");
                     res.card({
                         type: "Simple",
-                        title: "Connecting to a device using Spotify Connect",
-                        content: "To add a device to Spotify Connect,"
-                            + " log in to your Spotify account on a supported device"
-                            + " such as an Echo, phone, or computer"
-                            + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
+                        title: "Ein Gerät mit Spotify Connect verbinden",
+                        content: "Um ein Gerät mit Spotify Connect zu verbinden,"
+                            + " melde dich zuerst mit deinem Spotify-Konto auf dem unterstützen Gerät"
+                            + "wie zum Beispiel einem Amazon Echo, deinem Smartphone, oder einem Computer an"
+                            + "\nhttps://www.spotify.com/de/connect/"
                     });
                 }
             })
@@ -279,7 +279,7 @@ app.intent('DevicePlayIntent', {
         "DEVICENUMBER": "AMAZON.NUMBER"
     },
     "utterances": [
-        "play on {number|device|device number|} {-|DEVICENUMBER}"
+        "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer} {-|DEVICENUMBER}"
     ]
 },
     function (req, res) {
@@ -327,30 +327,30 @@ app.intent('DevicePlayIntent', {
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                        res.say("Musik wird auf " + deviceNumber + ": " + deviceName + " abgespielt");
                     }
                     else {
                         // If device for number not found
-                        res.say("I couldn't find device " + deviceNumber + ". ");
-                        res.say("Try asking me to list devices first");
+                        res.say("Ich konnte das Gerät " + deviceNumber + "nicht finden.");
+                        res.say("Frage mich zuerst, nach allen Geräten");
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("I couldn't work out which device to play on, make sure you refer to the device by number.");
-                    res.say("Try asking me to play on a device number");
-                    res.reprompt("What would you like to do?");
+                    res.say("Ich konnte dein Gerät nicht finden.");
+                    res.say("Versuche, die Geräte-Nummer zu nennen.");
+                    res.reprompt("Was möchtest du machen?");
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out which device number to play on.");
-                res.say("Try asking me to play on a device number");
-                res.reprompt("What would you like to do?");
+                res.say("Ich konnte dein Gerät nicht finden.");
+                res.say("Versuche, die Geräte-Nummer zu nennen.");
+                res.reprompt("Was möchtest du machen?");
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -365,7 +365,7 @@ app.intent('DeviceTransferIntent', {
         "DEVICENUMBER": "AMAZON.NUMBER"
     },
     "utterances": [
-        "transfer to {number|device|device number|} {-|DEVICENUMBER}"
+        "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer} {-|DEVICENUMBER}"
     ]
 },
     function (req, res) {
@@ -411,30 +411,30 @@ app.intent('DeviceTransferIntent', {
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                        res.say("Musikwiedergabe wird auf " + deviceNumber + ": " + deviceName + " übertragen");
                     }
                     else {
                         // If device for number not found
-                        res.say("I couldn't find device " + deviceNumber + ". ");
-                        res.say("Try asking me to list devices first");
+                        res.say("Ich konnte das Gerät " + deviceNumber + "nicht finden.");
+                        res.say("Frage mich zuerst, nach allen Geräten");
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
-                    res.say("Try asking me to transfer a device number");
-                    res.reprompt("What would you like to do?");
+                    res.say("Ich konnte dein Gerät zur Übertragung der Musikwiedergabe nicht finden.");
+                    res.say("Versuche, die Geräte-Nummer zu nennen.");
+                    res.reprompt("Was möchtest du machen?");
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out which device number to transfer to.");
-                res.say("Try asking me to transfer to a device number");
-                res.reprompt("What would you like to do?");
+                res.say("Ich konnte dein Gerät zur Übertragung der Musikwiedergabe nicht finden.");
+                res.say("Versuche, die Geräte-Nummer zu nennen.");
+                res.reprompt("Was möchtest du machen?");
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -446,8 +446,9 @@ app.intent('DeviceTransferIntent', {
 // No slots required
 app.intent('GetTrackIntent', {
     "utterances": [
-        "{what is|what's} {playing|this song}",
-        "what {song|track|} is this"
+        "Was wird gespielt",
+        "Was ist {der Song|der Track|das Lied}",
+        "{welcher|welches} {song|track|lied} ist das"
     ]
 },
     function (req, res) {
@@ -463,16 +464,16 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    res.say("This is " + body.item.name + " by " + body.item.artists[0].name);
+                    res.say("Das ist " + body.item.name + " von " + body.item.artists[0].name);
                 }
                 else {
                     if (body.item.name) {
                         // If not playing but last track known
-                        res.say("That was " + body.item.name + " by " + body.item.artists[0].name);
+                        res.say("Das war " + body.item.name + " von " + body.item.artists[0].name);
                     }
                     else {
                         // If unknown
-                        res.say("Nothing is playing");
+                        res.say("Aktuell wird nichts gespielt");
                     }
                 }
             })
