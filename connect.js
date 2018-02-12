@@ -331,7 +331,7 @@ app.intent('DevicePlayIntent', {
                     }
                     else {
                         // If device for number not found
-                        res.say("Ich konnte das Gerät " + deviceNumber + "nicht finden.");
+                        res.say("Ich konnte das Gerät " + deviceNumber + " nicht finden.");
                         res.say("Frage mich zuerst, nach allen Geräten");
                         // Keep session open
                         res.shouldEndSession(false);
@@ -415,7 +415,7 @@ app.intent('DeviceTransferIntent', {
                     }
                     else {
                         // If device for number not found
-                        res.say("Ich konnte das Gerät " + deviceNumber + "nicht finden.");
+                        res.say("Ich konnte das Gerät " + deviceNumber + " nicht finden.");
                         res.say("Frage mich zuerst, nach allen Geräten");
                         // Keep session open
                         res.shouldEndSession(false);

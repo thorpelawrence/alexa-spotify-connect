@@ -31,14 +31,14 @@ describe('Pre and post handling', () => {
     test('should give error if invalid applicationId', () => {
         var req = generateRequest.requestType(null, "example-application-id");
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("An error occured: Invalid applicationId");
+            expect(res).toContain("Es ist ein Fehler aufgetreten: Invalid applicationId");
         });
     });
 
     test('should warn if no Spotify account linked', () => {
         var req = generateRequest.requestType('LaunchRequest');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("You have not linked your Spotify account");
+            expect(res).toContain("Du hast kein Spotify-Konto hinterlegt");
         });
     });
 });
@@ -47,7 +47,7 @@ describe('Launch handling', () => {
     test('should handle launch of skill', () => {
         var req = generateRequest.requestType('LaunchRequest');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain('I can control your Spotify Connect devices');
+            expect(res).toContain('Ich kann deine Spotify Connect Geräte steuern');
         });
     });
 });
@@ -149,7 +149,7 @@ describe('VolumeLevelIntent', () => {
     test('should warn if no slot value', () => {
         var req = generateRequest.intentRequest('VolumeLevelIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't work out the volume to use");
+            expect(res).toContain("Du hast keine Lautstärke angegeben");
         });
     });
 
@@ -161,7 +161,7 @@ describe('VolumeLevelIntent', () => {
             }
         });
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("Try setting a volume between 0 and 10");
+            expect(res).toContain("Versuche eine Zahl von 0 bis 10");
         });
     });
 
@@ -196,7 +196,7 @@ describe('VolumeLevelIntent', () => {
         };
         var req = generateRequest.intentRequest('VolumeLevelIntent', slots);
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("You can only set the volume between 0 and 10");
+            expect(res).toContain("Ich kann die Lautstärke nur auf 0 bis 10 ändern");
         });
     });
 });
@@ -208,7 +208,7 @@ describe('GetDevicesIntent', () => {
             .reply(200, { "devices": [] });
         var req = generateRequest.intentRequest('GetDevicesIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find any connect devices");
+            expect(res).toContain("Ich konnte keine Spotify Connect Geräte finden");
         });
     });
 
@@ -239,7 +239,7 @@ describe('DevicePlayIntent', () => {
     test('should warn if no slot value', () => {
         var req = generateRequest.intentRequest('DevicePlayIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't work out which device number to play on");
+            expect(res).toContain("Ich konnte dein Gerät nicht finden");
         });
     });
 
@@ -251,7 +251,7 @@ describe('DevicePlayIntent', () => {
             }
         });
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("refer to the device by number");
+            expect(res).toContain("Versuche, die Geräte-Nummer zu nennen");
         });
     });
 
@@ -295,7 +295,7 @@ describe('DevicePlayIntent', () => {
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device " + deviceNumber);
+            expect(res).toContain("Ich konnte das Gerät " + deviceNumber);
         });
     });
 
@@ -307,7 +307,7 @@ describe('DevicePlayIntent', () => {
             }
         }, null, true);
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device");
+            expect(res).toContain("Ich konnte das Gerät");
         });
     });
 });
@@ -316,7 +316,7 @@ describe('DeviceTransferIntent', () => {
     test('should warn if no slot value', () => {
         var req = generateRequest.intentRequest('DeviceTransferIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't work out which device number to transfer to");
+            expect(res).toContain("Ich konnte dein Gerät zur Übertragung der Musikwiedergabe nicht finden");
         });
     });
 
@@ -328,7 +328,7 @@ describe('DeviceTransferIntent', () => {
             }
         });
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("Try asking me to transfer a device number");
+            expect(res).toContain("Versuche, die Geräte-Nummer zu nennen");
         });
     });
 
@@ -371,7 +371,7 @@ describe('DeviceTransferIntent', () => {
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device " + deviceNumber);
+            expect(res).toContain("Ich konnte das Gerät " + deviceNumber);
         });
     });
 
@@ -383,7 +383,7 @@ describe('DeviceTransferIntent', () => {
             }
         }, null, true);
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device");
+            expect(res).toContain("Ich konnte das Gerät");
         });
     });
 });
@@ -403,7 +403,7 @@ describe('GetTrackIntent', () => {
             });
         var req = generateRequest.intentRequest('GetTrackIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("This is " + trackName + " by " + artistName);
+            expect(res).toContain("Das ist " + trackName + " von " + artistName);
         });
     });
 
@@ -421,7 +421,7 @@ describe('GetTrackIntent', () => {
             });
         var req = generateRequest.intentRequest('GetTrackIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("That was " + trackName + " by " + artistName);
+            expect(res).toContain("Das war " + trackName + " von " + artistName);
         });
     });
 
@@ -434,7 +434,7 @@ describe('GetTrackIntent', () => {
             });
         var req = generateRequest.intentRequest('GetTrackIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("Nothing is playing");
+            expect(res).toContain("Aktuell wird nichts gespielt");
         });
     });
 
