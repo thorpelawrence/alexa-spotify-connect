@@ -2,6 +2,7 @@ var alexa = require('alexa-app');
 var request = require('request-promise');
 var express = require('express');
 var nodecache = require('node-cache');
+var i18n = require('i18n');
 
 // Create instance of express
 var express_app = express();
@@ -11,6 +12,9 @@ var cache = new nodecache({ stdTTL: 3600, checkperiod: 120 });
 var app = new alexa.app('connect');
 // Bind alexa-app to express instance
 app.express({ expressApp: express_app });
+i18n.configure({
+    directory: __dirname + '/locales'
+});
 
 // Run every time the skill is accessed
 app.pre = function (req, res, type) {
@@ -24,6 +28,8 @@ app.pre = function (req, res, type) {
         res.say("You have not linked your Spotify account, check your Alexa app to link the account");
         res.linkAccount();
     }
+    //i18n.init(req, res);
+    //i18n.setLocale(req.data.request.locale);
 };
 
 // Run after every request
