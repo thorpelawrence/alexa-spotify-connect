@@ -351,7 +351,7 @@ describe('DeviceTransferIntent', () => {
             {
                 "DEVICENUMBER": {
                     "name": "DEVICENUMBER",
-                    "value": 1
+                    "value": device0.number
                 }
             }, "example-access-token");
         connect.request(req);
@@ -445,6 +445,47 @@ describe('GetTrackIntent', () => {
         var req = generateRequest.intentRequest('GetTrackIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
             expect(res).toBe(503);
+        });
+    });
+});
+
+describe('i18n', () => {
+    test('give correct language response for launch intent', () => {
+        var req = generateRequest.requestType('LaunchRequest', null, "de-DE");
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Hey! Ich kann deine Spotify Connect Geräte steuern");
+        });
+    });
+
+    test('use i18n substitution for device number when not found', () => {
+        var deviceNumber = 2;
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": deviceNumber
+                }
+            }, "example-access-token", null, "de-DE");
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Ich konnte das Gerät " + deviceNumber + " nicht finden");
+        });
+    });
+
+    test('use i18n substitution for device number device found', () => {
+        nock("https://api.spotify.com")
+            .put("/v1/me/player")
+            .reply(204);
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": device0.number
+                }
+            }, "example-access-token", null, "de-DE");
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Musik wird auf " + device0.number + ": " + device0.name + " abgespielt");
         });
     });
 });

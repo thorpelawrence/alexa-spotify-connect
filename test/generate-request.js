@@ -28,7 +28,7 @@ module.exports = {
             }
         }
     },
-    intentRequestSessionAttributes: function (intentName, sessionAttributes, slots, accessToken, newSession) {
+    intentRequestSessionAttributes: function (intentName, sessionAttributes, slots, accessToken, newSession, locale) {
         return {
             "session": {
                 "new": newSession || false,
@@ -45,7 +45,8 @@ module.exports = {
                 "intent": {
                     "name": intentName || "",
                     "slots": slots || {}
-                }
+                },
+                "locale": locale || "en-GB"
             },
             "context": {
                 "System": {
@@ -59,7 +60,7 @@ module.exports = {
             }
         }
     },
-    requestType: function (requestType, applicationId) {
+    requestType: function (requestType, applicationId, locale) {
         return {
             "session": {
                 "application": {
@@ -68,7 +69,8 @@ module.exports = {
                 "user": {}
             },
             "request": {
-                "type": requestType || "LaunchRequest"
+                "type": requestType || "LaunchRequest",
+                "locale": locale || "en-GB"
             }
         };
     }
