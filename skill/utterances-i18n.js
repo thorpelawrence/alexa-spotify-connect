@@ -10,8 +10,9 @@ for (var locale in locales) {
     for (var intent in locales[locale]) {
         locales[locale][intent].forEach(template => {
             utterances(template).forEach(utterance => {
-                console.log('\t', intent, utterance.trim());
+                console.log(intent, utterance.trim());
             });
         });
     }
+    console.log();
 }
