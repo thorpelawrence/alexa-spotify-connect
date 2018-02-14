@@ -328,7 +328,7 @@ describe('DeviceTransferIntent', () => {
             }
         });
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("Try asking me to transfer a device number");
+            expect(res).toContain("Try asking me to transfer to a device number");
         });
     });
 
