@@ -4,7 +4,7 @@
     "SkipNextIntent": [
         "weiter",
         "{nächster|nächstes} {song|track|lied}",
-        "forwärts"
+        "vorwärts"
     ],
     "SkipPreviousIntent": [
         "zurück",
@@ -23,10 +23,10 @@
         "{liste|suche|finde|} {alle geräte|alle gerät-nummern} {auf|}"
     ],
     "DevicePlayIntent": [
-        "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer} {-|DEVICENUMBER}"
+        "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer|} {-|DEVICENUMBER}"
     ],
     "DeviceTransferIntent": [
-        "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer} {-|DEVICENUMBER}"
+        "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICENUMBER}"
     ],
     "GetTrackIntent": [
         "was wird gespielt",
