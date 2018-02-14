@@ -489,7 +489,3 @@ describe('i18n', () => {
         });
     });
 });
-
-afterEach(() => {
-    nock.cleanAll();
-});
