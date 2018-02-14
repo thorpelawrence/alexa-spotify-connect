@@ -23,7 +23,6 @@
 	"I couldn't work out which device number to transfer to.": "I couldn't work out which device number to transfer to.",
 	"Try asking me to transfer to a device number": "Try asking me to transfer to a device number",
 	"I couldn't work out which device to transfer to, make sure you refer to the device by number.": "I couldn't work out which device to transfer to, make sure you refer to the device by number.",
-	"Try asking me to transfer a device number": "Try asking me to transfer a device number",
 	"Transferring to device {{deviceNumber}}: {{deviceName}}": "Transferring to device {{deviceNumber}}: {{deviceName}}",
 	"This is {{name}} by {{artist}}": "This is {{name}} by {{artist}}",
 	"That was {{name}} by {{artist}}": "That was {{name}} by {{artist}}",

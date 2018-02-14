@@ -431,7 +431,7 @@ app.intent('DeviceTransferIntent', {
                 else {
                     // Not a number
                     res.say(i18n.__("I couldn't work out which device to transfer to, make sure you refer to the device by number."))
-                        .say(i18n.__("Try asking me to transfer a device number"))
+                        .say(i18n.__("Try asking me to transfer to a device number"))
                         .reprompt(i18n.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
@@ -470,12 +470,12 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    res.say(i18n.__("This is {{name}} by {{artist}}", {name: body.item.name, artist: body.item.artists[0].name}));
+                    res.say(i18n.__("This is {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                 }
                 else {
                     if (body.item.name) {
                         // If not playing but last track known
-                        res.say(i18n.__("That was {{name}} by {{artist}}", {name: body.item.name, artist: body.item.artists[0].name}));
+                        res.say(i18n.__("That was {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                     }
                     else {
                         // If unknown
