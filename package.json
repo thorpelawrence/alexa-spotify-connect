@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "node connect.js",
-    "skill": "node skill.js",
+    "skill": "node skill/skill.js",
+    "utterances-i18n": "node skill/utterances-i18n",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },

@@ -1,0 +1,36 @@
+{
+    "PlayIntent": ["play", "wiedergabe"],
+    "PauseIntent": ["pause"],
+    "SkipNextIntent": [
+        "weiter",
+        "{nächster|nächstes} {song|track|lied}",
+        "forwärts"
+    ],
+    "SkipPreviousIntent": [
+        "zurück",
+        "{letzter|letztes} {song|track|lied}",
+        "rückwärts"
+    ],
+    "VolumeLevelIntent": [
+        "{ändere die|ändere|} Lautstärke auf {-|VOLUMELEVEL}",
+        "lautstärke {-|VOLUMELEVEL}"
+    ],
+    "GetDevicesIntent": [
+        "geräte",
+        "liste",
+        "suche",
+        "finde",
+        "{liste|suche|finde|} {alle geräte|alle gerät-nummern} {auf|}"
+    ],
+    "DevicePlayIntent": [
+        "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer} {-|DEVICENUMBER}"
+    ],
+    "DeviceTransferIntent": [
+        "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer} {-|DEVICENUMBER}"
+    ],
+    "GetTrackIntent": [
+        "was wird gespielt",
+        "was ist {der Song|der Track|das Lied}",
+        "{welcher|welches} {song|track|lied} ist das"
+    ]
+}

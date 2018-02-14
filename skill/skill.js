@@ -1,4 +1,4 @@
-var connect = require('./connect');
+var connect = require('../connect');
 
 console.log("SCHEMA: ");
 console.log(connect.schema());
