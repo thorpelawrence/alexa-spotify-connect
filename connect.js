@@ -27,7 +27,7 @@ app.pre = function (req, res, type) {
         throw "Invalid applicationId";
     }
     // Check that the user has an access token, if they have linked their account
-    if (!req.getSession().details.user.accessToken) {
+    if (!(req.context.System.user.accessToken || req.getSession().details.user.accessToken)) {
         res.say(i18n.__("You have not linked your Spotify account, check your Alexa app to link the account"));
         res.linkAccount();
     }

@@ -199,6 +199,15 @@ describe('VolumeLevelIntent', () => {
             expect(res).toContain("You can only set the volume between 0 and 10");
         });
     });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
 });
 
 describe('GetDevicesIntent', () => {
@@ -310,6 +319,15 @@ describe('DevicePlayIntent', () => {
             expect(res).toContain("couldn't find device");
         });
     });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
 });
 
 describe('DeviceTransferIntent', () => {
@@ -384,6 +402,15 @@ describe('DeviceTransferIntent', () => {
         }, null, true);
         return getRequestSSML(req).then(res => {
             expect(res).toContain("couldn't find device");
+        });
+    });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
         });
     });
 });
