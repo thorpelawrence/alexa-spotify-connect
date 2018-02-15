@@ -321,7 +321,7 @@ describe('DevicePlayIntent', () => {
     });
 
     test('should return nothing if no session', () => {
-        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        var req = generateRequest.intentRequestNoSession('DevicePlayIntent');
         return connect.request(req).then(function (r) {
             return r.response;
         }).then(res => {
@@ -406,7 +406,7 @@ describe('DeviceTransferIntent', () => {
     });
 
     test('should return nothing if no session', () => {
-        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        var req = generateRequest.intentRequestNoSession('DeviceTransferIntent');
         return connect.request(req).then(function (r) {
             return r.response;
         }).then(res => {
