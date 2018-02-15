@@ -7,6 +7,7 @@
     "alexa-app": "^4.0.1",
     "event-to-promise": "^0.8.0",
     "express": "^4.15.3",
+    "i18n": "^0.8.3",
     "node-cache": "^4.1.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
@@ -20,13 +21,17 @@
   },
   "scripts": {
     "start": "node connect.js",
-    "skill": "node skill.js",
+    "skill": "node skill/skill.js",
+    "utterances-i18n": "node skill/utterances-i18n",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thorpelawrence/alexa-spotify-connect.git"
+  },
+  "alexa": {
+    "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
   },
   "jest": {
     "coverageReporters": [

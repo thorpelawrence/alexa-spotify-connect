@@ -22,13 +22,14 @@ module.exports = {
                         "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
                     },
                     "user": {
-                        "userId": "amzn1.ask.account.VOID"
+                        "userId": "amzn1.ask.account.VOID",
+                        "accessToken": accessToken || null
                     }
                 }
             }
         }
     },
-    intentRequestSessionAttributes: function (intentName, sessionAttributes, slots, accessToken, newSession) {
+    intentRequestSessionAttributes: function (intentName, sessionAttributes, slots, accessToken, newSession, locale) {
         return {
             "session": {
                 "new": newSession || false,
@@ -45,7 +46,8 @@ module.exports = {
                 "intent": {
                     "name": intentName || "",
                     "slots": slots || {}
-                }
+                },
+                "locale": locale || "en-GB"
             },
             "context": {
                 "System": {
@@ -53,13 +55,14 @@ module.exports = {
                         "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
                     },
                     "user": {
-                        "userId": "amzn1.ask.account.VOID"
+                        "userId": "amzn1.ask.account.VOID",
+                        "accessToken": accessToken || null
                     }
                 }
             }
         }
     },
-    requestType: function (requestType, applicationId) {
+    requestType: function (requestType, applicationId, locale) {
         return {
             "session": {
                 "application": {
@@ -68,8 +71,36 @@ module.exports = {
                 "user": {}
             },
             "request": {
-                "type": requestType || "LaunchRequest"
+                "type": requestType || "LaunchRequest",
+                "locale": locale || "en-GB"
+            },
+            "context": {
+                "System": {
+                    "application": {},
+                    "user": {}
+                }
             }
         };
+    },
+    intentRequestNoSession: function (intentName) {
+        return {
+            "request": {
+                "type": "IntentRequest",
+                "intent": {
+                    "name": intentName || ""
+                }
+            },
+            "context": {
+                "System": {
+                    "application": {
+                        "applicationId": "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0"
+                    },
+                    "user": {
+                        "userId": "amzn1.ask.account.VOID",
+                        "accessToken": "example-access-token"
+                    }
+                }
+            }
+        }
     }
 }

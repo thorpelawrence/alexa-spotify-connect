@@ -2,6 +2,7 @@ var alexa = require('alexa-app');
 var request = require('request-promise');
 var express = require('express');
 var nodecache = require('node-cache');
+var i18n = require('i18n');
 
 // Create instance of express
 var express_app = express();
@@ -12,16 +13,22 @@ var app = new alexa.app('connect');
 // Bind alexa-app to express instance
 app.express({ expressApp: express_app });
 
+i18n.configure({
+    directory: __dirname + '/locales'
+});
+
 // Run every time the skill is accessed
 app.pre = function (req, res, type) {
+    const applicationId = require('./package.json').alexa.applicationId;
+    i18n.setLocale(req.data.request.locale || "en-GB");
     // Error if the application ID of the request is not for this skill
-    if (req.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0" &&
-        req.getSession().details.application.applicationId != "amzn1.ask.skill.33d79728-0f5a-44e7-ae22-ccf0b0c0e9e0") {
+    if (req.applicationId != applicationId &&
+        req.getSession().details.application.applicationId != applicationId) {
         throw "Invalid applicationId";
     }
     // Check that the user has an access token, if they have linked their account
-    if (!req.getSession().details.user.accessToken) {
-        res.say("You have not linked your Spotify account, check your Alexa app to link the account");
+    if (!(req.context.System.user.accessToken || req.getSession().details.user.accessToken)) {
+        res.say(i18n.__("You have not linked your Spotify account, check your Alexa app to link the account"));
         res.linkAccount();
     }
 };
@@ -29,14 +36,14 @@ app.pre = function (req, res, type) {
 // Run after every request
 app.post = function (req, res, type, exception) {
     if (exception) {
-        return res.clear().say("An error occured: " + exception).send();
+        return res.clear().say(i18n.__("An error occured: ") + exception).send();
     }
 };
 
 // Function for when skill is invoked without intent
 app.launch(function (req, res) {
-    res.say("I can control your Spotify Connect devices, to start, ask me to list your devices");
-    res.reprompt("To start, ask me to list your devices");
+    res.say(i18n.__("I can control your Spotify Connect devices, to start, ask me to list your devices"))
+        .reprompt(i18n.__("To start, ask me to list your devices"));
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -47,9 +54,9 @@ app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
 }, function (req, res) {
-    res.say("You can ask me to list your connect devices and then control them. ")
-    res.say("For example, tell me to play on a device number after listing devices");
-    res.reprompt("What would you like to do?");
+    res.say(i18n.__("You can ask me to list your connect devices and then control them. "))
+        .say(i18n.__("For example, tell me to play on a device number after listing devices"))
+        .reprompt(i18n.__("What would you like to do?"));
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -186,24 +193,24 @@ app.intent('VolumeLevelIntent', {
                     }
                     else {
                         // If not valid volume
-                        res.say("You can only set the volume between 0 and 10");
+                        res.say(i18n.__("You can only set the volume between 0 and 10"));
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("Try setting a volume between 0 and 10");
-                    res.reprompt("What would you like to do?");
+                    res.say(i18n.__("Try setting a volume between 0 and 10"))
+                        .reprompt(i18n.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out the volume to use.")
-                res.say("Try setting a volume between 0 and 10");
-                res.reprompt("What would you like to do?");
+                res.say(i18n.__("I couldn't work out the volume to use."))
+                    .say(i18n.__("Try setting a volume between 0 and 10"))
+                    .reprompt(i18n.__("What would you like to do?"));
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -246,22 +253,22 @@ app.intent('GetDevicesIntent', {
                 // Check if user has devices
                 if (devices.length > 0) {
                     // Comma separated list of device names
-                    res.say("I found these connect devices: ");
-                    res.say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ', and ') + ". ");
-                    res.say("What would you like to do with these devices?").reprompt("What would you like to do?");
+                    res.say(i18n.__("I found these connect devices: "))
+                        .say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ',' + i18n.__(' and ')) + ". ")
+                        .say(i18n.__("What would you like to do with these devices?")).reprompt(i18n.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
                 }
                 else {
                     // No devices found
-                    res.say("I couldn't find any connect devices, check your Alexa app for information on connecting a device");
+                    res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
                     res.card({
                         type: "Simple",
-                        title: "Connecting to a device using Spotify Connect",
-                        content: "To add a device to Spotify Connect,"
+                        title: i18n.__("Connecting to a device using Spotify Connect"),
+                        content: i18n.__("To add a device to Spotify Connect,"
                             + " log in to your Spotify account on a supported device"
                             + " such as an Echo, phone, or computer"
-                            + "\nhttps://support.spotify.com/uk/article/spotify-connect/"
+                            + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
                     });
                 }
             })
@@ -327,30 +334,30 @@ app.intent('DevicePlayIntent', {
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Playing on device " + deviceNumber + ": " + deviceName);
+                        res.say(i18n.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
                     }
                     else {
                         // If device for number not found
-                        res.say("I couldn't find device " + deviceNumber + ". ");
-                        res.say("Try asking me to list devices first");
+                        res.say(i18n.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
+                            .say(i18n.__("Try asking me to list devices first"));
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("I couldn't work out which device to play on, make sure you refer to the device by number.");
-                    res.say("Try asking me to play on a device number");
-                    res.reprompt("What would you like to do?");
+                    res.say(i18n.__("I couldn't work out which device to play on, make sure you refer to the device by number."))
+                        .say(i18n.__("Try asking me to play on a device number"))
+                        .reprompt(i18n.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out which device number to play on.");
-                res.say("Try asking me to play on a device number");
-                res.reprompt("What would you like to do?");
+                res.say(i18n.__("I couldn't work out which device number to play on."))
+                    .say(i18n.__("Try asking me to play on a device number"))
+                    .reprompt(i18n.__("What would you like to do?"));
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -411,30 +418,30 @@ app.intent('DeviceTransferIntent', {
                             // Handle sending as JSON
                             json: true
                         });
-                        res.say("Transferring to device " + deviceNumber + ": " + deviceName);
+                        res.say(i18n.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
                     }
                     else {
                         // If device for number not found
-                        res.say("I couldn't find device " + deviceNumber + ". ");
-                        res.say("Try asking me to list devices first");
+                        res.say(i18n.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
+                            .say(i18n.__("Try asking me to list devices first"));
                         // Keep session open
                         res.shouldEndSession(false);
                     }
                 }
                 else {
                     // Not a number
-                    res.say("I couldn't work out which device to transfer to, make sure you refer to the device by number.");
-                    res.say("Try asking me to transfer a device number");
-                    res.reprompt("What would you like to do?");
+                    res.say(i18n.__("I couldn't work out which device to transfer to, make sure you refer to the device by number."))
+                        .say(i18n.__("Try asking me to transfer to a device number"))
+                        .reprompt(i18n.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
                 }
             }
             else {
                 // No slot value
-                res.say("I couldn't work out which device number to transfer to.");
-                res.say("Try asking me to transfer to a device number");
-                res.reprompt("What would you like to do?");
+                res.say(i18n.__("I couldn't work out which device number to transfer to."))
+                    .say(i18n.__("Try asking me to transfer to a device number"))
+                    .reprompt(i18n.__("What would you like to do?"));
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -463,16 +470,16 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    res.say("This is " + body.item.name + " by " + body.item.artists[0].name);
+                    res.say(i18n.__("This is {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                 }
                 else {
                     if (body.item.name) {
                         // If not playing but last track known
-                        res.say("That was " + body.item.name + " by " + body.item.artists[0].name);
+                        res.say(i18n.__("That was {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                     }
                     else {
                         // If unknown
-                        res.say("Nothing is playing");
+                        res.say(i18n.__("Nothing is playing"));
                     }
                 }
             })

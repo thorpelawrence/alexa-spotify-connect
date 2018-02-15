@@ -199,6 +199,15 @@ describe('VolumeLevelIntent', () => {
             expect(res).toContain("You can only set the volume between 0 and 10");
         });
     });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('VolumeLevelIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
 });
 
 describe('GetDevicesIntent', () => {
@@ -310,6 +319,15 @@ describe('DevicePlayIntent', () => {
             expect(res).toContain("couldn't find device");
         });
     });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('DevicePlayIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
 });
 
 describe('DeviceTransferIntent', () => {
@@ -328,7 +346,7 @@ describe('DeviceTransferIntent', () => {
             }
         });
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("Try asking me to transfer a device number");
+            expect(res).toContain("Try asking me to transfer to a device number");
         });
     });
 
@@ -351,7 +369,7 @@ describe('DeviceTransferIntent', () => {
             {
                 "DEVICENUMBER": {
                     "name": "DEVICENUMBER",
-                    "value": 1
+                    "value": device0.number
                 }
             }, "example-access-token");
         connect.request(req);
@@ -384,6 +402,15 @@ describe('DeviceTransferIntent', () => {
         }, null, true);
         return getRequestSSML(req).then(res => {
             expect(res).toContain("couldn't find device");
+        });
+    });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('DeviceTransferIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
         });
     });
 });
@@ -449,6 +476,45 @@ describe('GetTrackIntent', () => {
     });
 });
 
-afterEach(() => {
-    nock.cleanAll();
+describe('i18n', () => {
+    describe('de-DE', () => {
+        test('give correct language response for launch intent', () => {
+            var req = generateRequest.requestType('LaunchRequest', null, "de-DE");
+            return getRequestSSML(req).then(res => {
+                expect(res).toContain("Hey! Ich kann deine Spotify Connect Geräte steuern");
+            });
+        });
+
+        test('use i18n substitution for device number when not found', () => {
+            var deviceNumber = 2;
+            var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+                { "devices": [device0] },
+                {
+                    "DEVICENUMBER": {
+                        "name": "DEVICENUMBER",
+                        "value": deviceNumber
+                    }
+                }, "example-access-token", null, "de-DE");
+            return getRequestSSML(req).then(res => {
+                expect(res).toContain("Ich konnte das Gerät " + deviceNumber + " nicht finden");
+            });
+        });
+
+        test('use i18n substitution for device number device found', () => {
+            nock("https://api.spotify.com")
+                .put("/v1/me/player")
+                .reply(204);
+            var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+                { "devices": [device0] },
+                {
+                    "DEVICENUMBER": {
+                        "name": "DEVICENUMBER",
+                        "value": device0.number
+                    }
+                }, "example-access-token", null, "de-DE");
+            return getRequestSSML(req).then(res => {
+                expect(res).toContain("Musik wird auf " + device0.number + ": " + device0.name + " abgespielt");
+            });
+        });
+    });
 });
