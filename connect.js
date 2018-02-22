@@ -96,6 +96,8 @@ app.intent('PlayIntent', {
         }).auth(null, null, true, req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+            }).catch((err) => {
+                if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
     }
 );
@@ -114,6 +116,8 @@ app.intent('PauseIntent', {
         }).auth(null, null, true, req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+            }).catch((err) => {
+                if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
     }
 );
@@ -134,6 +138,8 @@ app.intent('SkipNextIntent', {
         }).auth(null, null, true, req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+            }).catch((err) => {
+                if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
     }
 );
@@ -155,6 +161,8 @@ app.intent('SkipPreviousIntent', {
         }).auth(null, null, true, req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+            }).catch((err) => {
+                if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
     }
 );
@@ -180,7 +188,7 @@ app.intent('VolumeLevelIntent', {
                     // Check that the volume is valid
                     if (volumeLevel >= 0 && volumeLevel <= 10) {
                         // PUT to Spotify REST API
-                        request.put({
+                        return request.put({
                             // Send new volume * 10 (convert to percentage)
                             url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + 10 * volumeLevel,
                             // Send access token as bearer auth
@@ -189,6 +197,8 @@ app.intent('VolumeLevelIntent', {
                             },
                             // Handle sending as JSON
                             json: true
+                        }).catch((err) => {
+                            if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                         });
                     }
                     else {
@@ -317,7 +327,7 @@ app.intent('DevicePlayIntent', {
                     // Check that the device for the number was found
                     if (deviceId) {
                         // PUT to Spotify REST API
-                        request.put({
+                        return request.put({
                             url: "https://api.spotify.com/v1/me/player",
                             // Send access token as bearer auth
                             auth: {
@@ -333,8 +343,11 @@ app.intent('DevicePlayIntent', {
                             },
                             // Handle sending as JSON
                             json: true
+                        }).then((r) => {
+                            res.say(i18n.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
+                        }).catch((err) => {
+                            if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                         });
-                        res.say(i18n.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
                     }
                     else {
                         // If device for number not found
@@ -403,7 +416,7 @@ app.intent('DeviceTransferIntent', {
                     // Check that the device for the number was found
                     if (deviceId) {
                         // PUT to Spotify REST API
-                        request.put({
+                        return request.put({
                             url: "https://api.spotify.com/v1/me/player",
                             // Send access token as bearer auth
                             auth: {
@@ -417,8 +430,11 @@ app.intent('DeviceTransferIntent', {
                             },
                             // Handle sending as JSON
                             json: true
+                        }).then((r) => {
+                            res.say(i18n.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
+                        }).catch((err) => {
+                            if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                         });
-                        res.say(i18n.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName }));
                     }
                     else {
                         // If device for number not found

@@ -86,61 +86,89 @@ describe('AMAZON.CancelIntent', () => {
 });
 
 describe('PlayIntent', () => {
-    beforeEach(() => {
+    test('should PUT to Spotify play endpoint and recieve 204', () => {
         nock("https://api.spotify.com")
             .put("/v1/me/player/play")
             .reply(204);
-    });
-
-    test('should PUT to Spotify play endpoint and recieve 204', () => {
         var req = generateRequest.intentRequest('PlayIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
             expect(res).toBe(204);
         });
     });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .put("/v1/me/player/play")
+            .reply(403);
+        var req = generateRequest.intentRequest('PlayIntent');
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
+        });
+    });
 });
 
 describe('PauseIntent', () => {
-    beforeEach(() => {
+    test('should PUT to Spotify pause endpoint and recieve 204', () => {
         nock("https://api.spotify.com")
             .put("/v1/me/player/pause")
             .reply(204);
-    });
-
-    test('should PUT to Spotify pause endpoint and recieve 204', () => {
         var req = generateRequest.intentRequest('PauseIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
             expect(res).toBe(204);
         });
     });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .put("/v1/me/player/pause")
+            .reply(403);
+        var req = generateRequest.intentRequest('PauseIntent');
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
+        });
+    });
 });
 
 describe('SkipNextIntent', () => {
-    beforeEach(() => {
+    test('should POST to Spotify next endpoint and recieve 204', () => {
         nock("https://api.spotify.com")
             .post("/v1/me/player/next")
             .reply(204);
-    });
-
-    test('should POST to Spotify next endpoint and recieve 204', () => {
         var req = generateRequest.intentRequest('SkipNextIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
             expect(res).toBe(204);
         });
     });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .post("/v1/me/player/next")
+            .reply(403);
+        var req = generateRequest.intentRequest('SkipNextIntent');
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
+        });
+    });
 });
 
 describe('SkipPreviousIntent', () => {
-    beforeEach(() => {
+    test('should POST to Spotify previous endpoint and recieve 204', () => {
         nock("https://api.spotify.com")
             .post("/v1/me/player/previous")
             .reply(204);
-    });
-
-    test('should POST to Spotify previous endpoint and recieve 204', () => {
         var req = generateRequest.intentRequest('SkipPreviousIntent');
         return getRequestAttribute(req, 'statusCode').then(res => {
             expect(res).toBe(204);
+        });
+    });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .post("/v1/me/player/previous")
+            .reply(403);
+        var req = generateRequest.intentRequest('SkipPreviousIntent');
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
         });
     });
 });
@@ -206,6 +234,23 @@ describe('VolumeLevelIntent', () => {
             return r.response;
         }).then(res => {
             expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
+
+    test('should warn if not premium', () => {
+        var vol = Math.floor(Math.random() * 10);
+        nock("https://api.spotify.com")
+            .put("/v1/me/player/volume")
+            .query({ "volume_percent": vol * 10 })
+            .reply(403);
+        var req = generateRequest.intentRequest('VolumeLevelIntent', {
+            "VOLUMELEVEL": {
+                "name": "VOLUMELEVEL",
+                "value": vol
+            }
+        });
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
         });
     });
 });
@@ -328,6 +373,23 @@ describe('DevicePlayIntent', () => {
             expect(res).not.toHaveProperty("outputSpeech");
         });
     });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .put("/v1/me/player")
+            .reply(403);
+        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": 1
+                }
+            }, "example-access-token");
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
+        });
+    });
 });
 
 describe('DeviceTransferIntent', () => {
@@ -411,6 +473,23 @@ describe('DeviceTransferIntent', () => {
             return r.response;
         }).then(res => {
             expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
+
+    test('should warn if not premium', () => {
+        nock("https://api.spotify.com")
+            .put("/v1/me/player")
+            .reply(403);
+        var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
+            { "devices": [device0] },
+            {
+                "DEVICENUMBER": {
+                    "name": "DEVICENUMBER",
+                    "value": device0.number
+                }
+            }, "example-access-token");
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
         });
     });
 });
