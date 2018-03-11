@@ -1,5 +1,5 @@
 const nock = require('nock');
-const eventToPromise = require('event-to-promise');
+const pEvent = require('p-event');
 const connect = require('../connect');
 const generateRequest = require('./generate-request');
 
@@ -199,7 +199,7 @@ describe('VolumeLevelIntent', () => {
             .put("/v1/me/player/volume")
             .query({ "volume_percent": vol * 10 })
             .reply(204);
-        var requested = eventToPromise(api, 'request')
+        var requested = pEvent(api, 'request')
             .then(() => {
                 return api.isDone();
             });
@@ -320,7 +320,7 @@ describe('DevicePlayIntent', () => {
                 "play": true
             })
             .reply(204);
-        var requested = eventToPromise(api, 'request')
+        var requested = pEvent(api, 'request')
             .then(() => {
                 return api.isDone();
             });
@@ -422,7 +422,7 @@ describe('DeviceTransferIntent', () => {
                 "device_ids": [device0.id]
             })
             .reply(204);
-        var requested = eventToPromise(api, 'request')
+        var requested = pEvent(api, 'request')
             .then(() => {
                 return api.isDone();
             });

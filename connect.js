@@ -1,5 +1,5 @@
 var alexa = require('alexa-app');
-var request = require('request-promise');
+var request = require('request-promise-native');
 var express = require('express');
 var nodecache = require('node-cache');
 var i18n = require('i18n');
