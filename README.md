@@ -1,5 +1,7 @@
 # alexa-spotify-connect (Connect Control for Spotify)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/thorpelawrence/alexa-spotify-connect.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/thorpelawrence/alexa-spotify-connect.svg?branch=master)](https://travis-ci.org/thorpelawrence/alexa-spotify-connect)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e8e6719b56106b6c5162/maintainability)](https://codeclimate.com/github/thorpelawrence/alexa-spotify-connect/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/e8e6719b56106b6c5162/test_coverage)](https://codeclimate.com/github/thorpelawrence/alexa-spotify-connect/test_coverage)
