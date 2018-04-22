@@ -4,7 +4,7 @@
   "description": "Control Spotify Connect devices with Alexa",
   "author": "Lawrence Thorpe",
   "dependencies": {
-    "alexa-app": "^4.0.1",
+    "alexa-app": "^4.2.2",
     "express": "^4.15.3",
     "i18n": "^0.8.3",
     "node-cache": "^4.1.1",

@@ -1,8 +1,4 @@
 var connect = require('../connect');
 
-console.log("SCHEMA: ");
-console.log(connect.schema());
-
-console.log();
-console.log("UTTERANCES: ");
-console.log(connect.utterances());
+console.log("SKILLBUILDER JSON: ");
+console.log(connect.schemas.skillBuilder());
