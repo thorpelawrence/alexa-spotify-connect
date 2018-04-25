@@ -16,7 +16,6 @@
 **US**: https://www.amazon.com/Lawrence-Thorpe-Connect-Control-Spotify/dp/B074KFNWFD
 
 ## Contribution and development
-To generate the skillBuilder JSON required for the skill in Amazon Developer console
 1. Make a Spotify developer app at developer.spotify.com, get a client ID and client secret
 2. Make a new Amazon Alexa skill, custom. Lots of details omitted here, but: once you get to the part in the Alexa developer console where you can upload/paste in JSON, then run `skill/skill.js` to generate the JSON required
 ```
