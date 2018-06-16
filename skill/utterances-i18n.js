@@ -2,7 +2,8 @@ var fs = require('fs');
 var utterances = require('alexa-utterances');
 
 var locales = {
-    "de-DE": require("./locales/de-DE.json")
+    "de-DE": require("./locales/de-DE.json"),
+    "fr-FR": require("./locales/fr-FR.json")
 };
 
 for (var locale in locales) {
