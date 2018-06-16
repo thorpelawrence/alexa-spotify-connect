@@ -1,0 +1,30 @@
+{
+    "PlayIntent": ["play","lecture","jouer","lancer"],
+    "PauseIntent": ["pause","stop","arrête"],
+    "SkipNextIntent": ["suivant","{musique|} suivante"],
+    "SkipPreviousIntent": ["précédent","{musique|} précédente"],
+    "VolumeLevelIntent": [
+        "{mettre|changer|ajuster|} le volume {sur|à} {-|VOLUMELEVEL}",
+        "volume {sur|à|} {-|VOLUMELEVEL}"
+    ],
+    "GetDevicesIntent": [
+        "liste",
+        "liste des appareils",
+        "{lister|chercher} les appareils",
+        "lister",
+        "appareils"
+    ],
+    "DevicePlayIntent": [
+        "{jouer|commencer|lancer|met} {de|} {la musique|spotify} sur {l'appareil|le numéro|} {-|DEVICENUMBER}"
+    ],
+    "DeviceTransferIntent": [
+        "passer {la musique|la lecture|} sur {l'appareil|le numéro|} {-|DEVICENUMBER}",
+        "écouter {de|} la musique sur {l'appareil|le numéro|} {-|DEVICENUMBER}"
+    ],
+    "GetTrackIntent": [
+        "qu'est ce qui est joué",
+        "qu'est ce que j'écoute",
+        "{c'est quoi|quelle est} cette musique",
+        "{c'est quoi|quel est} ce {morceau|son}"
+    ]
+}
