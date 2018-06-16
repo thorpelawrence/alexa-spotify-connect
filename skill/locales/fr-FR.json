@@ -1,6 +1,17 @@
 {
-    "PlayIntent": ["play","lecture","jouer","lancer"],
-    "PauseIntent": ["pause","stop","arrête"],
+    "PlayIntent": ["play",
+                   "jouer",
+                   "lire la musique",
+                   "jouer {de|} {la musique|}",
+                   "lancer {la musique|}",
+                   "{mettre} la musique"
+     ],
+    "PauseIntent": ["pause",
+                    "mettre {sur|} pause",
+                    "stop",
+                    "arrête",
+                    "arrêter"
+     ],
     "SkipNextIntent": ["suivant","{musique|} suivante"],
     "SkipPreviousIntent": ["précédent","{musique|} précédente"],
     "VolumeLevelIntent": [
@@ -10,7 +21,7 @@
     "GetDevicesIntent": [
         "liste",
         "liste des appareils",
-        "{lister|chercher} les appareils",
+        "{lister|chercher|trouver} les appareils",
         "lister",
         "appareils"
     ],
