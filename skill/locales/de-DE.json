@@ -1,36 +1,79 @@
 {
-    "PlayIntent": ["play", "wiedergabe"],
-    "PauseIntent": ["pause"],
-    "SkipNextIntent": [
-        "weiter",
-        "{nächster|nächstes} {song|track|lied}",
-        "vorwärts"
-    ],
-    "SkipPreviousIntent": [
-        "zurück",
-        "{letzter|letztes} {song|track|lied}",
-        "rückwärts"
-    ],
-    "VolumeLevelIntent": [
-        "{ändere die|ändere|} Lautstärke auf {-|VOLUMELEVEL}",
-        "lautstärke {-|VOLUMELEVEL}"
-    ],
-    "GetDevicesIntent": [
-        "geräte",
-        "liste",
-        "suche",
-        "finde",
-        "{liste|suche|finde|} {alle geräte|alle gerät-nummern} {auf|}"
-    ],
-    "DevicePlayIntent": [
-        "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer|} {-|DEVICENUMBER}"
-    ],
-    "DeviceTransferIntent": [
-        "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICENUMBER}"
-    ],
-    "GetTrackIntent": [
-        "was wird gespielt",
-        "was ist {der Song|der Track|das Lied}",
-        "{welcher|welches} {song|track|lied} ist das"
+    "intents": [
+        {
+            "name": "PlayIntent",
+            "samples": [
+                "play",
+                "wiedergabe"
+            ]
+        },
+        {
+            "name": "PauseIntent",
+            "samples": [
+                "pause"
+            ]
+        },
+        {
+            "name": "SkipNextIntent",
+            "samples": [
+                "weiter",
+                "{nächster|nächstes} {song|track|lied}",
+                "vorwärts"
+            ]
+        },
+        {
+            "name": "SkipPreviousIntent",
+            "samples": [
+                "zurück",
+                "{letzter|letztes} {song|track|lied}",
+                "rückwärts"
+            ]
+        },
+        {
+            "name": "VolumeLevelIntent",
+            "slots": {
+                "VOLUMELEVEL": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{ändere die|ändere|} Lautstärke auf {-|VOLUMELEVEL}",
+                "lautstärke {-|VOLUMELEVEL}"
+            ]
+        },
+        {
+            "name": "GetDevicesIntent",
+            "samples": [
+                "geräte",
+                "liste",
+                "suche",
+                "finde",
+                "{liste|suche|finde|} {alle geräte|alle gerät-nummern} {auf|}"
+            ]
+        },
+        {
+            "name": "DevicePlayIntent",
+            "slots": {
+                "DEVICENUMBER": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer|} {-|DEVICENUMBER}"
+            ]
+        },
+        {
+            "name": "DeviceTransferIntent",
+            "slots": {
+                "DEVICENUMBER": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICENUMBER}"
+            ]
+        },
+        {
+            "name": "GetTrackIntent",
+            "samples": [
+                "was wird gespielt",
+                "was ist {der Song|der Track|das Lied}",
+                "{welcher|welches} {song|track|lied} ist das"
+            ]
+        }
     ]
 }

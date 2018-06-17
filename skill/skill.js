@@ -1,4 +1,5 @@
-var connect = require('../connect');
+const connect = require('../connect');
+const chalk = require('chalk');
 
-console.log("SKILLBUILDER JSON: ");
+console.log(chalk.bgRed("SKILLBUILDER JSON:"));
 console.log(connect.schemas.skillBuilder());
