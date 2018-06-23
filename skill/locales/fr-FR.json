@@ -4,7 +4,6 @@
             "name": "PlayIntent",
             "samples": [
                 "play",
-                "jouer",
                 "lire la musique",
                 "jouer {de|} {la musique|}",
                 "lancer {la musique|}",
