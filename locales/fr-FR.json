@@ -24,8 +24,8 @@
 	"Try asking me to transfer to a device number": "Demandez moi le numéro de l'appareil ou vous souhaitez transférer la musique",
 	"I couldn't work out which device to transfer to, make sure you refer to the device by number.": "Je ne parviens pas à identifier cet appareil, assurez-vous de vous référer à l'appareil par son numéro.",
 	"Transferring to device {{deviceNumber}}: {{deviceName}}": "Transfert vers l'appareil {{deviceNumber}}: {{deviceName}}",
-	"This is {{name}} by {{artist}}": "La musique est {{nom}} de {{artiste}}",
-	"That was {{name}} by {{artist}}": "La musique était {{nom}} de {{artiste}}",
+	"This is {{name}} by {{artist}}": "La musique est {{name}} de {{artist}}",
+	"That was {{name}} by {{artist}}": "La musique était {{name}} de {{artist}}",
 	"Nothing is playing": "Aucune musique n'est jouée",
 	"Make sure your Spotify account is premium": "Assurez-vous que vous possédez un compte Spotify premium"
 }
