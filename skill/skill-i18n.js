@@ -3,7 +3,8 @@ const chalk = require('chalk');
 
 var locales = {
     "de-DE": require("./locales/de-DE.json"),
-    "fr-FR": require("./locales/fr-FR.json")
+    "fr-FR": require("./locales/fr-FR.json"),
+    "it-IT": require("./locales/it-IT.json")
 };
 
 for (var locale in locales) {
