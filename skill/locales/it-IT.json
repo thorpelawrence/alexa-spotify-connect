@@ -1,0 +1,105 @@
+{
+    "intents": [
+        {
+            "name": "PlayIntent",
+            "samples": [
+                "play",
+                "ascolta",
+                "riprodurre un po di musica",
+                "riproduci un po di musica",
+                "fai partire la musica",
+                "voglio ascoltare un po di musica",
+                "riprendi",
+                "riproduci",
+                "fai partire",
+                "esegui"
+            ]
+        },
+        {
+            "name": "PauseIntent",
+            "samples": [
+                "pausa",
+                "metti in pausa",
+                "mettere in pausa",
+                "fermarsi",
+                "basta",
+                "ferma",
+                "stop",
+                "silenzia",
+                "ferma la musica",
+                "stoppa"
+            ]
+        },
+        {
+            "name": "SkipNextIntent",
+            "samples": [
+                "prossima",
+                "andare alla prossima {canzone|traccia|musica}",
+                "{prossima|prossime} {canzone|canzoni|musica|traccia|tracce}",
+                "avanti",
+                "vai avanti",
+                "passa alla prossima",
+                "skippa"
+            ]
+        },
+        {
+            "name": "SkipPreviousIntent",
+            "samples": [
+                "indietro",
+                "tornare alla precendente {canzone|traccia|musica}",
+                "{precendente|precedenti} {canzone|canzoni|traccia|tracce|musica}",
+                "{torna|tornare} indietro",
+                "rimetti quella di prima"
+            ]
+        },
+        {
+            "name": "VolumeLevelIntent",
+            "slots": {
+                "VOLUMELEVEL": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{cambiare|impostare|cambia|cambia il|setta il|imposta il|imposta} volume a {-|VOLUMELEVEL}",
+                "volume {-|VOLUMELEVEL}"
+            ]
+        },
+        {
+            "name": "GetDevicesIntent",
+            "samples": [
+                "{dammi|darmi} la lista",
+                "ricercare i dispositivi",
+                "trova dispositivo",
+                "lista dispositivi",
+                "{elenco|elencare i} dispositivi",
+                "{darmi la lista di|dammi la lista di|lista di|elencami|elenca} {tutti i dispositivi|tutti i numeri di dispotivi}"
+            ]
+        },
+        {
+            "name": "DevicePlayIntent",
+            "slots": {
+                "DEVICENUMBER": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{riprodurre la|riproduci la|riproduci|far partire|fai partire la|fai partire|esegui|ascolta|voglio ascoltare|riprodurre} {musica|spotify} sul {disposivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
+            ]
+        },
+        {
+            "name": "DeviceTransferIntent",
+            "slots": {
+                "DEVICENUMBER": "AMAZON.NUMBER"
+            },
+            "samples": [
+                "{cambiare|cambia} il dispositivo al {disposivo|numero|dispositivo numero|} {-|DEVICENUMBER}",
+                "{passare|passa a|cambiare|cambia|sposta|spostare|trasferisci} {la riproduzione|la musica} sul {disposivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
+            ]
+        },
+        {
+            "name": "GetTrackIntent",
+            "samples": [
+                "cosa c'è in riproduzione",
+                "che {canzone|traccia|} è",
+                "che {canzone|traccia|} si sta ascoltando",
+                "{che|quale} {canzone|traccia|musica} è questa"
+            ]
+        }
+    ]
+}
