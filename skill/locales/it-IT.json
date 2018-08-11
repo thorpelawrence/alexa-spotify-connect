@@ -44,7 +44,7 @@
             "samples": [
                 "indietro",
                 "tornare alla precedente {canzone|traccia|musica}",
-                "{precendente|precedenti} {canzone|canzoni|traccia|tracce|musica}",
+                "{precedente|precedenti} {canzone|canzoni|traccia|tracce|musica}",
                 "{torna|tornare} indietro",
                 "rimetti quella di prima"
             ]
