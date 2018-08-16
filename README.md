@@ -16,15 +16,18 @@
 **US**: https://www.amazon.com/Lawrence-Thorpe-Connect-Control-Spotify/dp/B074KFNWFD
 
 ## Contribution and development
+To get started, fork this repository to make changes. If those changes would be useful in the project, feel free to make a pull request.
+
 ### Deploy the skill
-1. Make a Spotify developer app at developer.spotify.com, get a client ID and client secret
-2. Make a new Amazon Alexa skill, custom. Lots of details omitted here, but: once you get to the part in the Alexa developer console where you can upload/paste in JSON, then run `skill/skill.js` to generate the JSON required
+1. Create a Spotify developer app at developer.spotify.com, get a client ID and client secret
+2. Create an Amazon Alexa skill, choosing **custom**. When you get to the part in the Alexa developer console where you can upload/paste in JSON, run `skill/skill.js` to generate the JSON required
 ```
 $ node skill/skill.js
 ```
-3. Account linking on Alexa skill: turn it on, choose "Auth Code Grant", set Authorization URI to "https://accounts.spotify.com/authorize", set "Access Token URI" to "https://accounts.spotify.com/api/token", set client ID and secret, add scopes "user-read-playback-state" and "user-modify-playback-state", add the three redirect URLs from the account linking details in your developer console for the skill
-4. Deploy this webapp to somewhere that supports HTTPS (required for Alexa skills), for example Heroku
-5. Configure the skill to use an HTTPS endpoint of `https://<your-url>/<app-name>` where `app-name` is the name specified in `alexa.app('app-name')`, `connect` by default
+3. Enter the application ID from the developer console into `package.json`, under the key `alexa.applicationId`. 
+4. Turn on **Account linking**, choosing **"Auth Code Grant"**. Set **"Authorization URI"** to `https://accounts.spotify.com/authorize`,  **"Access Token URI"** to `https://accounts.spotify.com/api/token`, set client ID and secret, add scopes `user-read-playback-state` and `user-modify-playback-state`, and the three redirect URLs from the account linking details in your developer console for the skill
+5. Deploy this webapp to somewhere that **supports HTTPS** (required for Alexa skills), for example Heroku
+6. Configure the skill to use an HTTPS endpoint of `https://<your-url>/<app-name>` where `app-name` is the name specified in `alexa.app('app-name')`, `connect` by default
 
 ### Adding a language
 1. Check that the locale is supported by Amazon (see [list of supported locale codes](https://developer.amazon.com/docs/custom-skills/develop-skills-in-multiple-languages.html#h2-code-changes)) and get your locale code (e.g. `en-GB`)
