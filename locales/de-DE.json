@@ -26,5 +26,6 @@
 	"Transferring to device {{deviceNumber}}: {{deviceName}}": "Musikwiedergabe wird auf {{deviceNumber}} : {{deviceName}} übertragen",
 	"This is {{name}} by {{artist}}": "Das ist {{name}} von {{artist}}",
 	"That was {{name}} by {{artist}}": "Das war {{name}} von {{artist}}",
-	"Nothing is playing": "Aktuell wird nichts gespielt"
+	"Nothing is playing": "Aktuell wird nichts gespielt",
+	"Make sure your Spotify account is premium": "Stellen Sie sicher, dass Sie Spotify Premium verwenden"
 }

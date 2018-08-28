@@ -76,7 +76,7 @@
                 "DEVICENUMBER": "AMAZON.NUMBER"
             },
             "samples": [
-                "{riprodurre la|riproduci la|riproduci|far partire|fai partire la|fai partire|esegui|ascolta|voglio ascoltare|riprodurre} {musica|spotify} sul {disposivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
+                "{riprodurre la|riproduci la|riproduci|far partire|fai partire la|fai partire|esegui|ascolta|voglio ascoltare|riprodurre} {musica|spotify} sul {dispositivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
             ]
         },
         {
@@ -85,7 +85,7 @@
                 "DEVICENUMBER": "AMAZON.NUMBER"
             },
             "samples": [
-                "{cambiare|cambia} il dispositivo al {disposivo|numero|dispositivo numero|} {-|DEVICENUMBER}",
+                "{cambiare|cambia} il dispositivo al {dispositivo|numero|dispositivo numero|} {-|DEVICENUMBER}",
                 "{passare|passa a|cambiare|cambia|sposta|spostare|trasferisci} {la riproduzione|la musica} sul {dispositivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
             ]
         },
