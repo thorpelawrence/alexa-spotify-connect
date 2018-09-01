@@ -20,9 +20,9 @@ To get started, fork this repository to make changes. If those changes would be 
 
 ### Deploy the skill
 1. Create a Spotify developer app at developer.spotify.com, get a client ID and client secret
-2. Create an Amazon Alexa skill, choosing **custom**. When you get to the part in the Alexa developer console where you can upload/paste in JSON, run `skill/skill.js` to generate the JSON required
+2. Create an Amazon Alexa skill, choosing **custom**. When you get to the part in the Alexa developer console where you can upload/paste in JSON, run `skill.js` to generate the JSON required
 ```
-$ node skill/skill.js
+$ yarn skill
 ```
 3. Enter the application ID from the developer console into `package.json`, under the key `alexa.applicationId`. 
 4. Turn on **Account linking**, choosing **"Auth Code Grant"**. Set **"Authorization URI"** to `https://accounts.spotify.com/authorize`,  **"Access Token URI"** to `https://accounts.spotify.com/api/token`, set client ID and secret, add scopes `user-read-playback-state` and `user-modify-playback-state`, and the three redirect URLs from the account linking details in your developer console for the skill
@@ -36,7 +36,7 @@ $ node skill/skill.js
 4. Add the locale to the list of locales in `skill/skill-i18n.js` (follow the format used by other locales)
 5. (Optional: _for deployment_) To create the JSON data required by Skill Builder run
 ```
-$ node skill/skill-i18n.js
+$ yarn i18n
 ```
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
