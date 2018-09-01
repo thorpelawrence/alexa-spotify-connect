@@ -1,6 +1,6 @@
 const nock = require('nock');
 const pEvent = require('p-event');
-const connect = require('../connect');
+const connect = require('../src/connect');
 const generateRequest = require('./generate-request');
 
 nock.disableNetConnect();

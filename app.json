@@ -1,6 +1,0 @@
- {
-  "name": "alexa-spotify-connect",
-  "description": "Control Spotify Connect devices with Alexa",
-  "repository": "https://github.com/thorpelawrence/alexa-spotify-connect",
-  "keywords": ["amazon", "alexa", "echo", "spotify", "connect", "node", "nodejs", "js"]
-}

@@ -12,18 +12,27 @@
     "request-promise-native": "^1.0.5"
   },
   "license": "MIT",
-  "main": "connect.js",
+  "main": "src/connect.js",
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/i18n": "^0.8.3",
+    "@types/jest": "^23.3.1",
+    "@types/node": "^10.9.3",
+    "@types/node-cache": "^4.1.1",
+    "@types/request-promise-native": "^1.0.15",
     "chalk": "^2.4.1",
     "coveralls": "^3.0.0",
     "jest": "^22.1.4",
     "nock": "^9.1.6",
-    "p-event": "^2.0.0"
+    "p-event": "^2.0.0",
+    "ts-jest": "^23.1.4",
+    "typescript": "^3.0.1"
   },
   "scripts": {
-    "start": "node connect.js",
-    "skill": "node skill/skill.js",
-    "utterances-i18n": "node skill/utterances-i18n",
+    "start": "yarn build && node dist/connect.js",
+    "build": "tsc",
+    "skill": "yarn build && node skill/skill.js",
+    "i18n": "node skill/skill-i18n.js",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },
@@ -37,7 +46,15 @@
   "jest": {
     "coverageReporters": [
       "lcovonly"
-    ]
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testEnvironment": "node"
   },
   "keywords": [
     "amazon",

@@ -1,1 +1,1 @@
-web: node connect.js
+web: yarn start

@@ -48,5 +48,5 @@ for (var locale in locales) {
         });
     }
     console.log(JSON.stringify(skillbuilder, null, 2));
-    console.log();
+    console.log(chalk.magenta("=".repeat(50)));
 }
