@@ -725,6 +725,12 @@ debug@2.6.9, debug@^2.2.0, debug@^2.6.8:
   dependencies:
     ms "2.0.0"
 
+debug@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.0.tgz#373687bffa678b38b1cd91f861b63850035ddc87"
+  dependencies:
+    ms "^2.1.1"
+
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -2190,6 +2196,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+ms@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
+
 mustache@*:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/mustache/-/mustache-2.3.0.tgz#4028f7778b17708a489930a6e52ac3bca0da41d0"
@@ -2206,12 +2216,12 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-nock@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-10.0.0.tgz#bcbd2c003961baffcae2ecd28e074574233d3869"
+nock@^10.0.2:
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-10.0.2.tgz#9e9a92253808e480a8163c2a21fc12937c02c3b0"
   dependencies:
     chai "^4.1.2"
-    debug "^3.1.0"
+    debug "^4.1.0"
     deep-equal "^1.0.0"
     json-stringify-safe "^5.0.1"
     lodash "^4.17.5"
