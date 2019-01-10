@@ -114,6 +114,7 @@ app.intent('PauseIntent', {
         return rq.put("https://api.spotify.com/v1/me/player/pause", req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+                res.send();
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
