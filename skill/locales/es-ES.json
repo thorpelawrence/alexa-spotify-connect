@@ -31,7 +31,7 @@
       "samples": [
         "siguiente",
         "pasa a la siguiente {canción|pista}",
-		"pasa al siguiente {tema|de la lista}",
+	"pasa al siguiente {tema|de la lista}",
         "siguiente {canción|tema|pista}",
         "avanza",
         "avanza al siguiente",
@@ -44,7 +44,7 @@
       "samples": [
         "anterior",
         "vuelve a la {canción|pista|música} anterior",
-		"vuelve al tema anterior",
+	"vuelve al tema anterior",
         "{canción|pista|música|tema} anterior",
         "vuelve atrás"
       ]
@@ -68,7 +68,7 @@
         "listar dispositivos",
         "dispositivos",
         "dime los números de los dispositivos",
-		"qué dispositivos tengo",
+	"qué dispositivos tengo"
       ]
     },
     {
@@ -95,8 +95,8 @@
       "samples": [
         "qué {canción|pista|música|} {está sonando|suena} {ahora|}",
         "qué {canción|pista|música} es {esta|}",
-		"cuál es esta {canción|pista|música}",
-		"cuál es la {canción|pista|música|} que suena {ahora|}"
+	"cuál es esta {canción|pista|música}",
+	"cuál es la {canción|pista|música|} que suena {ahora|}"
       ]
     }
   ]
