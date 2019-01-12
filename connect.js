@@ -21,6 +21,14 @@ i18n.configure({
 });
 
 const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
+const connectDeviceCard = {
+    type: "Simple",
+    title: i18n.__("Connecting to a device using Spotify Connect"),
+    content: i18n.__("To add a device to Spotify Connect,"
+        + " log in to your Spotify account on a supported device"
+        + " such as an Echo, phone, or computer"
+        + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
+};
 
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
@@ -101,7 +109,10 @@ app.intent('PlayIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                if (err.statusCode === 404) {
+                    res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard);
+                }
             });
     }
 );
@@ -121,7 +132,10 @@ app.intent('PauseIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                if (err.statusCode === 404) {
+                    res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard);
+                }
             });
     }
 );
@@ -143,7 +157,10 @@ app.intent('SkipNextIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                if (err.statusCode === 404) {
+                    res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard);
+                }
             });
     }
 );
@@ -166,7 +183,10 @@ app.intent('SkipPreviousIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                if (err.statusCode === 404) {
+                    res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard);
+                }
             });
     }
 );
@@ -204,7 +224,10 @@ app.intent('VolumeLevelIntent', {
                             json: true
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                            if (err.statusCode === 404) {
+                                res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                res.card(connectDeviceCard);
+                            }
                         });
                     }
                     else {
@@ -260,7 +283,7 @@ app.intent('GetDevicesIntent', {
                 var deviceNames = [];
                 for (var i = 1; i <= devices.length; i++) {
                     // Number each device
-                    deviceNames.push(i + ". " + devices[i-1].name);
+                    deviceNames.push(i + ". " + devices[i - 1].name);
                     // Add the device number to JSON
                     devices[i].number = i;
                 }
@@ -278,14 +301,7 @@ app.intent('GetDevicesIntent', {
                 else {
                     // No devices found
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card({
-                        type: "Simple",
-                        title: i18n.__("Connecting to a device using Spotify Connect"),
-                        content: i18n.__("To add a device to Spotify Connect,"
-                            + " log in to your Spotify account on a supported device"
-                            + " such as an Echo, phone, or computer"
-                            + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
-                    });
+                    res.card(connectDeviceCard);
                 }
             })
             // Handle errors
@@ -337,7 +353,10 @@ app.intent('DevicePlayIntent', {
                             res.say(i18n.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                            if (err.statusCode === 404) {
+                                res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                res.card(connectDeviceCard);
+                            }
                         });
                     }
                     else {
@@ -409,7 +428,10 @@ app.intent('DeviceTransferIntent', {
                             res.say(i18n.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                            if (err.statusCode === 404) {
+                                res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                res.card(connectDeviceCard);
+                            }
                         });
                     }
                     else {
