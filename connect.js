@@ -101,6 +101,7 @@ app.intent('PlayIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
             });
     }
 );
@@ -120,6 +121,7 @@ app.intent('PauseIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
             });
     }
 );
@@ -141,6 +143,7 @@ app.intent('SkipNextIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
             });
     }
 );
@@ -163,6 +166,7 @@ app.intent('SkipPreviousIntent', {
                 res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
             });
     }
 );
@@ -253,11 +257,11 @@ app.intent('GetDevicesIntent', {
             .then(function (body) {
                 var devices = body.devices || [];
                 var deviceNames = [];
-                for (var i = 0; i < devices.length; i++) {
+                for (var i = 1; i <= devices.length; i++) {
                     // Number each device
-                    deviceNames.push((i + 1) + ". " + devices[i].name);
+                    deviceNames.push(i + ". " + devices[i].name);
                     // Add the device number to JSON
-                    devices[i].number = (i + 1);
+                    devices[i].number = i;
                 }
                 req.getSession().set("devices", devices);
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
