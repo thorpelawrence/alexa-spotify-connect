@@ -281,11 +281,11 @@ app.intent('GetDevicesIntent', {
             .then(function (body) {
                 var devices = body.devices || [];
                 var deviceNames = [];
-                for (var i = 1; i <= devices.length; i++) {
+                for (var i = 0; i < devices.length; i++) {
                     // Number each device
-                    deviceNames.push(i + ". " + devices[i - 1].name);
+                    deviceNames.push((i + 1) + ". " + devices[i].name);
                     // Add the device number to JSON
-                    devices[i].number = i;
+                    devices[i].number = (i + 1);
                 }
                 req.getSession().set("devices", devices);
                 cache.set(req.getSession().details.user.userId + ":devices", devices);
