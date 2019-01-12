@@ -186,6 +186,7 @@ app.intent('VolumeLevelIntent', {
                     var volumeLevel = req.slot("VOLUMELEVEL");
                     // Check that the volume is valid
                     if (volumeLevel >= 0 && volumeLevel <= 10) {
+                        res.say(successSound);
                         // PUT to Spotify REST API
                         return request.put({
                             // Send new volume * 10 (convert to percentage)
