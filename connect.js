@@ -20,7 +20,7 @@ i18n.configure({
     directory: __dirname + '/locales'
 });
 
-const successSound = "<audio src='soundbank://soundlibrary/musical/amzn_sfx_electronic_beep_02'/>";
+const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
 
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
