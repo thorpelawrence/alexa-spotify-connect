@@ -204,6 +204,7 @@ app.intent('VolumeLevelIntent', {
                             json: true
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
                         });
                     }
                     else {
@@ -259,7 +260,7 @@ app.intent('GetDevicesIntent', {
                 var deviceNames = [];
                 for (var i = 1; i <= devices.length; i++) {
                     // Number each device
-                    deviceNames.push(i + ". " + devices[i].name);
+                    deviceNames.push(i + ". " + devices[i-1].name);
                     // Add the device number to JSON
                     devices[i].number = i;
                 }
@@ -336,6 +337,7 @@ app.intent('DevicePlayIntent', {
                             res.say(i18n.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
                         });
                     }
                     else {
@@ -407,6 +409,7 @@ app.intent('DeviceTransferIntent', {
                             res.say(i18n.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
                         }).catch((err) => {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
+                            if (err.statusCode === 404) res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
                         });
                     }
                     else {
