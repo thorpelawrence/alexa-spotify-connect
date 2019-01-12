@@ -20,6 +20,8 @@ i18n.configure({
     directory: __dirname + '/locales'
 });
 
+const successSound = "<audio src='soundbank://soundlibrary/musical/amzn_sfx_electronic_beep_02'/>";
+
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
     const applicationId = require('./package.json').alexa.applicationId;
@@ -114,7 +116,7 @@ app.intent('PauseIntent', {
         return rq.put("https://api.spotify.com/v1/me/player/pause", req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
-                res.say(i18n.__("Paused"));
+                res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
@@ -135,6 +137,7 @@ app.intent('SkipNextIntent', {
         return rq.post("https://api.spotify.com/v1/me/player/next", req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+                res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
@@ -156,6 +159,7 @@ app.intent('SkipPreviousIntent', {
         return rq.post("https://api.spotify.com/v1/me/player/previous", req.getSession().details.user.accessToken)
             .then((r) => {
                 req.getSession().set("statusCode", r.statusCode);
+                res.say(successSound);
             }).catch((err) => {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
             });
