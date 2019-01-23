@@ -11,7 +11,8 @@
         "quiero escuchar un poco de música",
         "reproduce",
         "pon",
-        "quiero que pongas"
+        "quiero que pongas",
+        "reproduzca música en el dispositivo {DEVICENUMBER}"
       ]
     },
     {
@@ -23,7 +24,8 @@
         "para",
         "stop",
         "para la música",
-        "pause"
+        "pause",
+        "ponga la pausa"
       ]
     },
     {
