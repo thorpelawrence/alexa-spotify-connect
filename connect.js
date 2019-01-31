@@ -17,6 +17,7 @@ var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
 i18n.configure({
+    locales: ['en-GB', 'en-US', 'de-DE', 'it-IT', 'es-ES'],
     directory: __dirname + '/locales'
 });
 
