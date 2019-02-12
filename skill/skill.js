@@ -1,6 +1,6 @@
 const connect = require('../connect');
 const skill_i18n = require('./skill-i18n');
-const chalk = require('chalk');
+if (require.main === module) const chalk = require('chalk');
 
 const generatedSkill = connect.schemas.skillBuilder();
 
