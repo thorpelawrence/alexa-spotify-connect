@@ -18,7 +18,7 @@
     "coveralls": "^3.0.0",
     "jest": "^22.1.4",
     "nock": "^10.0.3",
-    "p-event": "^2.0.0"
+    "p-event": "^2.3.1"
   },
   "scripts": {
     "start": "node connect.js",
