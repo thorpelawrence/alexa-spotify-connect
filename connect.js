@@ -519,5 +519,16 @@ if (require.main === module) {
     express_app.listen(port);
 }
 
+/* istanbul ignore next */
+express_app.get('/skill', function (_, res) {
+    const skill = require('./skill/skill.js');
+    skill.forEach(locale => {
+        res.write(locale.name + '\n');
+        res.write(JSON.stringify(locale.data, null, 2) + '\n');
+        res.write('='.repeat(80) + '\n');
+    });
+    res.end();
+});
+
 // Export alexa-app instance for skill.js
 module.exports = app;
