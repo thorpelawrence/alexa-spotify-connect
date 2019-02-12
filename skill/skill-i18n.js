@@ -1,5 +1,5 @@
 const utterances = require('alexa-utterances');
-if (require.main === module) const chalk = require('chalk');
+const chalk = (require.main === module) ? require('chalk') : null;
 
 const locales = {
     "de-DE": require("./locales/de-DE.json"),
