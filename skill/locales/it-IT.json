@@ -12,7 +12,9 @@
                 "riprendi",
                 "riproduci",
                 "fai partire",
-                "esegui"
+                "esegui",
+                "di riprodurre un po di musica",
+                "di far partire {della|la} musica"
             ]
         },
         {
@@ -24,7 +26,9 @@
                 "fermarsi",
                 "silenzia",
                 "ferma la musica",
-                "stoppa"
+                "stoppa",
+                "di mettere in pausa",
+                "di fermare la musica"
             ]
         },
         {
@@ -36,7 +40,9 @@
                 "avanti",
                 "vai avanti",
                 "passa alla prossima",
-                "skippa"
+                "skippa",
+                "di mandare avanti",
+                "di passare alla prossima"
             ]
         },
         {
@@ -46,7 +52,8 @@
                 "tornare alla precedente {canzone|traccia|musica}",
                 "{precedente|precedenti} {canzone|canzoni|traccia|tracce|musica}",
                 "{torna|tornare} indietro",
-                "rimetti quella di prima"
+                "rimetti quella di prima",
+                "di {ritornare|tornare} indietro"
             ]
         },
         {
@@ -56,7 +63,8 @@
             },
             "samples": [
                 "{cambiare|impostare|cambia|cambia il|setta il|imposta il|imposta} volume a {-|VOLUMELEVEL}",
-                "volume {-|VOLUMELEVEL}"
+                "volume {-|VOLUMELEVEL}",
+                "di {cambiare|impostare} il volume a {-|VOLUMELEVEL}"
             ]
         },
         {
@@ -67,7 +75,9 @@
                 "trova dispositivo",
                 "lista dispositivi",
                 "{elenco|elencare i} dispositivi",
-                "{darmi la lista di|dammi la lista di|lista di|elencami|elenca} {tutti i dispositivi|tutti i numeri di dispositivi}"
+                "{darmi la lista di|dammi la lista di|lista di|elencami|elenca} {tutti i dispositivi|tutti i numeri di dispositivi}",
+                "di {darmi|dimmi} la lista dei dispositivi",
+                "di elencare i dispositivi"
             ]
         },
         {
@@ -76,7 +86,8 @@
                 "DEVICENUMBER": "AMAZON.NUMBER"
             },
             "samples": [
-                "{riprodurre la|riproduci la|riproduci|far partire|fai partire la|fai partire|esegui|ascolta|voglio ascoltare|riprodurre} {musica|spotify} sul {dispositivo|numero|dispositivo numero|} {-|DEVICENUMBER}"
+                "{riprodurre la|riproduci la|riproduci|far partire|fai partire la|fai partire|esegui|ascolta|voglio ascoltare|riprodurre} {musica|spotify} sul {dispositivo|numero|dispositivo numero|} {-|DEVICENUMBER}",
+                "di {riprodurre|far partire|eseguire|farmi ascoltare musica su} su {-|DEVICENUMBER}"
             ]
         },
         {
@@ -95,7 +106,8 @@
                 "cosa c'è in riproduzione",
                 "che {canzone|traccia|} è",
                 "che {canzone|traccia|} si sta ascoltando",
-                "{che|quale} {canzone|traccia|musica} è questa"
+                "{che|quale} {canzone|traccia|musica} è questa",
+                "il titolo di questa {traccia|canzone}"
             ]
         }
     ]
