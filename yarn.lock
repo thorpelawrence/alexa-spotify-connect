@@ -2404,10 +2404,10 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-p-event@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/p-event/-/p-event-2.3.1.tgz#596279ef169ab2c3e0cae88c1cfbb08079993ef6"
-  integrity sha512-NQCqOFhbpVTMX4qMe8PF8lbGtzZ+LCiN7pcNrb/413Na7+TRoe1xkKUzuWa/YEJdGQ0FvKtj35EEbDoVPO2kbA==
+p-event@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/p-event/-/p-event-3.0.0.tgz#f291d6c076a05c3af17eb6c08bdb6b73cdb826d9"
+  integrity sha512-Y07bGMEsSNRtQG2eOepN/Tvu/JkCeR+1O0YefjliVFRtDUuK87+CtrbYzpTDPitKEZE7pFOLvo1o/7vHdtovLw==
   dependencies:
     p-timeout "^2.0.1"
 
