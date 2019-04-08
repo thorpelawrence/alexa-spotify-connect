@@ -30,10 +30,10 @@ const connectDeviceCard = {
         + " such as an Echo, phone, or computer"
         + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
 };
+const applicationId = require('./package.json').alexa.applicationId;
 
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
-    const applicationId = require('./package.json').alexa.applicationId;
     if (req.data.request.locale) {
         i18n.setLocale(req.data.request.locale);
     }
