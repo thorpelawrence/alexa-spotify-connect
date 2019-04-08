@@ -17,7 +17,8 @@ var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
 i18n.configure({
-    directory: __dirname + '/locales'
+    directory: __dirname + '/locales',
+    defaultLocale: 'en-GB'
 });
 
 const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
@@ -33,7 +34,9 @@ const connectDeviceCard = {
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
     const applicationId = require('./package.json').alexa.applicationId;
-    i18n.setLocale(req.data.request.locale || "en-GB");
+    if (req.data.request.locale) {
+        req.setLocale(req.data.request.locale);
+    }
     // Error if the application ID of the request is not for this skill
     if (req.applicationId != applicationId &&
         req.getSession().details.application.applicationId != applicationId) {
