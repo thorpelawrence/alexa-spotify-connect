@@ -35,7 +35,7 @@ const connectDeviceCard = {
 app.pre = function (req, res, _type) {
     const applicationId = require('./package.json').alexa.applicationId;
     if (req.data.request.locale) {
-        req.setLocale(req.data.request.locale);
+        i18n.setLocale(req.data.request.locale);
     }
     // Error if the application ID of the request is not for this skill
     if (req.applicationId != applicationId &&
