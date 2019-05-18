@@ -11,7 +11,7 @@ This product is not endorsed, certified or otherwise approved in any way by Spot
 
 Click below to log in to Spotify
 
-<a id="login-link" href="#">Log in</a>
+<a id="login-link">Log in</a>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script>
