@@ -11,8 +11,10 @@ This product is not endorsed, certified or otherwise approved in any way by Spot
 
 Click below to log in to Spotify
 
+<a id="login-link" href="#">Log in</a>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script>
   params={};location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){params[k]=v});
-  $("body").append("<a href='https://accounts.spotify.com/authorize?nosignup=true?" + $.param(params) + "'>Log in</a>");
+  $("#login-link").attr("href", "https://accounts.spotify.com/authorize?nosignup=true&" + $.param(params));
 </script>
