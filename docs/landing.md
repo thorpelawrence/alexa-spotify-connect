@@ -16,7 +16,5 @@ Click below to log in to Spotify
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script>
   params={};location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){params[k]=v});
-  var btn=document.createElement("a");
-  btn.setAttribute("href", "https://accounts.spotify.com/authorize?nosignup=true?" + $.param(params));
-  document.body.appendChild(btn);
+  $("body").append("<a href='https://accounts.spotify.com/authorize?nosignup=true?" + $.param(params) + "' />");
 </script>
