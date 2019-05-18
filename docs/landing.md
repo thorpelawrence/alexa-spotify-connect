@@ -17,5 +17,5 @@ Click below to log in to Spotify
 <script src="https://unpkg.com/@ungap/url-search-params@0.1.2/min.js"></script>
 <script>
   params=new URLSearchParams(location.search);
-  $("#login-link").attr("href", "https://accounts.spotify.com/authorize?nosignup=true&" + $.param(params.entries()));
+  $("#login-link").attr("href", "https://accounts.spotify.com/authorize?nosignup=true&" + params.toString());
 </script>
