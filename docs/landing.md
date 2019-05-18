@@ -1,6 +1,6 @@
 # Connect Control for Spotify - Landing Page
 
-![](../resources/icon108.png)
+![](resources/icon108.png)
 
 Control Spotify Connect devices with Alexa
 
