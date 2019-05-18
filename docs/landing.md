@@ -9,7 +9,11 @@ May require a Spotify Premium account for some devices
 DISCLAIMER:
 This product is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 
-Click below to log in to Spotify
+[Privacy policy](https://alexa-spotify-connect.herokuapp.com/privacy.html)
+
+To use this skill, you must log in with the third-party (3P) service, Spotify.
+
+Click below to log in to Spotify:
 
 <a id="login-link">Log in</a>
 
