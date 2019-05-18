@@ -1,7 +1,5 @@
 # Connect Control for Spotify - Landing Page
 
-![](resources/icon108.png)
-
 Control Spotify Connect devices with Alexa
 
 Source code available from: https://github.com/thorpelawrence/alexa-spotify-connect
@@ -15,4 +13,10 @@ Click below to log in to Spotify
 
 [Log in](https://accounts.spotify.com/authorize?nosignup=true)
 
-<script>params={};location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){params[k]=v});console.log(params)</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script>
+  params={};location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){params[k]=v});
+  var btn=document.createElement("a");
+  btn.setAttribute("href", "https://accounts.spotify.com/authorize?nosignup=true?" + $.param(params));
+  document.body.appendChild(btn);
+</script>
