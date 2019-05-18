@@ -14,3 +14,5 @@ This product is not endorsed, certified or otherwise approved in any way by Spot
 Click below to log in to Spotify
 
 [Log in](https://accounts.spotify.com/authorize?nosignup=true)
+
+<script>params={};location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){params[k]=v});console.log(params)</script>
