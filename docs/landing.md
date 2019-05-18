@@ -13,6 +13,6 @@ DISCLAIMER:
 This product is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 ```
 
-Click the button below to log in to Spotify
+Click below to log in to Spotify
 
-[Log in](https://accounts.spotify.com/authorize?nosignup=true){: .btn}
+[Log in](https://accounts.spotify.com/authorize?nosignup=true)
