@@ -114,7 +114,7 @@ app.intent('PlayIntent', {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard);
+                    res.card(connectDeviceCard());
                 }
             });
     }
@@ -137,7 +137,7 @@ app.intent('PauseIntent', {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard);
+                    res.card(connectDeviceCard());
                 }
             });
     }
@@ -162,7 +162,7 @@ app.intent('SkipNextIntent', {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard);
+                    res.card(connectDeviceCard());
                 }
             });
     }
@@ -188,7 +188,7 @@ app.intent('SkipPreviousIntent', {
                 if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard);
+                    res.card(connectDeviceCard());
                 }
             });
     }
@@ -229,7 +229,7 @@ app.intent('VolumeLevelIntent', {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
                                 res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard);
+                                res.card(connectDeviceCard());
                             }
                         });
                     }
@@ -304,7 +304,7 @@ app.intent('GetDevicesIntent', {
                 else {
                     // No devices found
                     res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard);
+                    res.card(connectDeviceCard());
                 }
             })
             // Handle errors
@@ -358,7 +358,7 @@ app.intent('DevicePlayIntent', {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
                                 res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard);
+                                res.card(connectDeviceCard());
                             }
                         });
                     }
@@ -433,7 +433,7 @@ app.intent('DeviceTransferIntent', {
                             if (err.statusCode === 403) res.say(i18n.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
                                 res.say(i18n.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard);
+                                res.card(connectDeviceCard());
                             }
                         });
                     }
