@@ -22,14 +22,14 @@ i18n.configure({
 });
 
 const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
-const connectDeviceCard = {
+const connectDeviceCard = () => ({
     type: "Simple",
     title: i18n.__("Connecting to a device using Spotify Connect"),
     content: i18n.__("To add a device to Spotify Connect,"
         + " log in to your Spotify account on a supported device"
         + " such as an Echo, phone, or computer"
         + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
-};
+});
 const applicationId = require('./package.json').alexa.applicationId;
 
 // Run every time the skill is accessed
