@@ -2784,10 +2784,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
-nock@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-11.1.0.tgz#cbd63800c6132833ecb923fad7508858f766310b"
-  integrity sha512-cuyzdGYSEYjfTF8qmTB4uxdFrZcejEhjtK2gF5K5jq/WRfJFKpfqvjYIzJF818KBGtfXApfWKhtDXAeGjUjhJQ==
+nock@^11.3.5:
+  version "11.3.5"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-11.3.5.tgz#f2c7b4b672a04c35342593b6bfd821497881199c"
+  integrity sha512-6WGeZcWc3RExkBcMSYSrUm/5YukDo52m/jhwniQyrnuiCnKRljBwwje9vTwJyEi4J6m2bq0Aj6C1vzuM6iuaeg==
   dependencies:
     chai "^4.1.2"
     debug "^4.1.0"
