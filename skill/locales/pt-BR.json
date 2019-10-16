@@ -1,0 +1,105 @@
+﻿{
+  "intents": [
+    {
+      "name": "PlayIntent",
+      "samples": [
+        "reproduzir",
+        "escutar",
+        "reproduzir música",
+        "toque um pouco de música",
+        "toca música",
+        "quero escutar um pouco de música",
+        "toque",
+        "cante",
+        "quero música",
+        "toque música no dispositivo {DEVICENUMBER}"
+      ]
+    },
+    {
+      "name": "PauseIntent",
+      "samples": [
+        "pausa",
+        "faça uma pausa",
+        "pare um pouco",
+        "para",
+        "stop",
+        "para a música",
+        "pause",
+        "silêncio"
+      ]
+    },
+    {
+      "name": "SkipNextIntent",
+      "samples": [
+        "seguinte",
+        "passe para próxima {música|canção}",
+	"passe para seguinte {tema|da lista}",
+        "seguinte {música|tema|lista}",
+        "avança",
+        "adiante",
+        "manda a próxima",
+        "salta"
+      ]
+    },
+    {
+      "name": "SkipPreviousIntent",
+      "samples": [
+        "anterior",
+        "volte a {música|lista} anterior",
+	"volte a lista anterior",
+        "{canção|lista|música|tema} anterior",
+        "volte para atrás"
+      ]
+    },
+    {
+      "name": "VolumeLevelIntent",
+      "slots": {
+        "VOLUMELEVEL": "AMAZON.NUMBER"
+      },
+      "samples": [
+        "{coloque|ponha|ajuste} o volume para {-|VOLUMELEVEL}",
+        "volume {-|VOLUMELEVEL}"
+      ]
+    },
+    {
+      "name": "GetDevicesIntent",
+      "samples": [
+        "{diga|fale} a lista",
+        "{liste|lista} os dispositivos",
+        "{diga|fale} a lista de dispositivos",
+        "listar dispositivos",
+        "dispositivos",
+        "diga os números dos dispositivos",
+	"quais dispositivos tenho"
+      ]
+    },
+    {
+      "name": "DevicePlayIntent",
+      "slots": {
+        "DEVICENUMBER": "AMAZON.NUMBER"
+      },
+      "samples": [
+        "{reproduza|toca|reproduzir|iniciar a reprodução de|escutar|quero escutar|toque} {música|spotify} no {dispositivo| número|dispositivo número|} {-|DEVICENUMBER}"
+      ]
+    },
+    {
+      "name": "DeviceTransferIntent",
+      "slots": {
+        "DEVICENUMBER": "AMAZON.NUMBER"
+      },
+      "samples": [
+        "{trocar|troque} o dispositivo  {dispositivo|número|dispositivo número|} {-|DEVICENUMBER}",
+        "{passar|transferir|transfere|transferencia da} {reprodução|música} do {dispositivo|número|dispositivo número|} {-|DEVICENUMBER}"
+      ]
+    },
+    {
+      "name": "GetTrackIntent",
+      "samples": [
+        "qual {canção|música|} {está tocando|cantando} {agora|}",
+        "que {canção|música} é {essa|}",
+	"qual é essa {canção|música}",
+	"qual é essa {canção|música|} que toca {agora|}"
+      ]
+    }
+  ]
+}
