@@ -5,7 +5,8 @@ const locales = {
     "de-DE": require("./locales/de-DE.json"),
     "fr-FR": require("./locales/fr-FR.json"),
     "it-IT": require("./locales/it-IT.json"),
-    "es-ES": require("./locales/es-ES.json")
+    "es-ES": require("./locales/es-ES.json"),
+    "pt-BR": require("./locales/pt-BR.json")
 };
 
 const generatedLocales = Object.entries(locales).map(([name, locale]) => {
