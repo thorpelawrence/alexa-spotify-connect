@@ -34,7 +34,8 @@ $ node skill/skill.js
 2. Create a locale file in `locales/{LOCALE-CODE}.json` (see existing locales for formatting), please do not change the placeholder value names (in double curly brackets e.g. `{{name}}`)
 3. Create a localised _interaction model_ used by Skill Builder in `skill/locales/{LOCALE-CODE}.json` (please only change the values for the samples for each intent and not the intent names or slots). The formatting should be similar to the other locales, but if more (or fewer) samples are required for the language add as many as possible (more samples mean better accuracy) (formatting done by [alexa-utterances](https://github.com/alexa-js/alexa-utterances/blob/master/README.md))
 4. Add the locale to the list of locales in `skill/skill-i18n.js` (follow the format used by other locales)
-5. (Optional: _for deployment_) To create the JSON data required by Skill Builder run
+5. Please also provide [publishing information](https://github.com/thorpelawrence/alexa-spotify-connect/issues/14#issuecomment-365770234) in your pull request so that it can be localised and published to Amazon in the new language
+6. (Optional: _for deployment_) To create the JSON data required by Skill Builder run
 ```
 $ node skill/skill-i18n.js
 ```
