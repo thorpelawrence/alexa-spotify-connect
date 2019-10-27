@@ -7,7 +7,7 @@
     "alexa-app": "^4.2.2",
     "express": "^4.15.3",
     "i18n": "^0.8.3",
-    "node-cache": "^4.1.1",
+    "node-cache": "^5.0.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5"
   },
