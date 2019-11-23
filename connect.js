@@ -16,13 +16,6 @@ var app = new alexa.app('connect');
 // Bind alexa-app to express instance
 app.express({ expressApp: express_app });
 
-i18n.configure({
-    directory: __dirname + '/locales',
-    defaultLocale: 'en-GB'
-});
-
-express_app.use(i18n.init);
-
 const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
 const connectDeviceCard = (req) => ({
     type: "Simple",
@@ -36,8 +29,13 @@ const applicationId = require('./package.json').alexa.applicationId;
 
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
+    i18n.configure({
+        directory: __dirname + '/locales',
+        defaultLocale: 'en-GB',
+        register: req
+    });
     if (req.data.request.locale) {
-        req.setLocale(req.data.request.locale);
+        i18n.setLocale(req.data.request.locale);
     }
     // Error if the application ID of the request is not for this skill
     if (req.applicationId != applicationId &&
