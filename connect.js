@@ -304,7 +304,7 @@ app.intent('GetDevicesIntent', {
                 else {
                     // No devices found
                     res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard());
+                    res.card(connectDeviceCard(req));
                 }
             })
             // Handle errors
@@ -358,7 +358,7 @@ app.intent('DevicePlayIntent', {
                             if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
                                 res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard());
+                                res.card(connectDeviceCard(req));
                             }
                         });
                     }
@@ -433,7 +433,7 @@ app.intent('DeviceTransferIntent', {
                             if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
                                 res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard());
+                                res.card(connectDeviceCard(req));
                             }
                         });
                     }
