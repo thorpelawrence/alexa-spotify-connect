@@ -430,8 +430,6 @@ app.intent(
             
               var trackId = body.tracks.items[0].uri;
               trackName = body.tracks.items[0].name;
-            
-              console.log();
 
               return request.post(
                 {
