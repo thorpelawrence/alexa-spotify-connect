@@ -400,8 +400,8 @@ app.intent(
       TRACKNAME: "AMAZON.MusicRecording",
     },
     utterances: [
-      "Queue {the song|} {-|TRACKNAME}",
-      "Add {the song|} {-|TRACKNAME} to {my|the} queue",
+      "queue {the song|} {-|TRACKNAME}",
+      "add {the song|} {-|TRACKNAME} to {my|the} queue",
     ],
   },
   function (req, res) {
