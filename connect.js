@@ -427,34 +427,46 @@ app.intent(
               json: true,
             })
             .then((body) => {
-            
-              var trackId = body.tracks.items[0].uri;
-              trackName = body.tracks.items[0].name;
 
-              return request.post(
-                {
+              if (!body.tracks || !body.tracks.items[0] || !body.tracks.items[0].uri || !body.tracks.items[0].name) {
+                  return res
+                    .say(req.__("Sorry, I couldn't queue that song."))
+                    .reprompt(req.__("What would you like to do?"));
+              }
+
+              var trackId = body.tracks.items[0].uri;
+              var trackName = body.tracks.items[0].name;
+
+              return request
+                .post({
                   url: "https://api.spotify.com/v1/me/player/queue",
                   auth: {
-                    "bearer": req.getSession().details.user.accessToken,
+                    bearer: req.getSession().details.user.accessToken,
                   },
                   qs: {
                     // Send track ID
-                    "uri": trackId,
+                    uri: trackId,
                   },
                   // Handle sending as JSON
                   json: true,
-                }
-              )
-              .then((response) => {
-                res.say(req.__("Queued track {{trackName}}", {
-                    trackName,
-                  }));
-              })
-              .catch((err) => {
+                })
+                .then((response) => {
+                  res.say(
+                    req.__("Queued track {{trackName}}", {
+                      trackName,
+                    })
+                  );
+                })
+                .catch((err) => {
                   res
                     .say(req.__("Sorry, I couldn't queue that song."))
                     .reprompt(req.__("What would you like to do?"));
-        })
+                });
+            })
+            .catch((err) => {
+                res
+                  .say(req.__("Sorry, I couldn't queue that song."))
+                  .reprompt(req.__("What would you like to do?"));
             });
         } else {
           // If track name was not recognised
@@ -477,7 +489,6 @@ app.intent(
     }
   }
 );
-
 // Handle device transfer intent
 // Slot for device number
 app.intent('DeviceTransferIntent', {
