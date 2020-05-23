@@ -394,89 +394,99 @@ app.intent('DevicePlayIntent', {
 // Handle track queue intent
 // Slot for device number
 app.intent(
-  "QueueTrackIntent",
-  {
-    slots: {
-      TRACKNAME: "AMAZON.MusicRecording",
+    "QueueTrackIntent",
+    {
+      slots: {
+        TRACKNAME: "AMAZON.MusicRecording",
+      },
+      utterances: [
+        "Queue {the song|} {-|TRACKNAME}",
+        "Add {the song|} {-|TRACKNAME} to {my|the} queue",
+      ],
     },
-    utterances: [
-      "Queue {the song|} {-|TRACKNAME}",
-      "Add {the song|} {-|TRACKNAME} to {my|the} queue",
-    ],
-  },
-  function (req, res) {
-    // Check that request contains session
-    if (req.hasSession()) {
-      // Check that the slot has a value
-      if (req.slot("TRACKNAME")) {
-        var trackSearchQuery = req.slot("TRACKNAME");
-        if (trackSearchQuery != "") {
-          return request
-            .get({
-              url: `https://api.spotify.com/v1/search`,
-              // Send access token as bearer auth
-              auth: {
-                bearer: req.getSession().details.user.accessToken,
-              },
-              qs: {
-                q: trackSearchQuery,
-                type: "track",
-                offset: "0",
-              },
-              // Handle sending as JSON
-              json: true,
-            })
-            .then((body) => {
-            
-              var trackId = body.tracks.items[0].uri;
-              trackName = body.tracks.items[0].name;
-
-              return request.post(
-                {
-                  url: "https://api.spotify.com/v1/me/player/queue",
-                  auth: {
-                    "bearer": req.getSession().details.user.accessToken,
-                  },
-                  qs: {
-                    // Send track ID
-                    "uri": trackId,
-                  },
-                  // Handle sending as JSON
-                  json: true,
+    function (req, res) {
+      // Check that request contains session
+      if (req.hasSession()) {
+        // Check that the slot has a value
+        if (req.slot("TRACKNAME")) {
+          var trackSearchQuery = req.slot("TRACKNAME");
+          if (trackSearchQuery != "") {
+            return request
+              .get({
+                url: `https://api.spotify.com/v1/search`,
+                // Send access token as bearer auth
+                auth: {
+                  bearer: req.getSession().details.user.accessToken,
+                },
+                qs: {
+                  q: trackSearchQuery,
+                  type: "track",
+                  offset: "0",
+                },
+                // Handle sending as JSON
+                json: true,
+              })
+              .then((body) => {
+  
+                if (!body.tracks || !body.tracks.items[0] || !body.tracks.items[0].uri || !body.tracks.items[0].name) {
+                    throw "bad response";
                 }
-              )
-              .then((response) => {
-                res.say(req.__("Queued track {{trackName}}", {
-                    trackName,
-                  }));
+  
+                var trackId = body.tracks.items[0].uri;
+                var trackName = body.tracks.items[0].name;
+  
+                return request
+                  .post({
+                    url: "https://api.spotify.com/v1/me/player/queue",
+                    auth: {
+                      bearer: req.getSession().details.user.accessToken,
+                    },
+                    qs: {
+                      // Send track ID
+                      uri: trackId,
+                    },
+                    // Handle sending as JSON
+                    json: true,
+                  })
+                  .then((response) => {
+                    res.say(
+                      req.__("Queued track {{trackName}}", {
+                        trackName,
+                      })
+                    );
+                  })
+                  .catch((err) => {
+                    res
+                      .say(req.__("Sorry, I couldn't queue that song."))
+                      .reprompt(req.__("What would you like to do?"));
+                  });
               })
               .catch((err) => {
                   res
                     .say(req.__("Sorry, I couldn't queue that song."))
                     .reprompt(req.__("What would you like to do?"));
-        })
-            });
+              });
+          } else {
+            // If track name was not recognised
+            res.say(
+              req.__("I dont recognize the song {{trackName}}.", {
+                trackName: trackSearchQuery,
+              })
+            );
+            // Keep session open
+            res.shouldEndSession(false);
+          }
         } else {
-          // If track name was not recognised
-          res.say(
-            req.__("I dont recognize the song {{trackName}}.", {
-              trackName: trackSearchQuery,
-            })
-          );
+          // No slot value
+          res
+            .say(req.__("I couldn't work out which song you want to queue."))
+            .reprompt(req.__("What would you like to do?"));
           // Keep session open
           res.shouldEndSession(false);
         }
-      } else {
-        // No slot value
-        res
-          .say(req.__("I couldn't work out which song you want to queue."))
-          .reprompt(req.__("What would you like to do?"));
-        // Keep session open
-        res.shouldEndSession(false);
       }
     }
-  }
-);
+  );
 
 // Handle device transfer intent
 // Slot for device number
