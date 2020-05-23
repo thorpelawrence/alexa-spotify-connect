@@ -429,7 +429,9 @@ app.intent(
             .then((body) => {
 
               if (!body.tracks || !body.tracks.items[0] || !body.tracks.items[0].uri || !body.tracks.items[0].name) {
-                  throw "bad response";
+                  return res
+                    .say(req.__("Sorry, I couldn't queue that song."))
+                    .reprompt(req.__("What would you like to do?"));
               }
 
               var trackId = body.tracks.items[0].uri;
