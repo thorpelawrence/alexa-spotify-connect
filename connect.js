@@ -463,7 +463,7 @@ app.intent(
                     })
                 );
             })
-            .catch((err) => {S
+            .catch((err) => {
                 res
                   .say(req.__("Sorry, I couldn't queue that song."))
                   .reprompt(req.__("What would you like to do?"));
