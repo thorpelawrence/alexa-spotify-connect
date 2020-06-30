@@ -5,7 +5,7 @@ const nodecache = require('node-cache');
 const i18n = require('i18n');
 
 const rq = require('./request-helper');
-const { findDeviceByNumber } = require('./device-helper');
+const { findDeviceByNumber, requestDevices } = require('./device-helper');
 
 // Create instance of express
 var express_app = express();
@@ -272,26 +272,13 @@ app.intent('GetDevicesIntent', {
 },
     function (req, res) {
         // GET from Spotify REST API
-        return request.get({
-            url: "https://api.spotify.com/v1/me/player/devices",
-            // Send access token as bearer auth
-            auth: {
-                "bearer": req.getSession().details.user.accessToken
-            },
-            // Parse results as JSON
-            json: true
-        })
-            .then(function (body) {
-                var devices = body.devices || [];
+        return requestDevices(req, cache)
+            .then(function (devices) {
                 var deviceNames = [];
                 for (var i = 0; i < devices.length; i++) {
                     // Number each device
                     deviceNames.push((i + 1) + ". " + devices[i].name);
-                    // Add the device number to JSON
-                    devices[i].number = (i + 1);
                 }
-                req.getSession().set("devices", devices);
-                cache.set(req.getSession().details.user.userId + ":devices", devices);
                 // Check if user has devices
                 if (devices.length > 0) {
                     // Comma separated list of device names
@@ -332,43 +319,44 @@ app.intent('DevicePlayIntent', {
                 // Check if the slot is a number
                 if (!isNaN(req.slot("DEVICENUMBER"))) {
                     var deviceNumber = req.slot("DEVICENUMBER");
-                    var device = findDeviceByNumber(req, cache, deviceNumber);
-                    // Check that the device for the number was found
-                    if (device.id) {
-                        // PUT to Spotify REST API
-                        return request.put({
-                            url: "https://api.spotify.com/v1/me/player",
-                            // Send access token as bearer auth
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            body: {
-                                // Send device ID
-                                "device_ids": [
-                                    device.id
-                                ],
-                                // Make sure that music plays
-                                "play": true
-                            },
-                            // Handle sending as JSON
-                            json: true
-                        }).then((_r) => {
-                            res.say(req.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
-                        }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
-                            }
-                        });
-                    }
-                    else {
-                        // If device for number not found
-                        res.say(req.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
-                            .say(req.__("Try asking me to list devices first"));
-                        // Keep session open
-                        res.shouldEndSession(false);
-                    }
+                    return findDeviceByNumber(req, cache, deviceNumber).then(async (device) => {
+                        // Check that the device for the number was found
+                        if (device.id) {
+                            // PUT to Spotify REST API
+                            await request.put({
+                                url: "https://api.spotify.com/v1/me/player",
+                                // Send access token as bearer auth
+                                auth: {
+                                    "bearer": req.getSession().details.user.accessToken
+                                },
+                                body: {
+                                    // Send device ID
+                                    "device_ids": [
+                                        device.id
+                                    ],
+                                    // Make sure that music plays
+                                    "play": true
+                                },
+                                // Handle sending as JSON
+                                json: true
+                            }).then((_r) => {
+                                res.say(req.__("Playing on device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
+                            }).catch((err) => {
+                                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                                if (err.statusCode === 404) {
+                                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                    res.card(connectDeviceCard(req));
+                                }
+                            });
+                        }
+                        else {
+                            // If device for number not found
+                            res.say(req.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
+                                .say(req.__("Try asking me to list devices first"));
+                            // Keep session open
+                            res.shouldEndSession(false);
+                        }
+                    });
                 }
                 else {
                     // Not a number
@@ -494,41 +482,42 @@ app.intent('DeviceTransferIntent', {
                 // Check if the slot is a number
                 if (!isNaN(req.slot("DEVICENUMBER"))) {
                     var deviceNumber = req.slot("DEVICENUMBER");
-                    var device = findDeviceByNumber(req, cache, deviceNumber);
-                    // Check that the device for the number was found
-                    if (device.id) {
-                        // PUT to Spotify REST API
-                        return request.put({
-                            url: "https://api.spotify.com/v1/me/player",
-                            // Send access token as bearer auth
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            body: {
-                                // Send device ID
-                                "device_ids": [
-                                    device.id
-                                ]
-                            },
-                            // Handle sending as JSON
-                            json: true
-                        }).then((_r) => {
-                            res.say(req.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
-                        }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
-                            }
-                        });
-                    }
-                    else {
-                        // If device for number not found
-                        res.say(req.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
-                            .say(req.__("Try asking me to list devices first"));
-                        // Keep session open
-                        res.shouldEndSession(false);
-                    }
+                    return findDeviceByNumber(req, cache, deviceNumber).then(async (device) => {
+                        // Check that the device for the number was found
+                        if (device.id) {
+                            // PUT to Spotify REST API
+                            await request.put({
+                                url: "https://api.spotify.com/v1/me/player",
+                                // Send access token as bearer auth
+                                auth: {
+                                    "bearer": req.getSession().details.user.accessToken
+                                },
+                                body: {
+                                    // Send device ID
+                                    "device_ids": [
+                                        device.id
+                                    ]
+                                },
+                                // Handle sending as JSON
+                                json: true
+                            }).then((_r) => {
+                                res.say(req.__("Transferring to device {{deviceNumber}}: {{deviceName}}", { deviceNumber, deviceName: device.name }));
+                            }).catch((err) => {
+                                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                                if (err.statusCode === 404) {
+                                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                    res.card(connectDeviceCard(req));
+                                }
+                            });
+                        }
+                        else {
+                            // If device for number not found
+                            res.say(req.__("I couldn't find device {{deviceNumber}}. ", { deviceNumber }))
+                                .say(req.__("Try asking me to list devices first"));
+                            // Keep session open
+                            res.shouldEndSession(false);
+                        }
+                    });
                 }
                 else {
                     // Not a number
