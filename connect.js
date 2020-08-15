@@ -274,7 +274,7 @@ app.intent('GetDevicesIntent', {
         // GET from Spotify REST API
         return requestDevices(req, cache)
             .then(function (devices) {
-                var deviceNames = [];
+                var deviceNames = devices.map(d => d.name);
                 // Check if user has devices
                 if (devices.length > 0) {
                     // Comma separated list of device names

@@ -30,5 +30,9 @@
 	"Make sure your Spotify account is premium": "Make sure your Spotify account is premium",
 	"Queued track {{trackName}}": "Queued track {{trackName}}",
 	"For example, tell me to play on a device after listing devices": "For example, tell me to play on a device after listing devices",
-	"Transferring to {{deviceName}}": "Transferring to {{deviceName}}"
+	"Transferring to {{deviceName}}": "Transferring to {{deviceName}}",
+	"I couldn't work out which device to play on.": "I couldn't work out which device to play on.",
+	"I couldn't work out which device to transfer to.": "I couldn't work out which device to transfer to.",
+	"I couldn't find a device named {{DEVICE}}.": "I couldn't find a device named {{DEVICE}}.",
+	"Playing on device {{deviceName}}": "Playing on device {{deviceName}}"
 }

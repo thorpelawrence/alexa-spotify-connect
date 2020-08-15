@@ -24,6 +24,6 @@
 	"Make sure your Spotify account is premium": "Stelle sicher, dass du Spotify Premium verwendest",
 	" and ": " und ",
 	"I couldn't find a device named {{DEVICE}}.": "Ich konnte kein Gerät mit dem Namen „{{DEVICE}}“ finden.",
-	"Playing on device {{deviceName}}": "Spiele auf {{deviceName}}",
-	"Transferring to {{deviceName}}": "Übetrage die Wiedergabe zu {{deviceName}}",
+	"Playing on device {{deviceName}}": "Musik wird auf {{deviceName}} abgespielt",
+	"Transferring to {{deviceName}}": "Übetrage die Wiedergabe zu {{deviceName}}"
 }

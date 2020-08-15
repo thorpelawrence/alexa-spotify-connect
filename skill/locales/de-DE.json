@@ -64,7 +64,7 @@
                 "DEVICE": "AMAZON.SearchQuery"
             },
             "samples": [
-                "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICE}"
+                "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|mein|} {-|DEVICE}"
             ]
         },
         {
