@@ -52,19 +52,19 @@
         {
             "name": "DevicePlayIntent",
             "slots": {
-                "DEVICENUMBER": "AMAZON.NUMBER"
+                "DEVICE": "AMAZON.SearchQuery"
             },
             "samples": [
-                "{spiel|starte|} {musik|spotify} auf {dem gerät|der nummer|} {-|DEVICENUMBER}"
+                "{spiel|spiele|starte|} {musik|spotify|} auf {dem gerät|meinem|} {-|DEVICE}"
             ]
         },
         {
             "name": "DeviceTransferIntent",
             "slots": {
-                "DEVICENUMBER": "AMAZON.NUMBER"
+                "DEVICE": "AMAZON.SearchQuery"
             },
             "samples": [
-                "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICENUMBER}"
+                "{übertrage|ändere} die {musikwiedergabe|wiedergabe} auf {das gerät|die nummer|} {-|DEVICE}"
             ]
         },
         {

@@ -28,5 +28,7 @@
 	"That was {{name}} by {{artist}}": "That was {{name}} by {{artist}}",
 	"Nothing is playing": "Nothing is playing",
 	"Make sure your Spotify account is premium": "Make sure your Spotify account is premium",
-	"Queued track {{trackName}}": "Queued track {{trackName}}"
+	"Queued track {{trackName}}": "Queued track {{trackName}}",
+	"For example, tell me to play on a device after listing devices": "For example, tell me to play on a device after listing devices",
+	"Transferring to {{deviceName}}": "Transferring to {{deviceName}}"
 }
