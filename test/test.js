@@ -295,19 +295,7 @@ describe('DevicePlayIntent', () => {
     test('should warn if no slot value', () => {
         var req = generateRequest.intentRequest('DevicePlayIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't work out which device number to play on");
-        });
-    });
-
-    test('should warn if not a number', () => {
-        var req = generateRequest.intentRequest('DevicePlayIntent', {
-            "DEVICENUMBER": {
-                "name": "DEVICENUMBER",
-                "value": "NaN"
-            }
-        });
-        return getRequestSSML(req).then(res => {
-            expect(res).toContain("refer to the device by number");
+            expect(res).toContain("couldn't work out which device to play on");
         });
     });
 
@@ -329,9 +317,9 @@ describe('DevicePlayIntent', () => {
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": 1
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": device0.name
                 }
             }, "example-access-token");
         connect.request(req);
@@ -341,29 +329,17 @@ describe('DevicePlayIntent', () => {
     });
 
     test('should warn if device not found', () => {
-        var deviceNumber = Math.floor(Math.random() * 10) + 2;
+      const deviceName = "Nonexistent Device";
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": deviceNumber
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": deviceName
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device " + deviceNumber);
-        });
-    });
-
-    test('should use (empty) cache if new session', () => {
-        var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent', null, {
-            "DEVICENUMBER": {
-                "name": "DEVICENUMBER",
-                "value": 10
-            }
-        }, null, true);
-        return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device");
+            expect(res).toContain("couldn't find a device named " + deviceName);
         });
     });
 
@@ -383,9 +359,9 @@ describe('DevicePlayIntent', () => {
         var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": 1
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": device0.name
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
@@ -398,19 +374,7 @@ describe('DeviceTransferIntent', () => {
     test('should warn if no slot value', () => {
         var req = generateRequest.intentRequest('DeviceTransferIntent');
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't work out which device number to transfer to");
-        });
-    });
-
-    test('should warn if not a number', () => {
-        var req = generateRequest.intentRequest('DeviceTransferIntent', {
-            "DEVICENUMBER": {
-                "name": "DEVICENUMBER",
-                "value": "NaN"
-            }
-        });
-        return getRequestSSML(req).then(res => {
-            expect(res).toContain("Try asking me to transfer to a device number");
+            expect(res).toContain("couldn't work out which device to transfer to");
         });
     });
 
@@ -431,9 +395,9 @@ describe('DeviceTransferIntent', () => {
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": device0.number
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": device0.name
                 }
             }, "example-access-token");
         connect.request(req);
@@ -443,29 +407,17 @@ describe('DeviceTransferIntent', () => {
     });
 
     test('should warn if device not found', () => {
-        var deviceNumber = Math.floor(Math.random() * 10) + 2;
+        const deviceName = "Nonexistent Device";
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": deviceNumber
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": deviceName
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device " + deviceNumber);
-        });
-    });
-
-    test('should use (empty) cache if new session', () => {
-        var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent', null, {
-            "DEVICENUMBER": {
-                "name": "DEVICENUMBER",
-                "value": 10
-            }
-        }, null, true);
-        return getRequestSSML(req).then(res => {
-            expect(res).toContain("couldn't find device");
+            expect(res).toContain("couldn't find a device named " + deviceName);
         });
     });
 
@@ -485,9 +437,9 @@ describe('DeviceTransferIntent', () => {
         var req = generateRequest.intentRequestSessionAttributes('DeviceTransferIntent',
             { "devices": [device0] },
             {
-                "DEVICENUMBER": {
-                    "name": "DEVICENUMBER",
-                    "value": device0.number
+                "DEVICE": {
+                    "name": "DEVICE",
+                    "value": device0.name
                 }
             }, "example-access-token");
         return getRequestSSML(req).then(res => {
@@ -566,35 +518,35 @@ describe('i18n', () => {
             });
         });
 
-        test('use i18n substitution for device number when not found', () => {
-            var deviceNumber = 2;
+        test('use i18n substitution for device name when not found', () => {
+            const deviceName = "Nonexistent Device";
             var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
                 { "devices": [device0] },
                 {
-                    "DEVICENUMBER": {
-                        "name": "DEVICENUMBER",
-                        "value": deviceNumber
+                    "DEVICE": {
+                        "name": "DEVICE",
+                        "value": deviceName
                     }
                 }, "example-access-token", null, "de-DE");
             return getRequestSSML(req).then(res => {
-                expect(res).toContain("Ich konnte das Gerät " + deviceNumber + " nicht finden");
+                expect(res).toContain("Ich konnte kein Gerät mit dem Namen „" + deviceName + "“ finden");
             });
         });
 
-        test('use i18n substitution for device number device found', () => {
+        test('use i18n substitution for device name', () => {
             nock("https://api.spotify.com")
                 .put("/v1/me/player")
                 .reply(204);
             var req = generateRequest.intentRequestSessionAttributes('DevicePlayIntent',
                 { "devices": [device0] },
                 {
-                    "DEVICENUMBER": {
-                        "name": "DEVICENUMBER",
-                        "value": device0.number
+                    "DEVICE": {
+                        "name": "DEVICE",
+                        "value": device0.name
                     }
                 }, "example-access-token", null, "de-DE");
             return getRequestSSML(req).then(res => {
-                expect(res).toContain("Musik wird auf " + device0.number + ": " + device0.name + " abgespielt");
+                expect(res).toContain("Musik wird auf " + device0.name + " abgespielt");
             });
         });
     });

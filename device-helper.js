@@ -1,41 +1,28 @@
 const request = require('request-promise-native');
+const Fuse = require('fuse.js');
 
 async function getDevices(req, cache) {
-    // Check if session is new
-    if (req.getSession().isNew()) {
-        // If new session try to use cache
-        var devices = cache.get(req.getSession().details.user.userId + ":devices");
-        // Otherwise refresh by requesting
-        if (devices == undefined) {
-            try {
-                devices = await requestDevices(req, cache);
-            } catch (err) {
-                req.getSession().set("statusCode", err.statusCode);
-                devices = [];
-            }
+    // If new session try to use cache
+    var devices = cache.get(req.getSession().details.user.userId + ":devices");
+    // Otherwise refresh by requesting
+    if (devices == undefined) {
+        try {
+            devices = await requestDevices(req, cache);
+        } catch (err) {
+            req.getSession().set("statusCode", err.statusCode);
+            devices = [];
         }
-        return devices;
     }
-    else {
-        // If existing session use session data
-        return req.getSession().get("devices") || [];
-    }
+    return devices;
 }
 
-async function findDeviceByNumber(req, cache, deviceNumber) {
-    var devices = await getDevices(req, cache);
-
-    var deviceId, deviceName;
-
-    // Iterate through devices to find ID and name by number
-    for (var i = 0; i < devices.length; i++) {
-        if (devices[i].number == deviceNumber) {
-            deviceId = devices[i].id;
-            deviceName = devices[i].name;
-        }
-    }
-
-    return { id: deviceId, name: deviceName };
+async function findDeviceByName(req, cache, nameQuery) {
+  var devices = await getDevices(req, cache);
+  const results = (new Fuse(devices, {
+    keys: ['name'],
+    threshold: 0.4, //TODO needs fine-tuning
+  })).search(nameQuery);
+  return (results.length) ? results[0].item : {};
 }
 
 function requestDevices(req, cache) {
@@ -51,10 +38,6 @@ function requestDevices(req, cache) {
         })
         .then(function(body) {
             var devices = body.devices || [];
-            for (var i = 0; i < devices.length; i++) {
-                // Add the device number to JSON
-                devices[i].number = (i + 1);
-            }
             req.getSession().set("devices", devices);
             cache.set(req.getSession().details.user.userId + ":devices", devices);
             resolve(devices);
@@ -65,6 +48,6 @@ function requestDevices(req, cache) {
 
 module.exports = {
     getDevices,
-    findDeviceByNumber,
+    findDeviceByName,
     requestDevices
 };
