@@ -3,6 +3,8 @@ const pEvent = require('p-event');
 const connect = require('../connect');
 const generateRequest = require('./generate-request');
 
+jest.retryTimes(3);
+
 nock.disableNetConnect();
 
 function getRequestSSML(req) {
