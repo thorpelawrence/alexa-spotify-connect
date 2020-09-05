@@ -456,7 +456,8 @@ app.intent('DeviceTransferIntent', {
         "DEVICE": "AMAZON.SearchQuery"
     },
     "utterances": [
-        "transfer to {my|device|} {-|DEVICE}"
+        "{transfer|switch|swap|move} to {my|device|} {-|DEVICE}",
+        "use {my|device|} {-|DEVICE}"
     ]
 },
     function (req, res) {
