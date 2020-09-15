@@ -27,5 +27,12 @@
 	"This is {{name}} by {{artist}}": "Es {{name}}, de {{artist}}",
 	"That was {{name}} by {{artist}}": "Era {{name}} de {{artist}}",
 	"Nothing is playing": "Ahora mismo no suena nada",
-	"Make sure your Spotify account is premium": "Asegúrate de que tienes una cuenta premium de Spotify"
+	"Make sure your Spotify account is premium": "Asegúrate de que tienes una cuenta premium de Spotify",
+	"Queued track {{trackName}}": "Añadida a la lista la canción {{trackName}}",
+	"For example, tell me to play on a device after listing devices": "Por ejemplo, pídeme que reproduzca en un dispositivo después de listarlos",
+	"Transferring to {{deviceName}}": "Transfiriendo a {{deviceName}}",
+	"I couldn't work out which device to play on.": "No pude averiguar en qué dispositivo reproducir.",
+	"I couldn't work out which device to transfer to.": "No pude averiguar a qué dispositivo transferir.",
+	"I couldn't find a device named {{DEVICE}}.": "No pude encontrar un dispositivo llamado {{DEVICE}}.",
+	"Playing on device {{deviceName}}": "Reproduciendo en dispositivo {{deviceName}}"
 }
