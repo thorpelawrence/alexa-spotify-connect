@@ -9,7 +9,7 @@
 > DISCLAIMER:
 > This product is not endorsed, certified or otherwise approved in any way by Spotify. Spotify is the registered trade mark of the Spotify Group.
 
-[Privacy policy](https://alexa-spotify-connect.herokuapp.com/privacy.html)
+[Privacy policy](/privacy)
 
 To use this skill, you must log in with the following third-party (3P) services:
 * Spotify
