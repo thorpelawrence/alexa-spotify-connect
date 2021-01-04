@@ -5,6 +5,7 @@
 	"To start, ask me to list your devices": "Para começar, peça para listar seus dispositivos",
 	"You can ask me to list your connect devices and then control them. ": "Você pode me pedir para listar seus dispositivos e então controlá-los. ",
 	"For example, tell me to play on a device number after listing devices": "Por exemplo, diga-me para tocar em um número de dispositivo depois de listar dispositivos",
+	"For example, tell me to play on a device after listing devices": "Por exemplo, diga-me para reproduzir em um dispositivo depois de listar dispositivos",
 	"What would you like to do?": "O que você gostaria de fazer?",
 	"I couldn't work out the volume to use.": "Não consegui calcular o volume a usar.",
 	"Try setting a volume between 0 and 10": "Tente definir um volume entre 0 e 10",
