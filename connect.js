@@ -194,7 +194,72 @@ app.intent('SkipPreviousIntent', {
     }
 );
 
-// Handle volume level intent
+// PUT to Spotify REST API
+const setVolume = (volumePercent, req, res) => {
+    return request.put({
+        // Send new volume * 10 (convert to percentage)
+        url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + volumePercent,
+        // Send access token as bearer auth
+        auth: {
+            "bearer": req.getSession().details.user.accessToken
+        },
+        // Handle sending as JSON
+        json: true
+    }).catch((err) => {
+        if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+        if (err.statusCode === 404) {
+            res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+            res.card(connectDeviceCard(req));
+        }
+    });
+};
+
+const getAndValidateVolumePercentFromSlot = (req, res, isPercentIntent) => {
+    const slotName = isPercentIntent ? "VOLUMEPERCENT" : "VOLUMELEVEL"
+    // Check that the slot has a value
+    if (req.slot(slotName)) {
+        // Check if the slot is a number
+        if (!isNaN(req.slot(slotName))) {
+            var volumeValue = req.slot(slotName);
+            // Check that the volume is valid
+            if (volumeValue >= 0 && volumeValue <= (isPercentIntent ? 100 : 10)) {
+                return (isPercentIntent ? 1 : 10) * volumeValue;
+            }
+            else {
+                // If not valid volume
+                res.say(req.__(isPercentIntent
+                    ? "You can only set the volume percent between 0 and 100"
+                    : "You can only set the volume between 0 and 10"));
+                // Keep session open
+                res.shouldEndSession(false);
+                return null;
+            }
+        }
+        else {
+            // Not a number
+            res.say(req.__(isPercentIntent
+                ? "Try setting a volume percent between 0 and 100"
+                : "Try setting a volume between 0 and 10"))
+                .reprompt(req.__("What would you like to do?"));
+            // Keep session open
+            res.shouldEndSession(false);
+            return null;
+        }
+    }
+    else {
+        // No slot value
+        res.say(req.__("I couldn't work out the volume to use."))
+            .say(req.__(isPercentIntent
+                ? "Try setting a volume percent between 0 and 100"
+                : "Try setting a volume between 0 and 10"))
+            .reprompt(req.__("What would you like to do?"));
+        // Keep session open
+        res.shouldEndSession(false);
+        return null;
+    }
+};
+
+// Handle 0-10 volume level intent
 // Slot for new volume
 app.intent('VolumeLevelIntent', {
     "slots": {
@@ -207,54 +272,30 @@ app.intent('VolumeLevelIntent', {
     function (req, res) {
         // Check that request contains session
         if (req.hasSession()) {
-            // Check that the slot has a value
-            if (req.slot("VOLUMELEVEL")) {
-                // Check if the slot is a number
-                if (!isNaN(req.slot("VOLUMELEVEL"))) {
-                    var volumeLevel = req.slot("VOLUMELEVEL");
-                    // Check that the volume is valid
-                    if (volumeLevel >= 0 && volumeLevel <= 10) {
-                        res.say(successSound);
-                        // PUT to Spotify REST API
-                        return request.put({
-                            // Send new volume * 10 (convert to percentage)
-                            url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + 10 * volumeLevel,
-                            // Send access token as bearer auth
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            // Handle sending as JSON
-                            json: true
-                        }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
-                            }
-                        });
-                    }
-                    else {
-                        // If not valid volume
-                        res.say(req.__("You can only set the volume between 0 and 10"));
-                        // Keep session open
-                        res.shouldEndSession(false);
-                    }
-                }
-                else {
-                    // Not a number
-                    res.say(req.__("Try setting a volume between 0 and 10"))
-                        .reprompt(req.__("What would you like to do?"));
-                    // Keep session open
-                    res.shouldEndSession(false);
-                }
+            const volumePercent = getAndValidateVolumePercentFromSlot(req, res, false);
+            if (volumePercent !== null) {
+                return setVolume(volumePercent, req, res);
             }
-            else {
-                // No slot value
-                res.say(req.__("I couldn't work out the volume to use."))
-                    .say(req.__("Try setting a volume between 0 and 10"))
-                    .reprompt(req.__("What would you like to do?"));
-                // Keep session open
-                res.shouldEndSession(false);
+        }
+    }
+);
+
+// Handle volume percent intent
+// Slot for new volume
+app.intent('VolumePercentIntent', {
+    "slots": {
+        "VOLUMEPERCENT": "AMAZON.NUMBER"
+    },
+    "utterances": [
+        "{set the|set|} volume {level|} {to|} {-|VOLUMEPERCENT} percent"
+    ]
+},
+    function (req, res) {
+        // Check that request contains session
+        if (req.hasSession()) {
+            const volumePercent = getAndValidateVolumePercentFromSlot(req, res, true);
+            if (volumePercent !== null) {
+                return setVolume(volumePercent, req, res);
             }
         }
     }
