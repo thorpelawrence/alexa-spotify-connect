@@ -214,6 +214,51 @@ const setVolume = (volumePercent, req, res) => {
     });
 };
 
+const getAndValidateVolumePercentFromSlot = (req, res, isPercentIntent) => {
+    const slotName = isPercentIntent ? "VOLUMEPERCENT" : "VOLUMELEVEL"
+    // Check that the slot has a value
+    if (req.slot(slotName)) {
+        // Check if the slot is a number
+        if (!isNaN(req.slot(slotName))) {
+            var volumeValue = req.slot(slotName);
+            // Check that the volume is valid
+            if (volumeValue >= 0 && volumeValue <= (isPercentIntent ? 100 : 10)) {
+                return (isPercentIntent ? 1 : 10) * volumeValue;
+            }
+            else {
+                // If not valid volume
+                res.say(req.__(isPercentIntent
+                    ? "You can only set the volume percent between 0 and 100"
+                    : "You can only set the volume between 0 and 10"));
+                // Keep session open
+                res.shouldEndSession(false);
+                return null;
+            }
+        }
+        else {
+            // Not a number
+            res.say(req.__(isPercentIntent
+                ? "Try setting a volume percent between 0 and 100"
+                : "Try setting a volume between 0 and 10"))
+                .reprompt(req.__("What would you like to do?"));
+            // Keep session open
+            res.shouldEndSession(false);
+            return null;
+        }
+    }
+    else {
+        // No slot value
+        res.say(req.__("I couldn't work out the volume to use."))
+            .say(req.__(isPercentIntent
+                ? "Try setting a volume percent between 0 and 100"
+                : "Try setting a volume between 0 and 10"))
+            .reprompt(req.__("What would you like to do?"));
+        // Keep session open
+        res.shouldEndSession(false);
+        return null;
+    }
+};
+
 // Handle 0-10 volume level intent
 // Slot for new volume
 app.intent('VolumeLevelIntent', {
@@ -227,38 +272,9 @@ app.intent('VolumeLevelIntent', {
     function (req, res) {
         // Check that request contains session
         if (req.hasSession()) {
-            // Check that the slot has a value
-            if (req.slot("VOLUMELEVEL")) {
-                // Check if the slot is a number
-                if (!isNaN(req.slot("VOLUMELEVEL"))) {
-                    var volumeLevel = req.slot("VOLUMELEVEL");
-                    // Check that the volume is valid
-                    if (volumeLevel >= 0 && volumeLevel <= 10) {
-                        res.say(successSound);
-                        return setVolume(10 * volumeLevel, req, res);
-                    }
-                    else {
-                        // If not valid volume
-                        res.say(req.__("You can only set the volume between 0 and 10"));
-                        // Keep session open
-                        res.shouldEndSession(false);
-                    }
-                }
-                else {
-                    // Not a number
-                    res.say(req.__("Try setting a volume between 0 and 10"))
-                        .reprompt(req.__("What would you like to do?"));
-                    // Keep session open
-                    res.shouldEndSession(false);
-                }
-            }
-            else {
-                // No slot value
-                res.say(req.__("I couldn't work out the volume to use."))
-                    .say(req.__("Try setting a volume between 0 and 10"))
-                    .reprompt(req.__("What would you like to do?"));
-                // Keep session open
-                res.shouldEndSession(false);
+            const volumePercent = getAndValidateVolumePercentFromSlot(req, res, false);
+            if (volumePercent !== null) {
+                return setVolume(volumePercent, req, res);
             }
         }
     }
@@ -276,41 +292,11 @@ app.intent('VolumePercentIntent', {
 },
     function (req, res) {
         // Check that request contains session
-        if (!req.hasSession()) {
-            return;
-        }
-        // Check that the slot has a value
-        if (req.slot("VOLUMEPERCENT")) {
-            // Check if the slot is a number
-            if (!isNaN(req.slot("VOLUMEPERCENT"))) {
-                var volumePercent = req.slot("VOLUMEPERCENT");
-                // Check that the volume percentage is valid
-                if (volumePercent >= 0 && volumePercent <= 100) {
-                    res.say(successSound);
-                    return setVolume(volumePercent, req, res);
-                }
-                else {
-                    // If not valid volume
-                    res.say(req.__("You can only set the volume percent between 0 and 100"));
-                    // Keep session open
-                    res.shouldEndSession(false);
-                }
+        if (req.hasSession()) {
+            const volumePercent = getAndValidateVolumePercentFromSlot(req, res, true);
+            if (volumePercent !== null) {
+                return setVolume(volumePercent, req, res);
             }
-            else {
-                // Not a number
-                res.say(req.__("Try setting a volume percent between 0 and 100"))
-                    .reprompt(req.__("What would you like to do?"));
-                // Keep session open
-                res.shouldEndSession(false);
-            }
-        }
-        else {
-            // No slot value
-            res.say(req.__("I couldn't work out the volume to use."))
-                .say(req.__("Try setting a volume percent between 0 and 100"))
-                .reprompt(req.__("What would you like to do?"));
-            // Keep session open
-            res.shouldEndSession(false);
         }
     }
 );
