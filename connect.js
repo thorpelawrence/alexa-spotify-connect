@@ -194,7 +194,27 @@ app.intent('SkipPreviousIntent', {
     }
 );
 
-// Handle volume level intent
+// PUT to Spotify REST API
+const setVolume = (volumePercent, req, res) => {
+    return request.put({
+        // Send new volume * 10 (convert to percentage)
+        url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + volumePercent,
+        // Send access token as bearer auth
+        auth: {
+            "bearer": req.getSession().details.user.accessToken
+        },
+        // Handle sending as JSON
+        json: true
+    }).catch((err) => {
+        if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+        if (err.statusCode === 404) {
+            res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+            res.card(connectDeviceCard(req));
+        }
+    });
+};
+
+// Handle 0-10 volume level intent
 // Slot for new volume
 app.intent('VolumeLevelIntent', {
     "slots": {
@@ -215,23 +235,7 @@ app.intent('VolumeLevelIntent', {
                     // Check that the volume is valid
                     if (volumeLevel >= 0 && volumeLevel <= 10) {
                         res.say(successSound);
-                        // PUT to Spotify REST API
-                        return request.put({
-                            // Send new volume * 10 (convert to percentage)
-                            url: "https://api.spotify.com/v1/me/player/volume?volume_percent=" + 10 * volumeLevel,
-                            // Send access token as bearer auth
-                            auth: {
-                                "bearer": req.getSession().details.user.accessToken
-                            },
-                            // Handle sending as JSON
-                            json: true
-                        }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
-                            if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
-                            }
-                        });
+                        return setVolume(10 * volumeLevel, req, res);
                     }
                     else {
                         // If not valid volume
@@ -256,6 +260,57 @@ app.intent('VolumeLevelIntent', {
                 // Keep session open
                 res.shouldEndSession(false);
             }
+        }
+    }
+);
+
+// Handle volume percent intent
+// Slot for new volume
+app.intent('VolumePercentIntent', {
+    "slots": {
+        "VOLUMEPERCENT": "AMAZON.NUMBER"
+    },
+    "utterances": [
+        "{set the|set|} volume {level|} {to|} {-|VOLUMEPERCENT} percent"
+    ]
+},
+    function (req, res) {
+        // Check that request contains session
+        if (!req.hasSession()) {
+            return;
+        }
+        // Check that the slot has a value
+        if (req.slot("VOLUMEPERCENT")) {
+            // Check if the slot is a number
+            if (!isNaN(req.slot("VOLUMEPERCENT"))) {
+                var volumePercent = req.slot("VOLUMEPERCENT");
+                // Check that the volume percentage is valid
+                if (volumePercent >= 0 && volumePercent <= 100) {
+                    res.say(successSound);
+                    return setVolume(volumePercent, req, res);
+                }
+                else {
+                    // If not valid volume
+                    res.say(req.__("You can only set the volume percent between 0 and 100"));
+                    // Keep session open
+                    res.shouldEndSession(false);
+                }
+            }
+            else {
+                // Not a number
+                res.say(req.__("Try setting a volume percent between 0 and 100"))
+                    .reprompt(req.__("What would you like to do?"));
+                // Keep session open
+                res.shouldEndSession(false);
+            }
+        }
+        else {
+            // No slot value
+            res.say(req.__("I couldn't work out the volume to use."))
+                .say(req.__("Try setting a volume percent between 0 and 100"))
+                .reprompt(req.__("What would you like to do?"));
+            // Keep session open
+            res.shouldEndSession(false);
         }
     }
 );
