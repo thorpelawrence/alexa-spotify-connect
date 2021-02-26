@@ -257,6 +257,88 @@ describe('VolumeLevelIntent', () => {
     });
 });
 
+describe('VolumePercentIntent', () => {
+    test('should warn if no slot value', () => {
+        var req = generateRequest.intentRequest('VolumePercentIntent');
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("couldn't work out the volume to use");
+        });
+    });
+
+    test('should warn if not a number', () => {
+        var req = generateRequest.intentRequest('VolumePercentIntent', {
+            "VOLUMEPERCENT": {
+                "name": "VOLUMEPERCENT",
+                "value": "NaN"
+            }
+        });
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Try setting a volume percent between 0 and 100");
+        });
+    });
+
+    test('should PUT correct volume to Spotify endpoint', () => {
+        var vol = Math.floor(Math.random() * 100);
+        var api = nock("https://api.spotify.com")
+          .put("/v1/me/player/volume")
+          .query({ "volume_percent": vol })
+          .reply(204);
+        var requested = pEvent(api, 'request')
+          .then(() => {
+              return api.isDone();
+          });
+        var req = generateRequest.intentRequest('VolumePercentIntent', {
+            "VOLUMEPERCENT": {
+                "name": "VOLUMEPERCENT",
+                "value": vol
+            }
+        });
+        connect.request(req);
+        return requested.then(res => {
+            expect(res).toBe(true);
+        });
+    });
+
+    test('should warn if volume outside of range', () => {
+        var slots = {
+            "VOLUMEPERCENT": {
+                "name": "VOLUMEPERCENT",
+                "value": 101
+            }
+        };
+        var req = generateRequest.intentRequest('VolumePercentIntent', slots);
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("You can only set the volume percent between 0 and 100");
+        });
+    });
+
+    test('should return nothing if no session', () => {
+        var req = generateRequest.intentRequestNoSession('VolumePercentIntent');
+        return connect.request(req).then(function (r) {
+            return r.response;
+        }).then(res => {
+            expect(res).not.toHaveProperty("outputSpeech");
+        });
+    });
+
+    test('should warn if not premium', () => {
+        var vol = Math.floor(Math.random() * 100);
+        nock("https://api.spotify.com")
+          .put("/v1/me/player/volume")
+          .query({ "volume_percent": vol })
+          .reply(403);
+        var req = generateRequest.intentRequest('VolumePercentIntent', {
+            "VOLUMEPERCENT": {
+                "name": "VOLUMEPERCENT",
+                "value": vol
+            }
+        });
+        return getRequestSSML(req).then(res => {
+            expect(res).toContain("Make sure your Spotify account is premium");
+        });
+    });
+});
+
 describe('GetDevicesIntent', () => {
     test('should find no devices', () => {
         nock("https://api.spotify.com")
