@@ -26,7 +26,7 @@ $ node skill/skill.js
 ```
 3. Enter the application ID from the developer console into `package.json`, under the key `alexa.applicationId`. 
 4. Turn on **Account linking**, choosing **"Auth Code Grant"**. Set **"Authorization URI"** to `https://accounts.spotify.com/authorize`,  **"Access Token URI"** to `https://accounts.spotify.com/api/token`, set client ID and secret, add scopes `user-read-playback-state` and `user-modify-playback-state`, and the three redirect URLs from the account linking details in your developer console for the skill
-5. Deploy this webapp to somewhere that **supports HTTPS** (required for Alexa skills), for example Heroku
+5. Deploy this webapp to somewhere that **supports HTTPS** (required for Alexa skills), for example [Render](https://render.com/)
 6. Configure the skill to use an HTTPS endpoint of `https://<your-url>/<app-name>` where `app-name` is the name specified in `alexa.app('app-name')`, `connect` by default
 
 ### Adding a language
@@ -40,7 +40,7 @@ $ node skill/skill.js
 $ node skill/skill-i18n.js
 ```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
 ## License
 [MIT](LICENSE)
