@@ -34,5 +34,7 @@
 	"I couldn't work out which device to play on.": "I couldn't work out which device to play on.",
 	"I couldn't work out which device to transfer to.": "I couldn't work out which device to transfer to.",
 	"I couldn't find a device named {{DEVICE}}.": "I couldn't find a device named {{DEVICE}}.",
-	"Playing on device {{deviceName}}": "Playing on device {{deviceName}}"
+	"Playing on device {{deviceName}}": "Playing on device {{deviceName}}",
+	"Try setting a volume percent between 0 and 100": "Try setting a volume percent between 0 and 100",
+	"You can only set the volume percent between 0 and 100": "You can only set the volume percent between 0 and 100"
 }

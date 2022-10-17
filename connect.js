@@ -27,22 +27,17 @@ const connectDeviceCard = (res) => ({
 });
 const applicationId = require('./package.json').alexa.applicationId;
 
-
-
-express_app.use((req, res, next) => {
+// Run every time the skill is accessed
+app.pre = function (req, res, _type) {
     i18n.configure({
         directory: __dirname + '/locales',
         defaultLocale: 'en-GB',
         register: res,
     });
-    if (req.data && req.data.request && req.data.request.locale) {
-        i18n.setLocale(res, req.data.request.locale);
-    }
-    next();
-});
 
-// Run every time the skill is accessed
-app.pre = function (req, res, _type) {
+    if (req.data.request.locale) {
+        res.setLocale(req.data.request.locale);
+    }
     // Error if the application ID of the request is not for this skill
     if (req.applicationId != applicationId &&
         req.getSession().details.application.applicationId != applicationId) {
