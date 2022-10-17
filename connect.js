@@ -17,25 +17,26 @@ var app = new alexa.app('connect');
 app.express({ expressApp: express_app });
 
 const successSound = "<audio src='soundbank://soundlibrary/ui/gameshow/amzn_ui_sfx_gameshow_neutral_response_02'/>";
-const connectDeviceCard = (req) => ({
+const connectDeviceCard = (res) => ({
     type: "Simple",
-    title: req.__("Connecting to a device using Spotify Connect"),
-    content: req.__("To add a device to Spotify Connect,"
+    title: res.__("Connecting to a device using Spotify Connect"),
+    content: res.__("To add a device to Spotify Connect,"
         + " log in to your Spotify account on a supported device"
         + " such as an Echo, phone, or computer"
         + "\nhttps://support.spotify.com/uk/article/spotify-connect/")
 });
 const applicationId = require('./package.json').alexa.applicationId;
 
+i18n.configure({
+    directory: __dirname + '/locales',
+    defaultLocale: 'en-GB',
+    register: req
+});
+
 // Run every time the skill is accessed
 app.pre = function (req, res, _type) {
-    i18n.configure({
-        directory: __dirname + '/locales',
-        defaultLocale: 'en-GB',
-        register: req
-    });
     if (req.data.request.locale) {
-        i18n.setLocale(req, req.data.request.locale);
+        i18n.setLocale(res, req.data.request.locale);
     }
     // Error if the application ID of the request is not for this skill
     if (req.applicationId != applicationId &&
@@ -44,7 +45,7 @@ app.pre = function (req, res, _type) {
     }
     // Check that the user has an access token, if they have linked their account
     if (!(req.context.System.user.accessToken || req.getSession().details.user.accessToken)) {
-        res.say(req.__("You have not linked your Spotify account, check your Alexa app to link the account"));
+        res.say(res.__("You have not linked your Spotify account, check your Alexa app to link the account"));
         res.linkAccount();
     }
 };
@@ -52,14 +53,14 @@ app.pre = function (req, res, _type) {
 // Run after every request
 app.post = function (req, res, _type, exception) {
     if (exception) {
-        return res.clear().say(req.__("An error occured: ") + exception).send();
+        return res.clear().say(res.__("An error occured: ") + exception).send();
     }
 };
 
 // Function for when skill is invoked without intent
 app.launch(function (req, res) {
-    res.say(req.__("I can control your Spotify Connect devices, to start, ask me to list your devices"))
-        .reprompt(req.__("To start, ask me to list your devices"));
+    res.say(res.__("I can control your Spotify Connect devices, to start, ask me to list your devices"))
+        .reprompt(res.__("To start, ask me to list your devices"));
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -70,9 +71,9 @@ app.intent("AMAZON.HelpIntent", {
     "slots": {},
     "utterances": []
 }, function (req, res) {
-    res.say(req.__("You can ask me to list your connect devices and then control them. "))
-        .say(req.__("For example, tell me to play on a device after listing devices"))
-        .reprompt(req.__("What would you like to do?"));
+    res.say(res.__("You can ask me to list your connect devices and then control them. "))
+        .say(res.__("For example, tell me to play on a device after listing devices"))
+        .reprompt(res.__("What would you like to do?"));
     // Keep session open
     res.shouldEndSession(false);
 });
@@ -111,10 +112,10 @@ app.intent('PlayIntent', {
                 req.getSession().set("statusCode", r.statusCode);
                 res.say(successSound);
             }).catch((err) => {
-                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
-                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard(req));
+                    res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard(res));
                 }
             });
     }
@@ -134,10 +135,10 @@ app.intent('PauseIntent', {
                 req.getSession().set("statusCode", r.statusCode);
                 res.say(successSound);
             }).catch((err) => {
-                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
-                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard(req));
+                    res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard(res));
                 }
             });
     }
@@ -159,10 +160,10 @@ app.intent('SkipNextIntent', {
                 req.getSession().set("statusCode", r.statusCode);
                 res.say(successSound);
             }).catch((err) => {
-                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
-                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard(req));
+                    res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard(res));
                 }
             });
     }
@@ -185,10 +186,10 @@ app.intent('SkipPreviousIntent', {
                 req.getSession().set("statusCode", r.statusCode);
                 res.say(successSound);
             }).catch((err) => {
-                if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                 if (err.statusCode === 404) {
-                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard(req));
+                    res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard(res));
                 }
             });
     }
@@ -206,10 +207,10 @@ const setVolume = (volumePercent, req, res) => {
         // Handle sending as JSON
         json: true
     }).catch((err) => {
-        if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+        if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
         if (err.statusCode === 404) {
-            res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-            res.card(connectDeviceCard(req));
+            res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+            res.card(connectDeviceCard(res));
         }
     });
 };
@@ -227,7 +228,7 @@ const getAndValidateVolumePercentFromSlot = (req, res, isPercentIntent) => {
             }
             else {
                 // If not valid volume
-                res.say(req.__(isPercentIntent
+                res.say(res.__(isPercentIntent
                     ? "You can only set the volume percent between 0 and 100"
                     : "You can only set the volume between 0 and 10"));
                 // Keep session open
@@ -237,10 +238,10 @@ const getAndValidateVolumePercentFromSlot = (req, res, isPercentIntent) => {
         }
         else {
             // Not a number
-            res.say(req.__(isPercentIntent
+            res.say(res.__(isPercentIntent
                 ? "Try setting a volume percent between 0 and 100"
                 : "Try setting a volume between 0 and 10"))
-                .reprompt(req.__("What would you like to do?"));
+                .reprompt(res.__("What would you like to do?"));
             // Keep session open
             res.shouldEndSession(false);
             return null;
@@ -248,11 +249,11 @@ const getAndValidateVolumePercentFromSlot = (req, res, isPercentIntent) => {
     }
     else {
         // No slot value
-        res.say(req.__("I couldn't work out the volume to use."))
-            .say(req.__(isPercentIntent
+        res.say(res.__("I couldn't work out the volume to use."))
+            .say(res.__(isPercentIntent
                 ? "Try setting a volume percent between 0 and 100"
                 : "Try setting a volume between 0 and 10"))
-            .reprompt(req.__("What would you like to do?"));
+            .reprompt(res.__("What would you like to do?"));
         // Keep session open
         res.shouldEndSession(false);
         return null;
@@ -319,16 +320,16 @@ app.intent('GetDevicesIntent', {
                 // Check if user has devices
                 if (devices.length > 0) {
                     // Comma separated list of device names
-                    res.say(req.__("I found these connect devices: "))
-                        .say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ',' + req.__(' and ')) + ". ")
-                        .say(req.__("What would you like to do with these devices?")).reprompt(req.__("What would you like to do?"));
+                    res.say(res.__("I found these connect devices: "))
+                        .say([deviceNames.slice(0, -1).join(', '), deviceNames.slice(-1)[0]].join(deviceNames.length < 2 ? '' : ',' + res.__(' and ')) + ". ")
+                        .say(res.__("What would you like to do with these devices?")).reprompt(res.__("What would you like to do?"));
                     // Keep session open
                     res.shouldEndSession(false);
                 }
                 else {
                     // No devices found
-                    res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                    res.card(connectDeviceCard(req));
+                    res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                    res.card(connectDeviceCard(res));
                 }
             })
             // Handle errors
@@ -375,19 +376,19 @@ app.intent('DevicePlayIntent', {
                             // Handle sending as JSON
                             json: true
                         }).then((_r) => {
-                            res.say(req.__("Playing on device {{deviceName}}", { deviceName: device.name }));
+                            res.say(res.__("Playing on device {{deviceName}}", { deviceName: device.name }));
                         }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                            if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
+                                res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                res.card(connectDeviceCard(res));
                             }
                         });
                     }
                     else {
                         // If device not found
-                        res.say(req.__("I couldn't find a device named {{DEVICE}}.", { DEVICE }))
-                            .say(req.__("Try asking me to list devices first"));
+                        res.say(res.__("I couldn't find a device named {{DEVICE}}.", { DEVICE }))
+                            .say(res.__("Try asking me to list devices first"));
                         // Keep session open
                         res.shouldEndSession(false);
                     }
@@ -395,9 +396,9 @@ app.intent('DevicePlayIntent', {
             }
             else {
                 // No slot value
-                res.say(req.__("I couldn't work out which device to play on."))
-                    .say(req.__("Try asking me to list devices first"))
-                    .reprompt(req.__("What would you like to do?"));
+                res.say(res.__("I couldn't work out which device to play on."))
+                    .say(res.__("Try asking me to list devices first"))
+                    .reprompt(res.__("What would you like to do?"));
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -428,8 +429,8 @@ app.intent(
         if (!req.slot("TRACKNAME")) {
             // No slot value
             res
-            .say(req.__("I couldn't work out which song you want to queue."))
-            .reprompt(req.__("What would you like to do?"));
+            .say(res.__("I couldn't work out which song you want to queue."))
+            .reprompt(res.__("What would you like to do?"));
             // Keep session open
             res.shouldEndSession(false);
         }
@@ -472,21 +473,21 @@ app.intent(
             })
             .then((response) => {
                 res.say(
-                    req.__("Queued track {{trackName}}", {
+                    res.__("Queued track {{trackName}}", {
                         trackName,
                     })
                 );
             })
             .catch((err) => {
                 res
-                  .say(req.__("Sorry, I couldn't queue that song."))
-                  .reprompt(req.__("What would you like to do?"));
+                  .say(res.__("Sorry, I couldn't queue that song."))
+                  .reprompt(res.__("What would you like to do?"));
             });
         })
         .catch((err) => {
             res
-              .say(req.__("Sorry, I couldn't queue that song."))
-              .reprompt(req.__("What would you like to do?"));
+              .say(res.__("Sorry, I couldn't queue that song."))
+              .reprompt(res.__("What would you like to do?"));
         });
     }
 );
@@ -526,19 +527,19 @@ app.intent('DeviceTransferIntent', {
                             // Handle sending as JSON
                             json: true
                         }).then((_r) => {
-                            res.say(req.__("Transferring to {{deviceName}}", {deviceName: device.name }));
+                            res.say(res.__("Transferring to {{deviceName}}", {deviceName: device.name }));
                         }).catch((err) => {
-                            if (err.statusCode === 403) res.say(req.__("Make sure your Spotify account is premium"));
+                            if (err.statusCode === 403) res.say(res.__("Make sure your Spotify account is premium"));
                             if (err.statusCode === 404) {
-                                res.say(req.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
-                                res.card(connectDeviceCard(req));
+                                res.say(res.__("I couldn't find any connect devices, check your Alexa app for information on connecting a device"));
+                                res.card(connectDeviceCard(res));
                             }
                         });
                     }
                     else {
                         // If device not found
-                        res.say(req.__("I couldn't find a device named {{DEVICE}}.", { DEVICE }))
-                            .say(req.__("Try asking me to list devices first"));
+                        res.say(res.__("I couldn't find a device named {{DEVICE}}.", { DEVICE }))
+                            .say(res.__("Try asking me to list devices first"));
                         // Keep session open
                         res.shouldEndSession(false);
                     }
@@ -546,9 +547,9 @@ app.intent('DeviceTransferIntent', {
             }
             else {
                 // No slot value
-                res.say(req.__("I couldn't work out which device to transfer to."))
-                    .say(req.__("Try asking me to list devices first"))
-                    .reprompt(req.__("What would you like to do?"));
+                res.say(res.__("I couldn't work out which device to transfer to."))
+                    .say(res.__("Try asking me to list devices first"))
+                    .reprompt(res.__("What would you like to do?"));
                 // Keep session open
                 res.shouldEndSession(false);
             }
@@ -577,16 +578,16 @@ app.intent('GetTrackIntent', {
         })
             .then(function (body) {
                 if (body.is_playing) {
-                    res.say(req.__("This is {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
+                    res.say(res.__("This is {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                 }
                 else {
                     if (body.item.name) {
                         // If not playing but last track known
-                        res.say(req.__("That was {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
+                        res.say(res.__("That was {{name}} by {{artist}}", { name: body.item.name, artist: body.item.artists[0].name }));
                     }
                     else {
                         // If unknown
-                        res.say(req.__("Nothing is playing"));
+                        res.say(res.__("Nothing is playing"));
                     }
                 }
             })
