@@ -5,7 +5,7 @@
   "author": "Lawrence Thorpe",
   "dependencies": {
     "alexa-app": "^4.2.2",
-    "express": "^4.15.3",
+    "express": "^4.17.3",
     "fuse.js": "^6.4.1",
     "i18n": "^0.9.0",
     "node-cache": "^5.0.0",
